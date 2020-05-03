@@ -1,3 +1,511 @@
+<<<<<<< HEAD
+<!DOCTYPE html>
+<head>
+<meta charset="UTF-8">
+<title>CS 424 Lab 9</title>
+<script src="three.js"></script>
+<script src="OrbitControls.js"></script>
+<script src="GLTFLoader.js"></script>
+<script>
+
+"use strict";
+
+var canvas, renderer, scene, camera; // Standard three.js requirements.
+
+var controls;  // An OrbitControls object that is used to implement
+               // rotation of the scene using the mouse.  (It actually rotates
+               // the camera around the scene.)
+
+var animating = false;  // Set to true when an animation is in progress.
+var frameNumber = 0;  // Frame number is advanced by 1 for each frame while animating.
+var material_concrete2;
+var worldModel;
+
+
+/**
+ *  The render function draws the scene.
+ */
+function render() {
+    renderer.render(scene, camera);
+}
+
+
+/**
+ * This function is called by the init() method to create the world.
+ */
+function createWorld() {
+
+    renderer.setClearColor("gray"); // Background color for scene.
+    scene = new THREE.Scene();
+
+    // ------------------- Make a camera with viewpoint light ----------------------
+
+    camera = new THREE.PerspectiveCamera(30, canvas.width/canvas.height, 0.1, 600);
+    camera.position.y = 70;
+    var light;  // A light shining from the direction of the camera; moves with the camera.
+    light = new THREE.DirectionalLight();
+    light.position.set(0,0,1);
+    camera.add(light);
+    scene.add(camera);
+    
+    //------------------------ Create the texture  ----------------------------
+    
+    var texture = new THREE.TextureLoader().load( "textures/concrete2.jpg" );
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set( 1, 1 );
+    material_concrete2 = new THREE.MeshBasicMaterial({map: texture})
+    
+    var texture = new THREE.TextureLoader().load( "textures/grass.jpg" );
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set( 1, 1 );
+    var material_grass = new THREE.MeshBasicMaterial({map: texture});
+    
+    var texture = new THREE.TextureLoader().load( "textures/concrete3.jpg" );
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set( 1, 1 );
+    var material_concrete3 = new THREE.MeshBasicMaterial({map: texture});
+    
+    var texture = new THREE.TextureLoader().load( "textures/building1.jpg" );
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set( 1, 1 );
+    var material_building1 = new THREE.MeshBasicMaterial({map: texture});
+    
+    var texture = new THREE.TextureLoader().load( "textures/granite.jpg" );
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set( 1, 1 );
+    var material_granite = new THREE.MeshBasicMaterial({map: texture});
+    
+    var texture = new THREE.TextureLoader().load( "textures/bricks.jpeg" );
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set( 3, 1 );
+    var material_bricks = new THREE.MeshBasicMaterial({map: texture});
+    
+    var texture = new THREE.TextureLoader().load( "textures/building2.jpg" );
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set( 1, 1 );
+    var material_building2 = new THREE.MeshBasicMaterial({map: texture});
+    
+    var texture = new THREE.TextureLoader().load( "textures/granite1.jpg" );
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set( 1, 1 );
+    var material_granite1 = new THREE.MeshBasicMaterial({map: texture});
+    
+    var texture = new THREE.TextureLoader().load( "textures/granite2.jpg" );
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set( 1, 1 );
+    var material_granite2 = new THREE.MeshBasicMaterial({map: texture});
+    
+    var texture = new THREE.TextureLoader().load( "textures/bricks1.jpg" );
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set( 2, 1 );
+    var material_bricks1 = new THREE.MeshBasicMaterial({map: texture});
+
+    //------------------- Create the scene's visible objects ----------------------
+    
+    worldModel = new THREE.Object3D();
+    
+                    // --------- Ground ---------//
+    
+    var geometry = new THREE.BoxGeometry( 200, 1, 80 );
+    var ground = new THREE.Mesh( geometry, material_grass );
+    
+    var geometry1 = new THREE.CircleGeometry( 35, 32 );
+    var geometry2 = new THREE.CircleGeometry( 40, 32 );
+    
+    var circle = new THREE.Mesh( geometry1, material_concrete2 );
+    var circle2 = new THREE.Mesh( geometry2, material_concrete3 );
+    
+    var geometry4 = new THREE.PlaneGeometry( 30, 60, 32 );
+    var plane = new THREE.Mesh( geometry4, material_concrete2 );
+    var floor = new THREE.Mesh( geometry4, material_granite );
+    var floor1 = new THREE.Mesh( geometry4, material_granite1);
+    var floor2 = new THREE.Mesh( geometry4, material_granite2);
+    
+    worldModel.add(plane);
+    plane.rotateX(-1.5707963268);
+    plane.rotateZ(1.1344640138);
+    plane.position.y = 0.8;
+    plane.position.x = -55;
+    plane.position.z = 25;
+    
+    worldModel.add(plane.clone());
+    plane.rotateZ(-2.3561944902);
+    plane.position.x = 50;
+    plane.position.z = 30;
+    
+    worldModel.add(floor);
+    floor.rotateX(-1.5707963268);
+    floor.rotateZ(2.6616271093);
+    floor.scale.set(1.4,1,1.25);
+    floor.position.y = 1;
+    floor.position.x = -120;
+    floor.position.z = -27.5;
+    
+    worldModel.add(floor1);
+    floor1.rotateX(-1.5707963268);
+    floor1.rotateZ(1.5707963268);
+    floor1.scale.set(1.4,1,1.25);
+    floor1.position.y = 1;
+    floor1.position.z = -75;
+    
+    worldModel.add(floor2);
+    floor2.rotateX(-1.5707963268);
+    floor2.rotateZ(-2.7925268032);
+    floor2.scale.set(1.4,1,1.25);
+    floor2.position.y = 1;
+    floor2.position.x = 90;
+    floor2.position.z = 0.25;
+    
+    worldModel.add(circle2);
+    circle2.rotateX(-1.5707963268);
+    circle2.position.y = 0.9;
+    circle2.position.x = -2.5;
+    circle2.position.z = 60;
+    
+    worldModel.add(circle);
+    circle.rotateX(-1.5707963268);
+    circle.position.y = 1;
+    circle.position.x = -2.5;
+    circle.position.z = 60;
+    
+    ground.rotateY(-0.436332313);
+    ground.position.x = -59;
+    ground.position.y = 0.2;
+    worldModel.add( ground );
+    
+    worldModel.add(ground.clone())
+    ground.rotateY(-2.3561944902);
+    ground.position.x = 59;
+    ground.position.z = 3.5;
+	ground.position.y = 0.15
+    
+    worldModel.add(ground.clone());
+    ground.rotateY(1.2217304764);
+    ground.scale.set(0.75,1,1);
+    ground.position.x = 0;
+    ground.position.z = -30;
+	ground.position.y = 0.01
+    
+
+                    // --------- Houses ---------//
+    
+    var geometry3 = new THREE.BoxGeometry(15,15,10);
+    var house = new THREE.Mesh(geometry3, material_building1 );
+    var house1 = new THREE.Mesh(geometry3, material_building2);
+    
+    worldModel.add(house);
+    house.position.x = -15;
+    house.position.y = 8;
+    house.position.z = 77.5;
+    
+    worldModel.add(house.clone());
+    house.position.x = 15;
+    
+    worldModel.add(house.clone());
+    house.position.z = 45;
+    
+    worldModel.add(house.clone());
+    house.position.x = -15;
+    house.position.z = 45;
+    
+    worldModel.add(house.clone());
+    house.position.z = 20;
+    house.position.x = -70;
+    house.scale.set(1.25,1,1);
+    house.rotateY(1.1344640138);
+    
+    worldModel.add(house.clone());
+    house.position.x = -45;
+    house.position.z = 32.5;
+    
+    worldModel.add(house1);
+    house1.rotateY(0.3490658504);
+    house1.scale.set(2,2,2);
+    house1.position.x = 50;
+    house1.position.y = 16;
+    house1.position.z = 32.5;
+
+
+                    // --------- Trees ---------//
+
+    
+    var tree = new THREE.Object3D();
+	var trunk = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.2,0.2,1,16,1),
+                               new THREE.MeshLambertMaterial({
+		    color: 0x885522
+		})
+	);
+	trunk.position.y = 0.5;  // move base up to origin
+	var leaves = new THREE.Mesh(
+        new THREE.CylinderGeometry(0,.7,2,16,3),
+		new THREE.MeshPhongMaterial({
+		    color: 0x00BB00,
+			specular: 0x002000,
+			shininess: 5
+		})
+	);
+	leaves.position.y = 2;  // move bottom of cone to top of trunk
+	tree.add(trunk);
+	tree.add(leaves);
+    worldModel.add(tree);
+    tree.scale.set(4,4,4);
+    
+    worldModel.add(tree.clone());
+    tree.position.x = -85;
+    tree.position.z = -40;
+    
+    worldModel.add(tree.clone());
+    tree.position.x = -110;
+    tree.position.z = 10;
+    
+    worldModel.add(tree.clone());
+    tree.position.x = -50;
+    
+    worldModel.add(tree.clone());
+    tree.position.z = -15;
+    
+    worldModel.add(tree.clone());
+    tree.position.x = -30;
+    
+                    // --------- Walls ---------//
+    
+    var geometry5 = new THREE.BoxGeometry(80,10,1);
+    var walls = new THREE.Mesh(geometry5, material_bricks );
+    var build = new THREE.Object3D();
+    var wall = new THREE.Mesh(geometry5, material_bricks1 );
+    
+    worldModel.add(build);
+    build.add(wall);
+    wall.scale.set(0.74,1.5,1);
+    wall.position.y = 8;
+    wall.position.z = -96.5;
+    
+    build.add(wall.clone());
+    wall.scale.set(0.3,1.5,1);
+    wall.position.x = -18;
+    wall.position.z = -53.5;
+    
+    build.add(wall.clone());
+    wall.position.x = 18;
+    
+    build.add(wall.clone());
+    wall.scale.set(0.55,1.5,1);
+    wall.rotateY(1.5707963268);
+    wall.position.x = 30;
+    wall.position.z = -75;
+    
+    build.add(wall.clone());
+    wall.position.x = -30;
+    
+    worldModel.add(build.clone());
+    build.rotateY(1.5707963268)
+    
+    
+    
+    worldModel.add(walls);
+    walls.position.y = 4.5;
+    walls.position.z = -105;
+    
+    worldModel.add(walls.clone());
+    walls.rotateY(1.1344640138);
+    walls.position.x = -149.5;
+    walls.position.z = -42;
+    
+    worldModel.add(walls.clone());
+    walls.rotateY(0.436332313);
+    walls.scale.set(0.9,1,1);
+    walls.position.x = -40;
+    walls.position.z = -70;
+    
+    worldModel.add(walls.clone());
+    walls.position.x = 40;
+    
+    worldModel.add(walls.clone());
+    walls.rotateY(-1.2217304764);
+    walls.scale.set(1.32,1,1);
+    walls.position.x = 89;
+    walls.position.z = -50.7;
+    
+    worldModel.add(walls.clone());
+    walls.scale.set(1.73,1,1);
+    walls.position.x = 101.5;
+    walls.position.z = 31.5;
+    
+    worldModel.add(walls.clone());
+    walls.rotateY(-0.7853981634);
+    walls.position.x = -105;
+    walls.position.z = 23.5;
+    
+    worldModel.add(walls.clone());
+    walls.scale.set(1.27,1,1);
+    walls.position.x = -87;
+    walls.position.z = -57;
+    
+    worldModel.add(walls.clone());
+    walls.rotateY(-0.7853981634)
+    walls.scale.set(1.02,1,1);
+    walls.position.x = 153;
+    walls.position.z = -31;
+    
+    
+    
+    scene.add(worldModel);
+
+} // end function createWorld()
+
+
+/**
+ *  This function is called once for each frame of the animation, before
+ *  the render() function is called for that frame.  It updates any
+ *  animated properties.  The value of the global variable frameNumber
+ *  is incrementd 1 before this function is called.
+ */
+function updateForFrame() {
+
+    // Update size and rotation of tempObject.  DELETE THIS!
+    /*var loopFrame = frameNumber % 240;
+    if (loopFrame > 120) {
+        loopFrame = 240 - loopFrame;
+    }
+    var scaleFactor = 1 + loopFrame/120;
+    diskworldModel.scale.set(scaleFactor,scaleFactor,scaleFactor);*/
+    worldModel.rotation.y += 0.01;
+
+
+}
+
+
+/* ---------------------------- MOUSE AND ANIMATION SUPPORT ------------------
+
+/**
+ *  This page uses THREE.OrbitControls to let the user use the mouse to rotate
+ *  the view.  OrbitControls are designed to be used during an animation, where
+ *  the rotation is updated as part of preparing for the next frame.  The scene
+ *  is not automatically updated just because the user drags the mouse.  To get
+ *  the rotation to work without animation, I add another mouse listener to the
+ *  canvas, just to call the render() function when the user drags the mouse.
+ *  The same thing holds for touch events -- I call render for any mouse move
+ *  event with one touch.
+ */
+function installOrbitControls() {
+    controls = new THREE.OrbitControls(camera,canvas);
+    controls.noPan = true;
+    controls.noZoom = true;
+    controls.staticMoving = true;
+    function move() {
+        controls.update();
+        if (! animating) {
+            render();
+        }
+    }
+    function down() {
+        document.addEventListener("mousemove", move, false);
+    }
+    function up() {
+        document.removeEventListener("mousemove", move, false);
+    }
+    function touch(event) {
+        if (event.touches.length == 1) {
+            move();
+        }
+    }
+    canvas.addEventListener("mousedown", down, false);
+    canvas.addEventListener("touchmove", touch, false);
+    
+    controls.keys = {
+	LEFT: 37, //left arrow
+	UP: 38, // up arrow
+	RIGHT: 39, // right arrow
+	BOTTOM: 40 // down arrow
+    }
+}
+
+/*  Called when user changes setting of the Animate checkbox. */
+function doAnimateCheckbox() {
+   var run = document.getElementById("animateCheckbox").checked;
+   if (run != animating) {
+       animating = run;
+       if (animating) {
+           requestAnimationFrame(doFrame);
+       }
+   }
+}
+
+/*  Drives the animation, called by system through requestAnimationFrame() */
+function doFrame() {
+    if (animating) {
+        frameNumber++;
+        updateForFrame();
+        render();
+        requestAnimationFrame(doFrame);
+    }
+}
+
+/*----------------------------- INITIALIZATION ----------------------------------------
+
+/**
+ *  This function is called by the onload event so it will run after the
+ *  page has loaded.  It creates the renderer, canvas, and scene objects,
+ *  calls createWorld() to add objects to the scene, and renders the
+ *  initial view of the scene.  If an error occurs, it is reported.
+ */
+function init() {
+    try {
+        canvas = document.getElementById("glcanvas");
+        renderer = new THREE.WebGLRenderer({
+            canvas: canvas,
+            antialias: true,
+            alpha: false
+        });
+    }
+    catch (e) {
+        document.getElementById("message").innerHTML="<b>Sorry, an error occurred:<br>" +
+                e + "</b>";
+        return;
+    }
+    document.getElementById("animateCheckbox").checked = false;
+    document.getElementById("animateCheckbox").onchange = doAnimateCheckbox;
+    createWorld();
+    installOrbitControls();
+    render();
+}
+
+</script>
+</head>
+<body onload="init()">
+
+<h2>Three.js Demo</h2>
+
+<noscript>
+   <p style="color: #AA0000; font-weight: bold">Sorry, but this page requires JavaScript!</p>
+</noscript>
+
+<p style="color:#AA0000; font-weight: bold" id="message">
+</p>
+
+<p>
+   <label><input type="checkbox" id="animateCheckbox"><b>Animate</b></label>
+   <b style="margin-left:50px">Use the mouse to rotate the model.</b>
+</p>
+
+<div id="canvas-holder" style="float:left; border: thin solid black; background-color: white">
+   <canvas width=1200 height=600 id="glcanvas"></canvas>
+</div>
+
+</body>
+</html>
+=======
 <!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
@@ -503,3 +1011,4 @@ function init() {
 
 </body>
 </html>
+>>>>>>> 8f8495d6c56cb79114e4d886668a421db3f94a2c
