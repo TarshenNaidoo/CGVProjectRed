@@ -4,6 +4,7 @@
 <title>CS 424 Lab 9</title>
 <script src="three.js"></script>
 <script src="OrbitControls.js"></script>
+<script src="GLTFLoader.js"></script>
 <script>
 
 "use strict";
@@ -16,7 +17,7 @@ var controls;  // An OrbitControls object that is used to implement
 
 var animating = false;  // Set to true when an animation is in progress.
 var frameNumber = 0;  // Frame number is advanced by 1 for each frame while animating.
-var material1;
+var material_concrete2;
 var worldModel;
 
 
@@ -52,61 +53,61 @@ function createWorld() {
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
     texture.repeat.set( 1, 1 );
-    material1 = new THREE.MeshBasicMaterial({map: texture})
+    material_concrete2 = new THREE.MeshBasicMaterial({map: texture})
     
     var texture = new THREE.TextureLoader().load( "textures/grass.jpg" );
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
     texture.repeat.set( 1, 1 );
-    var material2 = new THREE.MeshBasicMaterial({map: texture});
+    var material_grass = new THREE.MeshBasicMaterial({map: texture});
     
     var texture = new THREE.TextureLoader().load( "textures/concrete3.jpg" );
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
     texture.repeat.set( 1, 1 );
-    var material3 = new THREE.MeshBasicMaterial({map: texture});
+    var material_concrete3 = new THREE.MeshBasicMaterial({map: texture});
     
     var texture = new THREE.TextureLoader().load( "textures/building1.jpg" );
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
     texture.repeat.set( 1, 1 );
-    var material4 = new THREE.MeshBasicMaterial({map: texture});
+    var material_building1 = new THREE.MeshBasicMaterial({map: texture});
     
     var texture = new THREE.TextureLoader().load( "textures/granite.jpg" );
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
     texture.repeat.set( 1, 1 );
-    var material5 = new THREE.MeshBasicMaterial({map: texture});
+    var material_granite = new THREE.MeshBasicMaterial({map: texture});
     
     var texture = new THREE.TextureLoader().load( "textures/bricks.jpeg" );
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
     texture.repeat.set( 3, 1 );
-    var material6 = new THREE.MeshBasicMaterial({map: texture});
+    var material_bricks = new THREE.MeshBasicMaterial({map: texture});
     
     var texture = new THREE.TextureLoader().load( "textures/building2.jpg" );
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
     texture.repeat.set( 1, 1 );
-    var material7 = new THREE.MeshBasicMaterial({map: texture});
+    var material_building2 = new THREE.MeshBasicMaterial({map: texture});
     
     var texture = new THREE.TextureLoader().load( "textures/granite1.jpg" );
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
     texture.repeat.set( 1, 1 );
-    var material8 = new THREE.MeshBasicMaterial({map: texture});
+    var material_granite1 = new THREE.MeshBasicMaterial({map: texture});
     
     var texture = new THREE.TextureLoader().load( "textures/granite2.jpg" );
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
     texture.repeat.set( 1, 1 );
-    var material9 = new THREE.MeshBasicMaterial({map: texture});
+    var material_granite2 = new THREE.MeshBasicMaterial({map: texture});
     
     var texture = new THREE.TextureLoader().load( "textures/bricks1.jpg" );
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
     texture.repeat.set( 2, 1 );
-    var material10 = new THREE.MeshBasicMaterial({map: texture});
+    var material_bricks1 = new THREE.MeshBasicMaterial({map: texture});
 
     //------------------- Create the scene's visible objects ----------------------
     
@@ -115,24 +116,24 @@ function createWorld() {
                     // --------- Ground ---------//
     
     var geometry = new THREE.BoxGeometry( 200, 1, 80 );
-    var ground = new THREE.Mesh( geometry, material2 );
+    var ground = new THREE.Mesh( geometry, material_grass );
     
     var geometry1 = new THREE.CircleGeometry( 35, 32 );
     var geometry2 = new THREE.CircleGeometry( 40, 32 );
     
-    var circle = new THREE.Mesh( geometry1, material1 );
-    var circle2 = new THREE.Mesh( geometry2, material3 );
+    var circle = new THREE.Mesh( geometry1, material_concrete2 );
+    var circle2 = new THREE.Mesh( geometry2, material_concrete3 );
     
     var geometry4 = new THREE.PlaneGeometry( 30, 60, 32 );
-    var plane = new THREE.Mesh( geometry4, material1 );
-    var floor = new THREE.Mesh( geometry4, material5 );
-    var floor1 = new THREE.Mesh( geometry4, material8);
-    var floor2 = new THREE.Mesh( geometry4, material9);
+    var plane = new THREE.Mesh( geometry4, material_concrete2 );
+    var floor = new THREE.Mesh( geometry4, material_granite );
+    var floor1 = new THREE.Mesh( geometry4, material_granite1);
+    var floor2 = new THREE.Mesh( geometry4, material_granite2);
     
     worldModel.add(plane);
     plane.rotateX(-1.5707963268);
     plane.rotateZ(1.1344640138);
-    plane.position.y = 0.7;
+    plane.position.y = 0.8;
     plane.position.x = -55;
     plane.position.z = 25;
     
@@ -166,7 +167,7 @@ function createWorld() {
     
     worldModel.add(circle2);
     circle2.rotateX(-1.5707963268);
-    circle2.position.y = 0.8;
+    circle2.position.y = 0.9;
     circle2.position.x = -2.5;
     circle2.position.z = 60;
     
@@ -178,25 +179,28 @@ function createWorld() {
     
     ground.rotateY(-0.436332313);
     ground.position.x = -59;
+    ground.position.y = 0.2;
     worldModel.add( ground );
     
     worldModel.add(ground.clone())
     ground.rotateY(-2.3561944902);
     ground.position.x = 59;
     ground.position.z = 3.5;
+	ground.position.y = 0.15
     
     worldModel.add(ground.clone());
     ground.rotateY(1.2217304764);
     ground.scale.set(0.75,1,1);
     ground.position.x = 0;
     ground.position.z = -30;
+	ground.position.y = 0.01
     
 
                     // --------- Houses ---------//
     
     var geometry3 = new THREE.BoxGeometry(15,15,10);
-    var house = new THREE.Mesh(geometry3, material4 );
-    var house1 = new THREE.Mesh(geometry3, material7);
+    var house = new THREE.Mesh(geometry3, material_building1 );
+    var house1 = new THREE.Mesh(geometry3, material_building2);
     
     worldModel.add(house);
     house.position.x = -15;
@@ -276,9 +280,9 @@ function createWorld() {
                     // --------- Walls ---------//
     
     var geometry5 = new THREE.BoxGeometry(80,10,1);
-    var walls = new THREE.Mesh(geometry5, material6 );
+    var walls = new THREE.Mesh(geometry5, material_bricks );
     var build = new THREE.Object3D();
-    var wall = new THREE.Mesh(geometry5, material10 );
+    var wall = new THREE.Mesh(geometry5, material_bricks1 );
     
     worldModel.add(build);
     build.add(wall);
