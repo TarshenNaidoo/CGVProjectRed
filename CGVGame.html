@@ -578,6 +578,7 @@
 
                 scene.add(worldModel);
 
+                //hand and gun player model added to camera
                 let loader = new GLTFLoader();
                 loader.load(
                     'models/handGunWithHand1.glb',
@@ -602,6 +603,19 @@
 
                     }
                 );
+
+                //zombies
+
+                let zLoader = new GLTFLoader();
+                zLoader.load(
+                    'models/zombie1.glb',
+                    function (zombie1) {
+                        let zombie = zombie1.scene;
+                        //zombie.position.y = 10;
+                        zombie.scale.set(9,9,9);
+                        scene.add(zombie);
+                    }
+                )
 
             }
 
@@ -659,7 +673,6 @@
                         canJump = true;
 
                     }
-
 
                     prevTime = time;
                 }
