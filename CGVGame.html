@@ -655,6 +655,7 @@
             function animate() {
 
                 requestAnimationFrame(animate);
+                let time = performance.now();
                 if (controls.isLocked === true) {
 
                     rayCaster.ray.origin.copy((controls.getObject().position));
@@ -664,17 +665,18 @@
 
                     let onObject = intersections.length > 0;
 
-                    let time = performance.now();
                     let delta = (time - prevTime) / 1000;
 
-                    velocity.x -= velocity.x * 10 * delta;
-                    velocity.z -= velocity.z * 10 * delta;
 
-                    velocity.y -= 9.8 * 50 * delta; // 100 = mass
+                    velocity.x -= velocity.x * 10 * delta; //approximates to 0 with no movement input
+                    velocity.z -= velocity.z * 10 * delta; //approximates to 0 with no movement input
 
-                    direction.z = Number(moveForward) - Number(moveBackward);
-                    direction.x = Number(moveRight) - Number(moveLeft);
-                    direction.normalize();
+                    let mass = 50;
+                    velocity.y -= 9.8 * mass * delta; // simulates gravity
+
+                    direction.z = Number(moveForward) - Number(moveBackward); //gets either 1,0,-1 representing forward direction
+                    direction.x = Number(moveRight) - Number(moveLeft); //gets either 1,0,-1 representing right direction
+                    direction.normalize(); //gets final direction x and z direction both not 0
 
                     if ( moveForward || moveBackward ) velocity.z -= direction.z * 400.0 * delta;
                     if ( moveLeft || moveRight ) velocity.x -= direction.x * 400.0 * delta;
@@ -699,9 +701,10 @@
                         canJump = true;
 
                     }
+                    //zombie movement
 
-                    prevTime = time;
                 }
+                prevTime = time;
             renderer.render(scene, camera);
             }
         </script>
