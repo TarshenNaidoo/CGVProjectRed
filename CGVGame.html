@@ -609,12 +609,17 @@
 
                 //zombies
 
+                //let zLoader = new GLTFLoader();
                 let zLoader = new ObjectLoader();
                 zLoader.load(
                     "models/zombieReworked.json",
+                    //"models/zombie1.glb",
                     function (zombie) {
-                        zombie.scale.set(7,7,7);
+                    //function (gltf) {
+                        //let zombie = gltf.scene;
                         zombie.position.y = 1.2;
+                        zombie.scale.set(9,9,9);
+
                         zombie.position.z = -70;
                         let i;
                         let zomNum = 5;
@@ -628,6 +633,7 @@
                             zombies.push(newZombie);
                             scene.add(newZombie);
                         }
+
                     },
                     function (xhr) {
                         console.log('Zombie loading: ' + (xhr.loaded/xhr.total * 100) + '%');
