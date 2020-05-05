@@ -69,7 +69,9 @@
             let camera, scene, renderer, controls;
 
             let objects = [];
-            let zombies = [];
+            let zombieArray = [];
+            let zombieModels = new THREE.Object3D();
+            let isMoveZombies = false;
 
             let rayCaster;
             let moveForward = false;
@@ -126,10 +128,7 @@
                     blocker.style.display = 'none';
                     instructions.style.display = 'none';
 
-                    moveForward = false;
-                    moveRight = false;
-                    moveLeft = false;
-                    moveBackward = false;
+                    console.log(moveForward);
 
                 });
 
@@ -178,13 +177,22 @@
                             canJump = false;
                             break;
 
-                        //case 69: //esc
-                        //   controls.unlock();
-                        //    break;
+                        case 80:
+                            if (isMoveZombies){
+                                isMoveZombies = false;
+                                console.log("Zombie status: stationary");
+                            } else {
+                                isMoveZombies = true;
+                                console.log("Zombie status: moving");
+                            }
+                            console.log("Zombie 1: x " + zombieModels.children[0].position.x + ", y " + zombieModels.children[0].position.z);
+
+                            break;
                     }
                 };
 
                 let onKeyUp = function (event) {
+
                     switch (event.keyCode) {
 
                         case 38: // up
@@ -225,7 +233,6 @@
                 document.addEventListener('keydown', onKeyDown, false);
                 document.addEventListener('keyup', onKeyUp, false);
                 document.addEventListener('click', shoot, false);
-
 
                 rayCaster = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, - 1, 0 ), 0, 10 );
 
@@ -630,8 +637,8 @@
                             newZombie.position.x = i;
                             newZombie.position.z += 2*zombieAlternate;
                             zombieAlternate *= -1;
-                            zombies.push(newZombie);
-                            scene.add(newZombie);
+                            zombieArray.push(newZombie);
+                            zombieModels.add(newZombie);
                         }
 
                     },
@@ -642,6 +649,7 @@
                         console.error('Error loading Zombie');
                     }
                 );
+                scene.add(zombieModels);
 
             }
 
@@ -650,6 +658,25 @@
                 camera.updateProjectionMatrix();
 
                 renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+
+            function moveZombies () {
+                for (let i = 0; i < zombieModels.length ; i++) {
+                    let zDirection = new THREE.Vector3();
+                    zDirection.x = camera.position.x - zombieModels.children[i].position.x;
+                    if (zDirection.x !== 0) {
+                        zDirection.x /= Math.abs(zDirection.x);
+                    }
+                    zDirection.z = camera.position.z - zombieModels.children[i].position.z;
+                    if (zDirection.z !== 0) {
+                        zDirection.z /= Math.abs(zDirection.z);
+                    }
+                    zDirection.normalize();
+                    let speed = 10;
+                    zombieModels.children[i].position.x += zDirection.x * speed;
+                    zombieModels.children[i].position.z += zDirection.z * speed;
+                }
+
             }
 
             function animate() {
@@ -701,7 +728,10 @@
                         canJump = true;
 
                     }
-                    //zombie movement
+
+                    if (isMoveZombies){
+                        moveZombies();
+                    }
 
                 }
                 prevTime = time;
