@@ -178,10 +178,10 @@
                         case 80:
                             if (isMoveZombies){
                                 isMoveZombies = false;
-                                //console.log("Zombie status: stationary");
+                                console.log("Zombie status: stationary");
                             } else {
                                 isMoveZombies = true;
-                                //console.log("Zombie status: moving");
+                                console.log("Zombie status: moving");
                             }
                             //console.log("Zombie 1: x " + zombieModels.children[0].position.x + ", y " + zombieModels.children[0].position.z);
 
@@ -650,7 +650,7 @@
 
                         zombie.position.z = -210;
                         let i;
-                        let zomNum = 5;
+                        let zomNum = 1;
                         let posCon = 6;
                         let zombieAlternate = 1;
                         for (i = (-zomNum/2)*posCon ; i < (zomNum/2)*posCon ; i += posCon) {
@@ -682,18 +682,14 @@
             }
 
             function moveZombies () {
-                for (let i = 0; i < zombieModels.length ; i++) {
+                for (let i = 0; i < zombieModels.children.length ; i++) {
                     let zDirection = new THREE.Vector3();
                     zDirection.x = camera.position.x - zombieModels.children[i].position.x;
-                    if (zDirection.x !== 0) {
-                        zDirection.x /= Math.abs(zDirection.x);
-                    }
+
                     zDirection.z = camera.position.z - zombieModels.children[i].position.z;
-                    if (zDirection.z !== 0) {
-                        zDirection.z /= Math.abs(zDirection.z);
-                    }
+
                     zDirection.normalize();
-                    let speed = 10;
+                    let speed = 0.1;
                     zombieModels.children[i].position.x += zDirection.x * speed;
                     zombieModels.children[i].position.z += zDirection.z * speed;
                 }
