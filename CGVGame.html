@@ -11,7 +11,7 @@
                 position:absolute;
                 width:100%;
                 height: 100%;
-                background-color: rgba(30, 30, 30, 0.8);
+                background-color: rgba(30, 30, 30, 1);
             }
 
             #instructions {
@@ -54,7 +54,8 @@
                 <br /><br />
                 Move:WASD<br />
                 Look:Mouse<br />
-                Pause:ESC
+                Pause:ESC<br />
+                Toggle zombie movement: P <br />
             </div>
         </div>
 
@@ -71,6 +72,8 @@
             let objects = [];
             let zombieArray = [];
             let zombieModels = new THREE.Object3D();
+            let zomNum = 1;
+            let zombieScale = 6;
             let isMoveZombies = false;
 
             let rayCaster;
@@ -98,8 +101,8 @@
                 camera.rotation.y = Math.PI;
 
                 scene = new THREE.Scene();
-                scene.background = new THREE.Color (0xffffff);
-                scene.fog = new THREE.Fog(0xffffff, 0, 750);
+                scene.background = new THREE.Color (0x87ceeb);
+                scene.fog = new THREE.Fog(0xffffff, 0, 250);
 
                 let light = new THREE.HemisphereLight(0xeeeeee, 0x777777, 0.75);
                 light.position.set (0.5,1,0.75);
@@ -112,29 +115,13 @@
                 sun.castShadow = false;
                 sun.receiveShadow = false;
 
-                let sunLight = new THREE.PointLight(0xffffff, 2);
+                let sunLight = new THREE.PointLight(0xffffff, 2,0);
                 sun.add(sunLight);
-
+                sun.castShadow = false;
+                sun.receiveShadow = false;
                 scene.add(sun);
 
                 controls = new PointerLockControls (camera, document.body);
-
-                let blocker = document.getElementById('blocker');
-                let instructions = document.getElementById('instructions');
-
-                instructions.addEventListener('click', function (){controls.lock();}, false);
-
-                controls.addEventListener('lock', function() {
-                    blocker.style.display = 'none';
-                    instructions.style.display = 'none';
-
-                });
-
-                controls.addEventListener('unlock', function() {
-                    blocker.style.display = 'block';
-                    instructions.style.display = '';
-
-                })
 
                 scene.add (controls.getObject());
 
@@ -178,13 +165,9 @@
                         case 80:
                             if (isMoveZombies){
                                 isMoveZombies = false;
-                                console.log("Zombie status: stationary");
                             } else {
                                 isMoveZombies = true;
-                                console.log("Zombie status: moving");
                             }
-                            //console.log("Zombie 1: x " + zombieModels.children[0].position.x + ", y " + zombieModels.children[0].position.z);
-
                             break;
                     }
                 };
@@ -236,6 +219,8 @@
 
                 addObjects();
                 renderer = new THREE.WebGLRenderer({antialias:true});
+                //renderer.shadowMap.enabled = true;
+                renderer.toneMapping = THREE.ReinhardToneMapping;
                 renderer.setPixelRatio(window.devicePixelRatio);
                 renderer.setSize(window.innerWidth, window.innerHeight);
                 document.body.appendChild(renderer.domElement);
@@ -621,16 +606,17 @@
                         gun.rotation.x = Math.PI/2;
                         gun.rotation.z = Math.PI/2;
                         camera.add(gun);
+                        checkIfLoaded();
 
                     },
                     function ( xhr ) {
 
-                        console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+                        console.log('Player loading: ' + (xhr.loaded/xhr.total * 100) + '%');
 
                     },
                     function ( error ) {
 
-                        console.error( 'An error happened' );
+                        console.error( 'Error loading gun: ' + error);
 
                     }
                 );
@@ -646,11 +632,10 @@
                     //function (gltf) {
                         //let zombie = gltf.scene;
                         zombie.position.y = 3.2;
-                        zombie.scale.set(9,9,9);
+                        zombie.scale.set(zombieScale,zombieScale,zombieScale);
 
                         zombie.position.z = -210;
                         let i;
-                        let zomNum = 1;
                         let posCon = 6;
                         let zombieAlternate = 1;
                         for (i = (-zomNum/2)*posCon ; i < (zomNum/2)*posCon ; i += posCon) {
@@ -661,16 +646,17 @@
                             zombieArray.push(newZombie);
                             zombieModels.add(newZombie);
                         }
+                        scene.add(zombieModels);
+                        checkIfLoaded();
 
                     },
                     function (xhr) {
                         console.log('Zombie loading: ' + (xhr.loaded/xhr.total * 100) + '%');
                     },
                     function (err) {
-                        console.error('Error loading Zombie');
+                        console.error('Error loading Zombie: ' + err);
                     }
                 );
-                scene.add(zombieModels);
 
             }
 
@@ -687,11 +673,44 @@
                     zDirection.x = camera.position.x - zombieModels.children[i].position.x;
 
                     zDirection.z = camera.position.z - zombieModels.children[i].position.z;
-
+                    //checks if Zombie is close enough then stops moving
+                    let radius = Math.sqrt(Math.pow(zDirection.x,2) + Math.pow(zDirection.z,2));
+                    if (radius < 5){
+                        return;
+                    }
+                    //
                     zDirection.normalize();
+                    zombieModels.children[i].lookAt(camera.position.x, zombieModels.children[i].position.y, camera.position.z);
+
                     let speed = 0.1;
                     zombieModels.children[i].position.x += zDirection.x * speed;
                     zombieModels.children[i].position.z += zDirection.z * speed;
+                }
+
+            }
+
+            function checkIfLoaded() {
+                if (scene.children.length === 5){
+                    if (camera.children.length === 1){
+                        let instructions = document.getElementById('instructions');
+                        let blocker = document.getElementById('blocker');
+                        instructions.addEventListener('click', function (){controls.lock();}, false);
+
+                        controls.addEventListener('lock', function() {
+                            blocker.style.display = 'none';
+                            instructions.style.display = 'none';
+
+                        });
+
+                        controls.addEventListener('unlock', function() {
+                            blocker.style.display = 'block';
+                            instructions.style.display = '';
+
+                        });
+                        //instructions.innerText += "loaded";
+                    }
+                } else {
+
                 }
 
             }
