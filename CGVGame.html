@@ -1,62 +1,60 @@
 <!DOCTYPE html>
-<!-- saved from url=(0034)http://localhost:8080/CGVGame.html -->
-<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>CGVGame</title>
-        
-        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0,
-        maximum-scale=1.0">
-        <link type="text/css" rel="stylesheet" href="./css/main.css">
-        <style>
-            #blocker {
-                position:absolute;
-                width:100%;
-                height: 100%;
-                background-color: rgba(30, 30, 30, 1);
-            }
+<html lang="en">
+<head>
+    <title>CGVGame</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0,
+    maximum-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="./css/main.css">
+    <style>
+        #blocker {
+            position:absolute;
+            width:100%;
+            height: 100%;
+            background-color: rgba(30, 30, 30, 1);
+        }
 
-            #instructions {
-                width:100%;
-                height: 100%;
+        #instructions {
+            width:100%;
+            height: 100%;
 
-                display: -webkit-box;
-                display: -moz-box;
-                //display: -box;
+            display: -webkit-box;
+            display: -moz-box;
+            //display: -box;
 
-                -webkit-box-orient: horizontal;
-                -moz-box-orient: horizontal;
-                //box-orient: horizontal;
+            -webkit-box-orient: horizontal;
+            -moz-box-orient: horizontal;
+            //box-orient: horizontal;
 
-                -webkit-box-pack: center;
-                -moz-box-pack: center;
-                //box-pack: center;
+            -webkit-box-pack: center;
+            -moz-box-pack: center;
+            //box-pack: center;
 
-                -webkit-box-align: center;
-                -moz-box-align: center;
-                //box-align: center;
+            -webkit-box-align: center;
+            -moz-box-align: center;
+            //box-align: center;
 
-                color: #ffffff;
-                text-align: center;
-                font-family: Arial,serif;
-                font-size: 14px;
-                line-height: 24px;
+            color: #ffffff;
+            text-align: center;
+            font-family: Arial,serif;
+            font-size: 14px;
+            line-height: 24px;
 
-                cursor: pointer;
-
-
-            }
-        </style>
-    <style type="text/css"></style></head>
+            cursor: pointer;
+        }
+    </style>
     <body>
-        <div id="blocker" style="display: block;">
+        <div id="blocker">
 
-            <div id="instructions" style="">
+            <div id="instructions">
                 <span style="font-size:30px">Click to play level</span>
-                <br><br>
-                Move:WASD<br>
-                Look:Mouse<br>
-                Pause:ESC<br>
-                Toggle zombie movement: P <br>
+                <br /><br />
+                Move:WASD<br/>
+                Look:Mouse<br/>
+                Pause:ESC<br/>
+                Toggle zombie movement: P <br/>
             </div>
+
         </div>
 
         <script type="module">
@@ -64,12 +62,12 @@
 
             import { PointerLockControls } from './js/three.js-master/examples/jsm/controls/PointerLockControls.js';
 
-            import './js/three.js-master/build/three.module.js';
             import {GLTFLoader} from "./js/three.js-master/examples/jsm/loaders/GLTFLoader.js";
             import {ObjectLoader} from "./js/three.js-master/build/three.module.js";
             let camera, scene, renderer, controls;
 
             let objects = [];
+
             let zombieArray = [];
             let zombieModels = new THREE.Object3D();
             let zomNum = 1;
@@ -77,6 +75,7 @@
             let isMoveZombies = false;
 
             let rayCaster;
+
             let moveForward = false;
             let moveBackward = false;
             let moveLeft = false;
@@ -86,8 +85,6 @@
             let prevTime = performance.now();
             let velocity = new THREE.Vector3();
             let direction = new THREE.Vector3();
-            let vertex = new THREE.Vector3();
-            let color = new THREE.Color();
 
 
             init();
@@ -102,7 +99,7 @@
 
                 scene = new THREE.Scene();
                 scene.background = new THREE.Color (0x87ceeb);
-                scene.fog = new THREE.Fog(0xffffff, 0, 250);
+                scene.fog = new THREE.Fog(0xffffff, 0, 750);
 
                 let light = new THREE.HemisphereLight(0xeeeeee, 0x777777, 0.75);
                 light.position.set (0.5,1,0.75);
@@ -122,6 +119,29 @@
                 scene.add(sun);
 
                 controls = new PointerLockControls (camera, document.body);
+
+                let blocker = document.getElementById( 'blocker' );
+                let instructions = document.getElementById( 'instructions' );
+
+                instructions.addEventListener( 'click', function () {
+
+                    controls.lock();
+
+                }, false );
+
+                controls.addEventListener( 'lock', function () {
+
+                    instructions.style.display = 'none';
+                    blocker.style.display = 'none';
+
+                } );
+
+                controls.addEventListener( 'unlock', function () {
+
+                    blocker.style.display = 'block';
+                    instructions.style.display = '';
+
+                } );
 
                 scene.add (controls.getObject());
 
@@ -227,7 +247,6 @@
 
                 window.addEventListener('resize', onWindowResize, false);
 
-                document.addEventListener('click', shoot, false);
             }
 
             function addObjects() {
@@ -606,7 +625,7 @@
                         gun.rotation.x = Math.PI/2;
                         gun.rotation.z = Math.PI/2;
                         camera.add(gun);
-                        checkIfLoaded();
+                        //checkIfLoaded();
 
                     },
                     function ( xhr ) {
@@ -647,7 +666,7 @@
                             zombieModels.add(newZombie);
                         }
                         scene.add(zombieModels);
-                        checkIfLoaded();
+                        //checkIfLoaded();
 
                     },
                     function (xhr) {
@@ -685,32 +704,6 @@
                     let speed = 0.1;
                     zombieModels.children[i].position.x += zDirection.x * speed;
                     zombieModels.children[i].position.z += zDirection.z * speed;
-                }
-
-            }
-
-            function checkIfLoaded() {
-                if (scene.children.length === 5){
-                    if (camera.children.length === 1){
-                        let instructions = document.getElementById('instructions');
-                        let blocker = document.getElementById('blocker');
-                        instructions.addEventListener('click', function (){controls.lock();}, false);
-
-                        controls.addEventListener('lock', function() {
-                            blocker.style.display = 'none';
-                            instructions.style.display = 'none';
-
-                        });
-
-                        controls.addEventListener('unlock', function() {
-                            blocker.style.display = 'block';
-                            instructions.style.display = '';
-
-                        });
-                        //instructions.innerText += "loaded";
-                    }
-                } else {
-
                 }
 
             }
@@ -768,11 +761,11 @@
                     if (isMoveZombies){
                         moveZombies();
                     }
-
+                    console.log("yes")
                 }
                 prevTime = time;
-            renderer.render(scene, camera);
+                renderer.render(scene, camera);
             }
         </script>
-    
-<canvas width="1280" height="577" style="width: 1280px; height: 577px;"></canvas></body></html>
+    </body>
+</html>
