@@ -1,3 +1,8 @@
+/**
+ * @author David Infante, Jose Ariza
+ *
+ */
+
 class Crosshair extends THREE.Object3D {
 
     constructor () {
