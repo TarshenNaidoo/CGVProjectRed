@@ -5,8 +5,96 @@
 <head>
     <meta charset="UTF-8">
     <title>Z-Game</title>
+    <script type="text/javascript" src="exLibs/three.js"></script>
+    <script type="text/javascript" src="exLibs/jquery-1.9.0.js"></script>
+    <script type="text/javascript" src="exLibs/stats.js"></script>
+    <script type="text/javascript" src="exLibs/dat.gui.js"></script>
+    <script type="text/javascript" src="exLibs/PointerLockControls.js"></script>
+    <script type="text/javascript" src="exLibs/OBJLoader.js"></script>
+    <script type="text/javascript" src="exLibs/MTLLoader.js"></script>
+    <script type="text/javascript" src="exLibs/physi.js"></script>
+    <script type="text/javascript" src="exLibs/howler.js"></script>
+    <script type="text/javascript" src="js/gameFiles/zombies.js"></script>
+    <script type="text/javascript" src="js/gameFiles/crosshair.js"></script>
+    <script type="text/javascript" src="js/gameFiles/avatar.js"></script>
+    <script type="text/javascript" src="js/gameFiles/bullets.js"></script>
+    <script type="text/javascript" src="js/gameFiles/gameScene.js"></script>
+    <script type="text/javascript" src="js/gameFiles/gameStartScript.js"></script>
+
+    <div id="blocker">
+        <div id="instructions">
+            <span id="title" style="font-size:30px">Click to start game</span>
+            <br/>
+            Move: WASD
+            <br/>
+            Jump: Space
+            <br/>
+            Left click: Shoot
+            <br/>
+            Look: Mouse
+            <br/>
+            Pause: ESC
+        </div>
+    </div>
+
+    <style>
+        body{
+            margin: 0;
+            overflow: hidden;
+            cursor: none;
+        }
+
+        #blocker {
+
+            position: absolute;
+
+            width: 100%;
+            height: 100%;
+
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        #instructions {
+
+            width: 100%;
+            height: 100%;
+
+            display: -webkit-box;
+            display: -moz-box;
+            display: box;
+
+            -webkit-box-orient: horizontal;
+            -moz-box-orient: horizontal;
+            box-orient: horizontal;
+
+            -webkit-box-pack: center;
+            -moz-box-pack: center;
+            box-pack: center;
+
+            -webkit-box-align: center;
+            -moz-box-align: center;
+            box-align: center;
+
+            color: #ffffff;
+            text-align: center;
+
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
+
+<div id="Stats-output">
+
+</div>
+
+<div style="position:absolute; left:100px; top:10px" id="Messages">
+
+</div>
+
+<div id="WebGL-output">
+
+</div>
 
 <h1 align="center"><span style="color:crimson"> Z-GAME </span></h1>
 <a href = "menu/Options.html"><h2 align="center"><span style="color: rebeccapurple" > Options </span> </h2></a>
