@@ -43,12 +43,14 @@
             cursor: pointer;
         }
     </style>
+
     <body>
         <div id="blocker">
 
             <div id="instructions">
                 <span style="font-size:30px">Click to play level</span>
                 <br /><br />
+                <a href = "menu/Resume.html"><span > Main menu </span></a><br/>
                 Move:WASD<br/>
                 Look:Mouse<br/>
                 Pause:ESC<br/>
@@ -87,6 +89,7 @@
             let direction = new THREE.Vector3();
 
 
+
             init();
             animate();
 
@@ -108,7 +111,7 @@
                 let sunGeo = new THREE.SphereGeometry(5,32,32);
                 let sunMat = new THREE.MeshBasicMaterial({color: 0xFFFF00});
                 let sun = new THREE.Mesh(sunGeo, sunMat);
-                sun.position.y = 60;
+                sun.position.y = 120;
                 sun.castShadow = false;
                 sun.receiveShadow = false;
 
@@ -183,11 +186,7 @@
                             break;
 
                         case 80:
-                            if (isMoveZombies){
-                                isMoveZombies = false;
-                            } else {
-                                isMoveZombies = true;
-                            }
+                            isMoveZombies = !isMoveZombies;
                             break;
                     }
                 };
@@ -229,7 +228,7 @@
 
                 let shoot = function () {
                     console.log("bang!");
-                }
+                };
 
                 document.addEventListener('keydown', onKeyDown, false);
                 document.addEventListener('keyup', onKeyUp, false);
@@ -250,6 +249,24 @@
             }
 
             function addObjects() {
+
+                let textureURLs = [ // URLs of the six faces of the cube map
+                    "src/textures/skybox/posx.jpg",
+                    "src/textures/skybox/negx.jpg",
+                    "src/textures/skybox/posy.jpg",
+                    "textures/grass.jpg",
+                    "src/textures/skybox/posz.jpg",
+                    "src/textures/skybox/negz.jpg" ];
+
+                let materials = [];
+                for (let i = 0; i < 6; i++) {
+                    let texture = new THREE.TextureLoader().load( textureURLs[i] );
+                    materials.push( new THREE.MeshBasicMaterial( {
+                        color: "white", // Color will be multiplied by texture color.
+                        side: THREE.DoubleSide, // IMPORTANT: To see the inside of the cube, // back faces must be rendered!
+                        map: texture } ) );
+                }
+
                 let texture = new THREE.TextureLoader().load("textures/concrete2.jpg");
                 texture.wrapS = THREE.RepeatWrapping;
                 texture.wrapT = THREE.RepeatWrapping;
@@ -384,11 +401,11 @@
                 ground.position.y = 0.2;
                 worldModel.add( ground );
 
-                worldModel.add(ground.clone())
+                worldModel.add(ground.clone());
                 ground.rotateY(-2.3561944902);
                 ground.position.x = 59;
                 ground.position.z = 3.5;
-                ground.position.y = 0.15
+                ground.position.y = 0.15;
 
                 worldModel.add(ground.clone());
                 ground.rotateY(1.2217304764);
@@ -407,6 +424,17 @@
                 let geometry3 = new THREE.BoxGeometry(15, 15, 10);
                 let smallhouse = new THREE.Mesh(geometry3, material_building1);
                 let bighouse = new THREE.Mesh(geometry3, material_building2);
+                let skybox =  new THREE.Mesh(  // DELETE THIS !
+                    new THREE.BoxGeometry(325,80,300),
+                    materials
+
+                );
+                worldModel.add(skybox);
+                objects.push(skybox);
+                skybox.position.x = -10;
+                skybox.position.y = 40;
+                skybox.position.z = -40;
+                skybox.rotateY(2);
 
                 worldModel.add(smallhouse);
                 objects.push(smallhouse);
@@ -585,7 +613,7 @@
 
                 worldModel.add(redWalls.clone());
                 objects.push(redWalls);
-                redWalls.rotateY(-0.7853981634)
+                redWalls.rotateY(-0.7853981634);
                 redWalls.scale.set(1.02,1,1);
                 redWalls.position.x = 153;
                 redWalls.position.z = -31;
