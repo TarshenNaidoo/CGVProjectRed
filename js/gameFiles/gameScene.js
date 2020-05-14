@@ -6,24 +6,29 @@ class gameScene extends Physijs.Scene {
         this.setGravity(new THREE.Vector3(0,-50, 0));
         this.prevTime = performance.now();
         this.isPaused = false;
-
+        this.background =  new THREE.Color (0x87ceeb);
         this.camera = theCamera;
-        this.createCrosshair(renderer);
 
-        this.avatar = null;
+        this.avatar = this.createAvatar();
+        //this.camera = theCamera;
+        //this.camera.add(this.crosshair);
+        this.crosshair = this.createCrosshair();
+        this.camera.add(this.crosshair);
         //this.map = null;
         this.zombies = [];
         //this.skybox = null;
         this.bullets = [];
-        this.reload();
-        this.bulletsShot = 0;
         this.maxBullets = 20;
         this.actualAmmo = this.maxBullets;
+        for (let i = 0 ; i < this.maxBullets ; i++){
+            this.bullets.push(new Bullet());
+        }
+        this.reload();
+        this.bulletsShot = 0;
         this.score = 0;
         this.lastScore = 0;
         this.level = 1;
 
-        this.createAvatar();
 
         this.createHUD();
         this.avatar.loadWeapons();
@@ -35,6 +40,10 @@ class gameScene extends Physijs.Scene {
         this.createLights();
 
         this.add(this.place);
+    }
+
+    display(){
+        this.crosshair.setVisible();
     }
 
     createHUD() {
@@ -105,9 +114,8 @@ class gameScene extends Physijs.Scene {
         level.innerHTML = "Level: " + this.level;
     }
 
-    createCrosshair(renderer) {
+    createCrosshair() {
         let crosshair = new Crosshair();
-        this.camera.add(crosshair);
 
         //center the crosshair
         let cHPX = 50; //crosshair percent X
@@ -115,14 +123,17 @@ class gameScene extends Physijs.Scene {
         let cHPosX = (cHPX/100) * 2 - 1;
         let cHPosY = (cHPY/100) * 2 - 1;
         crosshair.position.set (cHPosX, cHPosY, -0.3);
+        return crosshair;
     }
     //this creates the lights for the scene. If the scene already has lights, we can comment this out
     createLights() {
         this.ambientLight = new THREE.AmbientLight(0xccddee, 0.35);
         this.add (this.ambientLight);
+        //let pointlight = new THREE.PointLight(0x333333,1);
+        //this.add(pointlight);
 
         this.spotLight = new THREE.SpotLight(0xffffff);
-        this.spotLight.position.set(0,500,1000);
+        this.spotLight.position.set(0,10,0);
         this.spotLight.intensity = 1;
         this.spotLight.castShadow = true;
 
@@ -151,7 +162,9 @@ class gameScene extends Physijs.Scene {
     }
 
     createAvatar(){
-        this.avatar = new Avatar(this.camera, this);
+        let avatar = new Avatar();
+        this.camera.add(avatar.getObject());
+        return avatar;
     }
 
     reload() {
@@ -166,8 +179,7 @@ class gameScene extends Physijs.Scene {
         }
         //'shooting' will be false the 2nd time this runs
          else if (!shooting) {
-            this.bullets.shoot(
-                this.bulletsShot,
+            this.bullets[this.maxBullets-this.actualAmmo].shoot(
                 this.avatar.getPosition(),
                 this.camera.getWorldDirection(),
                 this.avatar.getPower()
@@ -243,20 +255,21 @@ class gameScene extends Physijs.Scene {
     animate() {
         this.simulate();
 
-        if (moveForward) this.avatar.moveForward();
-        if (moveBackward) this.avatar.moveBackward();
-        if (moveLeft) this.avatar.moveLeft();
-        if (moveRight) this.avatar.moveRight();
+        if (moveForward)
+        if (moveBackward)
+        if (moveLeft)
+        if (moveRight)
 
         if (jumping) {
-            this.avatar.jump();
-        }
 
+        }
+        if (sceneChildrenDisplayOnce) {
+            //console.log("Children: " + this.children.length);
+            sceneChildrenDisplayOnce  = false;
+        }
         if (shooting) {
             this.avatar.animateWeapon();
         }
-
-        this.avatar.updateControls(); //ensures that the controls object and the avatar are aligned
 
         for (let i = 0 ; i < this.zombies.length ; i++) {
             this.zombies[i].animate();

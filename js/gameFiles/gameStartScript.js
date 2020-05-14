@@ -2,7 +2,7 @@ let scene = null;
 
 let stats = null;
 
-let mouseDown = false;
+let letmouseDown = false;
 
 let renderer = null;
 
@@ -18,12 +18,14 @@ let jumping = false;
 let shooting = false;
 let enableControls = false;
 
+let sceneChildrenDisplayOnce = true;
+
 //window.onload=function(){
     //$('.Play').onclick(main(event));
 //}
 
 function createGUI (withStats) {
-    let gui = new dat.GUI();
+    //let gui = new dat.GUI();
 
     if (withStats) stats = initStats();
 
@@ -33,14 +35,17 @@ function createGUI (withStats) {
 function initStats(){
 
     let stats = new Stats();
-
     stats.setMode(0) //0: fps, 1:ms
 
     stats.domElement.style.position = 'absolute';
     stats.domElement.style.left = '0px';
     stats.domElement.style.top = '0px';
 
+    //let statsElement = document.getElementById("Stats-output");
+    //statsElement.append(stats.domElement);
     $("Stats-output").append(stats.domElement);
+    return stats;
+    //animate();
 
 }
 
@@ -96,7 +101,7 @@ function onKeyDown (event) {
         }
     }
 
-    if (event.keyCode == 80 && enableControls == false) { // p
+    if (event.keyCode === 80 && enableControls === false) { // p
         scene.newGame();
     }
 }
@@ -144,9 +149,9 @@ function onWindowResize () {
 
 function createRenderer() {
     let renderer = new THREE.WebGLRenderer({antialias:true});
-    renderer.setClearColor(new THREE.Color(0xEEEEEE), 1);
+    renderer.setClearColor(new THREE.Color(0xEEEEEE), 0.1);
     renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth/window.innerHeight);
+    renderer.setSize(window.innerWidth,window.innerHeight);
     document.body.appendChild(renderer.domElement);
     renderer.shadowMap.enabled = true;
     return renderer;
@@ -154,7 +159,8 @@ function createRenderer() {
 
 function animate() {
     requestAnimationFrame(animate);
-    //stats.update();
+    stats.update();
+    //console.log("running");
     scene.animate();
     renderer.render(scene,scene.getCamera());
     scene.simulate();
@@ -186,7 +192,7 @@ function main() {
     zgame.innerHTML = "";
     options.innerHTML = "";
     play.innerHTML = "";
-    let title = document.getElementById('title');
+    //let title = document.getElementById('title');
     let havePointerLock =
         'pointerLockElement' in document ||
         'mozPointerLockElement' in document ||
@@ -238,6 +244,7 @@ function main() {
         instructions.addEventListener('click', function (event) {
             instructions.style.display = 'none';
 
+            scene.display();
             element.requestPointerLock =
                 element.requestPointerLock ||
                 element.mozRequestPointerLock ||
@@ -252,24 +259,24 @@ function main() {
 
     let controlsEnabled = false;
 
-        camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, +0);
+    camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
 
-        renderer = createRenderer();
+    renderer = createRenderer();
 
-        $("WebGL-output").append(renderer.domElement);
+    $("WebGL-output").append(renderer.domElement);
 
-        window.addEventListener("resize", onWindowResize);
-        window.addEventListener("mousedown", onMouseDown, true);
-        window.addEventListener("keydown", onKeyDown, true);
-        window.addEventListener("keyup", onKeyUp, true);
-        window.addEventListener("mousewheel", onMouseWheel, true); //most browsers
-        window.addEventListener("DOMMouseScroll", onMouseWheel, true); //for firefox
+    window.addEventListener("resize", onWindowResize);
+    window.addEventListener("mousedown", onMouseDown, true);
+    window.addEventListener("keydown", onKeyDown, true);
+    window.addEventListener("keyup", onKeyUp, true);
+    window.addEventListener("mousewheel", onMouseWheel, true); //most browsers
+    window.addEventListener("DOMMouseScroll", onMouseWheel, true); //for firefox
 
-        scene = new gameScene(renderer.domElement, camera);
-        controls = new THREE.PointerLockControls(camera);
-        scene.add(controls.getObject());
+    scene = new gameScene(renderer.domElement, camera);
+    controls = new THREE.PointerLockControls(camera);
+    scene.add(controls.getObject());
 
-        createGUI(true);
+    createGUI(true);
 
-        animate();
+    animate();
 }

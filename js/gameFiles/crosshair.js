@@ -18,11 +18,12 @@ class Crosshair extends THREE.Object3D {
         this.crosshair = null;
 
         this.crosshair = this.createRoot();
+        this.crosshair.visible = false;
         this.add (this.crosshair);
     }
 
     createRoot() {
-        var root = new THREE.Object3D();
+        let root = new THREE.Object3D();
         root.castShadow = false;
         root.autoUpdateMatrix = false;
         root.updateMatrix();
@@ -34,7 +35,7 @@ class Crosshair extends THREE.Object3D {
     }
 
     createCrosshair(part) {
-        var rectangle = new THREE.Mesh (new THREE.BoxGeometry (this.xLength, this.yLength, this.zLength), this.material);
+        let rectangle = new THREE.Mesh (new THREE.BoxGeometry (this.xLength, this.yLength, this.zLength), this.material);
 
         rectangle.castShadow = false;
         rectangle.autoUpdateMatrix = false;
@@ -62,4 +63,7 @@ class Crosshair extends THREE.Object3D {
         return rectangle;
     }
 
+    setVisible() {
+        this.crosshair.visible = true;
+    }
 }

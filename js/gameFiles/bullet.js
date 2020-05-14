@@ -2,7 +2,7 @@ class Bullet {
 
     constructor() {
 
-        this.material = THREE.MeshBasicMaterial({color:0xeeeeee});
+        this.material = new THREE.MeshStandardMaterial(0xeeeeee);
         this.bulletWidth = 0.8;
         this.launched = false;
         this.bullet =
@@ -14,6 +14,8 @@ class Bullet {
         this.bullet.position.z = 0;
         this.bullet._dirtyPosition = true;
         this.target = new THREE.Vector3 (0,0,0);
+
+        this.bullet.visible = false;
     }
 
     getLaunched() {
@@ -24,13 +26,13 @@ class Bullet {
         this.launched = false;
     }
 
-    getParameters(i) {
-        let parameters = {x: this.bullet.position.x, y: this.bullet.position.y,
+    getParameters() {
+        return {x: this.bullet.position.x, y: this.bullet.position.y,
             z: this.bullet.position.z, radius: this.bulletWidth/2};
-        return parameters;
     }
 
     shoot(position, target, power) {
+        this.bullet.visible = true;
         this.target.set(target.x, target.y, target.z);
         this.bullet.position.set(position.x-target.x, position.y+5, position.z-target.z);
 
@@ -40,7 +42,7 @@ class Bullet {
         this.bullet.__dirtyPosition = true;
         this.launched = true;
 
-        let sound = null;
+        //let sound = null;
         let force = new THREE.Vector3(
             this.target.x*power,
             this.target.y*power,
