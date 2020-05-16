@@ -2,13 +2,18 @@ let scene = null;
 
 let stats = null;
 
-let letmouseDown = false;
+let mouseDown = false;
 
 let renderer = null;
 
 let camera = null;
 
 let controls = null;
+
+
+//external assets:
+let gun = null;
+let zombieModel = null;
 
 let moveForward = false;
 let moveBackward = false;
@@ -23,6 +28,14 @@ let sceneChildrenDisplayOnce = true;
 //window.onload=function(){
     //$('.Play').onclick(main(event));
 //}
+
+function loadGun(newGun){
+    gun = newGun;
+}
+
+function loadZombie(newZombie){
+    //zombieModel = newZombie
+}
 
 function createGUI (withStats) {
     //let gui = new dat.GUI();
@@ -169,7 +182,6 @@ function animate() {
 //main function
 
 function main() {
-    console.log("this runs");
     'use strict';
     Physijs.scripts.worker = '../../exLibs/physijs_worker.js';
     Physijs.scripts.ammo = '../../exLibs/ammo.js';

@@ -42,19 +42,19 @@ class Crosshair extends THREE.Object3D {
 
         switch (part) {
             case "U":
-                rectangle.geometry.applyMatrix (new THREE.Matrix4().makeTranslation (0, this.crosshairPos, 0));
+                rectangle.geometry.applyMatrix4(new THREE.Matrix4().makeTranslation (0, this.crosshairPos, 0));
                 break;
             case "D":
                 rectangle = new THREE.Mesh (new THREE.BoxGeometry (this.xLength, this.yLength, this.zLength), this.material);
-                rectangle.geometry.applyMatrix (new THREE.Matrix4().makeTranslation (0, -this.crosshairPos, 0));
+                rectangle.geometry.applyMatrix4(new THREE.Matrix4().makeTranslation (0, -this.crosshairPos, 0));
                 break;
             case "L":
                 rectangle = new THREE.Mesh (new THREE.BoxGeometry (this.yLength, this.xLength, this.zLength), this.material);
-                rectangle.geometry.applyMatrix (new THREE.Matrix4().makeTranslation (-this.crosshairPos, 0, 0));
+                rectangle.geometry.applyMatrix4(new THREE.Matrix4().makeTranslation (-this.crosshairPos, 0, 0));
                 break;
             case "R":
                 rectangle = new THREE.Mesh (new THREE.BoxGeometry (this.yLength, this.xLength, this.zLength), this.material);
-                rectangle.geometry.applyMatrix (new THREE.Matrix4().makeTranslation (this.crosshairPos, 0, 0));
+                rectangle.geometry.applyMatrix4(new THREE.Matrix4().makeTranslation (this.crosshairPos, 0, 0));
                 break;
         }
 

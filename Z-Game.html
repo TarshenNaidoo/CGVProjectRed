@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Z-Game</title>
-    <script type="text/javascript" src="exLibs/three.js"></script>
+    <script type="text/javascript" src="js/three.js-master/build/three.js"></script>
     <script type="text/javascript" src="exLibs/jquery-1.9.0.js"></script>
     <script type="text/javascript" src="exLibs/stats.js"></script>
     <script type="text/javascript" src="exLibs/dat.gui.js"></script>
@@ -100,7 +100,34 @@
 <div id="WebGL-output">
 
 </div>
+<script type="module">
+    import {GLTFLoader} from "./js/three.js-master/examples/jsm/loaders/GLTFLoader.js";
+    let gunGtlfloader = new GLTFLoader();
+    gunGtlfloader.load(
+        'models/handGunWithHand1.glb',
+        function (gunWithHand) {
+            let gun = gunWithHand.scene;
+            gun.position.z = -5;
+            gun.position.y = -2;
+            gun.position.x = 2;
+            gun.rotation.x = Math.PI/2;
+            gun.rotation.z = Math.PI/2;
+           loadGun(gun);
+            //checkIfLoaded();
 
+        },
+        function ( xhr ) {
+
+            console.log('Player loading: ' + (xhr.loaded/xhr.total * 100) + '%');
+
+        },
+        function ( error ) {
+
+            console.error( 'Error loading gun: ' + error);
+
+        }
+    );
+</script>
 
 </body>
 </html>

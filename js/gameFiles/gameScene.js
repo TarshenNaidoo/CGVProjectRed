@@ -1,10 +1,9 @@
 
 class gameScene extends Physijs.Scene {
 
-    constructor(renderer, theCamera) {
-        super();
+    constructor(renderer, theCamera, controls) {
+        super({fixedTimeStep: 1 / 60});
         this.setGravity(new THREE.Vector3(0,-50, 0));
-        this.prevTime = performance.now();
         this.isPaused = false;
         this.background =  new THREE.Color (0x87ceeb);
         this.camera = theCamera;
@@ -33,7 +32,7 @@ class gameScene extends Physijs.Scene {
         this.createHUD();
         this.avatar.loadWeapons();
         this.place = this.createPlace();
-        this.createZombies();
+        //this.createZombies();
 
         this.ambientLight = null;
         this.spotLight = null;
@@ -144,26 +143,58 @@ class gameScene extends Physijs.Scene {
 
     //this creates the 'place' as it were complete with a skybox and map
     createPlace(){
+
+        let vertex = new THREE.Vector3();
+        let color = new THREE.Color();
+
         let place = new THREE.Object3D();
+        let floorGeometry = new THREE.PlaneBufferGeometry( 2000, 2000, 100, 100 );
+        floorGeometry.rotateX( - Math.PI / 2 );
 
-        //uncomment when skybox is done
-        //this.skybox = new Skybox();
-        //place.add(this.skybox);
+        // vertex displacement
 
-        //creates the map (actual scene objects like fence, door, etc)
-        //note that the map.js file has to be modified to include all objects
+        let position = floorGeometry.attributes.position;
 
-        //map.js has not been added
-        //this.map = new Map();
-        //for (let i = 0 ; i < this.map.getMapSize() ; i++) {
-        //    this.add(this.map.getMap(i));
-        //}
+        for ( let i = 0, l = position.count; i < l; i ++ ) {
+
+            vertex.fromBufferAttribute( position, i );
+
+            vertex.x += Math.random() * 20 - 10;
+            vertex.y += Math.random() * 2;
+            vertex.z += Math.random() * 20 - 10;
+
+            position.setXYZ( i, vertex.x, vertex.y, vertex.z );
+
+        }
+
+        floorGeometry = floorGeometry.toNonIndexed(); // ensure each face has unique vertices
+
+        position = floorGeometry.attributes.position;
+        let colors = [];
+
+        for ( let i = 0, l = position.count; i < l; i ++ ) {
+
+            color.setHSL( Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
+            colors.push( color.r, color.g, color.b );
+
+        }
+
+        floorGeometry.setAttribute( 'color', new THREE.Float32BufferAttribute( colors, 3 ) );
+
+        let floorMaterial = new THREE.MeshBasicMaterial( { vertexColors: true } );
+
+        let floor = new THREE.Mesh( floorGeometry, floorMaterial );
+
+        //let physiFloor = new Physijs.PlaneMesh(floorGeometry,floorMaterial, 10);
+        place.add(floor);
+        console.log(this.camera.position.y);
+        console.log(vertex.y);
         return place;
     }
 
     createAvatar(){
-        let avatar = new Avatar();
-        this.camera.add(avatar.getObject());
+        let avatar = new Avatar(this.camera);
+        this.add(avatar.getObject());
         return avatar;
     }
 
@@ -190,9 +221,8 @@ class gameScene extends Physijs.Scene {
     }
 
 
-    async createZombies() {
-        let gltf = await import('../three.js-master/examples/jsm/loaders/GLTFLoader.js');
-        let zLoader = new gltf.GLTFLoader();
+    createZombies() {
+        let zLoader = new THREE.GLTFLoader();
         let that = this;
         zLoader.load(
             '../models/zombie1.glb',
@@ -253,16 +283,13 @@ class gameScene extends Physijs.Scene {
     }
 
     animate() {
-        this.simulate();
 
-        if (moveForward)
-        if (moveBackward)
-        if (moveLeft)
-        if (moveRight)
 
         if (jumping) {
 
         }
+        console.log();
+        this.avatar.move(1/60,moveForward, moveBackward, moveLeft, moveRight);
         if (sceneChildrenDisplayOnce) {
             //console.log("Children: " + this.children.length);
             sceneChildrenDisplayOnce  = false;
@@ -278,6 +305,7 @@ class gameScene extends Physijs.Scene {
         if (this.avatar.hp === 0) {
             this.endGame();
         }
+        this.simulate();
     }
 
     changeWeapon() {
