@@ -6,9 +6,9 @@ let mouseDown = false;
 
 let renderer = null;
 
-let camera = null;
+let camera;// = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
 
-let controls = null;
+let controls;// = new PointerLockControls(camera, document.body);
 
 
 //external assets:
@@ -35,6 +35,11 @@ function loadGun(newGun){
 
 function loadZombie(newZombie){
     //zombieModel = newZombie
+}
+
+function loadControls(newCamera, newControls){
+    camera = newCamera;
+    controls = newControls;
 }
 
 function createGUI (withStats) {
@@ -181,7 +186,8 @@ function animate() {
 
 //main function
 
-function main() {
+async function main() {
+    let PointerLockControls = await import("../three.js-master/examples/jsm/controls/PointerLockControls.js")
     'use strict';
     Physijs.scripts.worker = '../../exLibs/physijs_worker.js';
     Physijs.scripts.ammo = '../../exLibs/ammo.js';
@@ -272,7 +278,7 @@ function main() {
     let controlsEnabled = false;
 
     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-
+    camera.position.y = 10;
     renderer = createRenderer();
 
     $("WebGL-output").append(renderer.domElement);
@@ -285,7 +291,7 @@ function main() {
     window.addEventListener("DOMMouseScroll", onMouseWheel, true); //for firefox
 
     scene = new gameScene(renderer.domElement, camera);
-    controls = new THREE.PointerLockControls(camera);
+    controls = new PointerLockControls.PointerLockControls(camera, document.body);
     scene.add(controls.getObject());
 
     createGUI(true);

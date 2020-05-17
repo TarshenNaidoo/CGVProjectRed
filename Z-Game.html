@@ -9,7 +9,6 @@
     <script type="text/javascript" src="exLibs/jquery-1.9.0.js"></script>
     <script type="text/javascript" src="exLibs/stats.js"></script>
     <script type="text/javascript" src="exLibs/dat.gui.js"></script>
-    <script type="text/javascript" src="exLibs/PointerLockControls.js"></script>
     <script type="text/javascript" src="exLibs/OBJLoader.js"></script>
     <script type="text/javascript" src="exLibs/MTLLoader.js"></script>
     <script type="text/javascript" src="exLibs/physi.js"></script>
@@ -112,7 +111,7 @@
             gun.position.x = 2;
             gun.rotation.x = Math.PI/2;
             gun.rotation.z = Math.PI/2;
-           loadGun(gun);
+            loadGun(gun);
             //checkIfLoaded();
 
         },
@@ -127,6 +126,14 @@
 
         }
     );
+</script>
+<script type="module" src="exLibs/PointerLockControls.js">
+    import {PointerLockControls} from "./js/three.js-master/examples/jsm/controls/PointerLockControls";
+
+    //let newCamera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+    //let newControls = new PointerLockControls(camera, document.body);
+    PointerControls
+    //loadControls(newCamera, newControls);
 </script>
 
 </body>

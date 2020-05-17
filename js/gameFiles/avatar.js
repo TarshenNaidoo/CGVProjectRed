@@ -23,6 +23,7 @@ class Avatar {
         this.positionLimit = 82;
         this.power = 10000;
 
+        this.velocity = new THREE.Vector3();
         this.direction = new THREE.Vector3();
 
     }
@@ -58,32 +59,33 @@ class Avatar {
     }
 
     move(delta, moveForward, moveBackward, moveLeft, moveRight) {
-        let velocity = this.hitBox.getLinearVelocity();
-        velocity.x -= velocity.x * 10 * delta; //approximates to 0 with no movement input
-        velocity.z -= velocity.z * 10 * delta; //approximates to 0 with no movement input
+        this.velocity.x -= this.velocity.x * 10 * delta; //approximates to 0 with no movement input
+        this.velocity.z -= this.velocity.z * 10 * delta; //approximates to 0 with no movement input
 
         this.direction.z = Number(moveForward) - Number(moveBackward);
-        this.direction.x = Number(moveLeft) - Number(moveRight);
+        this.direction.x = Number(moveRight) - Number(moveLeft);
         this.direction.normalize();
 
-        if ( moveForward || moveBackward ) velocity.z -= this.direction.z * 400.0 * delta;
+        if ( moveForward || moveBackward ) this.velocity.z -= this.direction.z * 400.0 * delta;
         else {
-            if (velocity.z > -0.1){velocity.z = 0;}
+            if (this.velocity.z > -0.1){this.velocity.z = 0;}
         }
-        if ( moveLeft || moveRight ) velocity.x -= this.direction.x * 400.0 * delta;
+        if ( moveLeft || moveRight ) this.velocity.x -= this.direction.x * 400.0 * delta;
         else {
-            if (velocity.x > -0.1){velocity.x = 0;}
+            if (this.velocity.x > -0.1){this.velocity.x = 0;}
         }
-        console.log("velocity x:" + velocity.x + ", velocity z: " + velocity.z);
+        console.log("velocity x:" + this.velocity.x + ", velocity z: " + this.velocity.z);
         //console.log("delta: " + delta);
         //if (velocity.x < 0.1 && moveLeft === false && moveRight === false) {velocity.x = 0;}
         //if (velocity.z < 0.1 && moveForward === false && moveRight === false) {velocity.z = 0;}
-        this.hitBox.setLinearVelocity(velocity);
+        //this.hitBox.setLinearVelocity(velocity);
 
-        //this.camera.translateX (-velocity.x * delta);
-        //this.camera.translateZ (-velocity.z * delta);
-        this.hitBox.position.z += velocity.z*delta;
-        this.hitBox.position.x += velocity.x*delta;
+        //this.camera.position.x += (-velocity.x * delta);
+        //this.camera.position.z += (-velocity.z * delta);
+        //this.hitBox.position.z += velocity.z*delta;
+        //this.hitBox.position.x += velocity.x*delta;
+        controls.moveForward(-this.velocity.z * delta);
+        controls.moveRight(-this.velocity.x * delta)
         this.hitBox.position.y = 3;
         console.log(this.hitBox.position.y);
 
