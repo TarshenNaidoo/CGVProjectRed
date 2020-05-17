@@ -25,6 +25,7 @@ class Avatar {
 
         this.velocity = new THREE.Vector3();
         this.direction = new THREE.Vector3();
+        this.mass = 50;
 
     }
 
@@ -58,6 +59,20 @@ class Avatar {
         return this.weaponNumber;
     }
 
+    jump() {
+        this.velocity.y += 100;
+    }
+
+    simGravity(delta){
+        this.velocity.y -= 9.8 * this.mass * delta;
+        controls.getObject().position.y += this.velocity.y * delta;
+
+        if (controls.getObject().position.y <= 10) {
+            controls.getObject().position.y = 10;
+            this.velocity.y = 0;
+        }
+    }
+
     move(delta, moveForward, moveBackward, moveLeft, moveRight) {
         this.velocity.x -= this.velocity.x * 10 * delta; //approximates to 0 with no movement input
         this.velocity.z -= this.velocity.z * 10 * delta; //approximates to 0 with no movement input
@@ -74,7 +89,7 @@ class Avatar {
         else {
             if (this.velocity.x > -0.1){this.velocity.x = 0;}
         }
-        console.log("velocity x:" + this.velocity.x + ", velocity z: " + this.velocity.z);
+        //console.log("velocity x:" + this.velocity.x + ", velocity z: " + this.velocity.z);
         //console.log("delta: " + delta);
         //if (velocity.x < 0.1 && moveLeft === false && moveRight === false) {velocity.x = 0;}
         //if (velocity.z < 0.1 && moveForward === false && moveRight === false) {velocity.z = 0;}
@@ -87,7 +102,7 @@ class Avatar {
         controls.moveForward(-this.velocity.z * delta);
         controls.moveRight(-this.velocity.x * delta)
         this.hitBox.position.y = 3;
-        console.log(this.hitBox.position.y);
+        //console.log(this.hitBox.position.y);
 
     }
 

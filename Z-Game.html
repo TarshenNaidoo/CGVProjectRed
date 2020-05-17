@@ -107,8 +107,8 @@
         function (gunWithHand) {
             let gun = gunWithHand.scene;
             gun.position.z = -5;
-            gun.position.y = -2;
-            gun.position.x = 2;
+            gun.position.y = -1.5;
+            gun.position.x = 1.5;
             gun.rotation.x = Math.PI/2;
             gun.rotation.z = Math.PI/2;
             loadGun(gun);
@@ -126,14 +126,6 @@
 
         }
     );
-</script>
-<script type="module" src="exLibs/PointerLockControls.js">
-    import {PointerLockControls} from "./js/three.js-master/examples/jsm/controls/PointerLockControls";
-
-    //let newCamera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-    //let newControls = new PointerLockControls(camera, document.body);
-    PointerControls
-    //loadControls(newCamera, newControls);
 </script>
 
 </body>

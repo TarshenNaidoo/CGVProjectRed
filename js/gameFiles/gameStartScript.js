@@ -146,6 +146,10 @@ function onKeyUp (event) {
             case 68: // d
                 moveRight = false;
                 break;
+
+            case 32: // space
+                jumping = false;
+                break;
         }
     }
 }

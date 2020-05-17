@@ -1,21 +1,19 @@
 class Bullet {
 
-    constructor() {
+    constructor(i) {
 
         this.material = new THREE.MeshStandardMaterial(0xeeeeee);
-        this.bulletWidth = 0.8;
+        this.bulletWidth = 1;
         this.launched = false;
         this.bullet =
-            new Physijs.SphereMesh(
-                new THREE.SphereGeometry(this.bulletWidth/4, 20, 20), this.material, 50);
+            new THREE.Mesh(
+                new THREE.SphereBufferGeometry(this.bulletWidth/4, 20, 20), this.material, 50);
         this.bullet.castShadow = true;
-        this.bullet.position.x = 0;
-        this.bullet.position.y = -9.5;
-        this.bullet.position.z = 0;
         this.bullet._dirtyPosition = true;
+        this.bullet.position.y = 5;
+        this.bullet.position.x = -10 + i;
         this.target = new THREE.Vector3 (0,0,0);
-
-        this.bullet.visible = false;
+        //this.bullet.visible = false;
     }
 
     getLaunched() {

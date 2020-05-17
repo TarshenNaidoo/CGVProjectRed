@@ -15,11 +15,13 @@ class Crosshair extends THREE.Object3D {
         this.zLength = 0.0;
         this.crosshairPos = 0.0075;
 
-        this.crosshair = null;
-
+        this.crosshair = new THREE.Object3D;
         this.crosshair = this.createRoot();
         this.crosshair.visible = false;
         this.add (this.crosshair);
+    }
+    getPosition(){
+        return this.crosshair.position;
     }
 
     createRoot() {

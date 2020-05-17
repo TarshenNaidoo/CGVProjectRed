@@ -7,6 +7,7 @@ class gameScene extends Physijs.Scene {
         this.isPaused = false;
         this.background =  new THREE.Color (0x87ceeb);
         this.camera = theCamera;
+        this.cameraPos = 10;
 
         this.avatar = this.createAvatar();
         //this.camera = theCamera;
@@ -20,9 +21,10 @@ class gameScene extends Physijs.Scene {
         this.maxBullets = 20;
         this.actualAmmo = this.maxBullets;
         for (let i = 0 ; i < this.maxBullets ; i++){
-            this.bullets.push(new Bullet());
+            this.bullets.push(new Bullet(i));
+            this.add(this.bullets[i].bullet);
         }
-        this.reload();
+        //this.reload();
         this.bulletsShot = 0;
         this.score = 0;
         this.lastScore = 0;
@@ -34,7 +36,7 @@ class gameScene extends Physijs.Scene {
         this.place = this.createPlace();
         //this.createZombies();
 
-        this.ambientLight = null;
+        this.pointLight = null;
         this.spotLight = null;
         this.createLights();
 
@@ -126,19 +128,13 @@ class gameScene extends Physijs.Scene {
     }
     //this creates the lights for the scene. If the scene already has lights, we can comment this out
     createLights() {
-        this.ambientLight = new THREE.AmbientLight(0xccddee, 0.35);
-        this.add (this.ambientLight);
+        this.pointLight = new THREE.PointLight(0xccddee, 0.75);
+        this.pointLight.position.y = 50;
+        this.add (this.pointLight);
         //let pointlight = new THREE.PointLight(0x333333,1);
         //this.add(pointlight);
 
-        this.spotLight = new THREE.SpotLight(0xffffff);
-        this.spotLight.position.set(0,10,0);
-        this.spotLight.intensity = 1;
-        this.spotLight.castShadow = true;
 
-        this.spotLight.shadow.mapSize.width = 2048;
-        this.spotLight.shadow.mapSize.height = 2048;
-        this.add(this.spotLight);
     }
 
     //this creates the 'place' as it were complete with a skybox and map
@@ -187,8 +183,6 @@ class gameScene extends Physijs.Scene {
 
         //let physiFloor = new Physijs.PlaneMesh(floorGeometry,floorMaterial, 10);
         place.add(floor);
-        console.log(this.camera.position.y);
-        console.log(vertex.y);
         return place;
     }
 
@@ -200,7 +194,7 @@ class gameScene extends Physijs.Scene {
 
     reload() {
         for (let i = 0 ; i < this.bullets.length ; i++) {
-            this.bullets[i] = new Bullet();
+            this.bullets[i] = new Bullet(i);
         }
         this.actualAmmo = this.maxBullets;
     }
@@ -211,8 +205,8 @@ class gameScene extends Physijs.Scene {
         //'shooting' will be false the 2nd time this runs
          else if (!shooting) {
             this.bullets[this.maxBullets-this.actualAmmo].shoot(
-                this.avatar.getPosition(),
-                this.camera.getWorldDirection(),
+                this.camera.position,
+                this.crosshair.getPosition(),
                 this.avatar.getPower()
             );
             this.actualAmmo--;
@@ -285,9 +279,12 @@ class gameScene extends Physijs.Scene {
     animate() {
 
 
-        if (jumping) {
-
+        if (jumping && this.camera.position.y <= 10) {
+            this.avatar.jump();
         }
+
+        this.avatar.simGravity(1/60);
+
         console.log();
         this.avatar.move(1/60,moveForward, moveBackward, moveLeft, moveRight);
         if (sceneChildrenDisplayOnce) {
