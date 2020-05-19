@@ -12,6 +12,7 @@ class Zombie {
             ), mesh);
         //this.zombieModel = new THREE.Mesh(zombieImport.scene.geometry, zombieImport.scene.material);
         this.zombieModel = zombieImport.scene;
+        this.hitbox.position.set(this.zombieModel.position.x, this.zombieModel.position.y, this.zombieModel.position.z);
         console.log(this.zombieModel.position.x);
         //this.loadZombie();
         this.zombie.add(this.zombieModel);

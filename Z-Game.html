@@ -132,12 +132,12 @@
     //zombie
     let zLoader = new GLTFLoader();
     zLoader.load(
-        '../models/zombie1.glb',
+        '../models/zombieWalk6.glb',
         function (zombieImport) {
             importZombie(zombieImport);
             let zombieImportScene = zombieImport.scene;
-            zombieImportScene.rotation.x = 90;
-            zombieImportScene.scale(7,7,7);
+            //zombieImportScene.rotation.x = 90;
+            zombieImportScene.scale.set(7,7,7);
         },
         function (xhr) {
             console.log('Zombie model loading: ' + (xhr.loaded/xhr.total * 100) + '%');
