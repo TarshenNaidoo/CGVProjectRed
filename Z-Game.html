@@ -1,19 +1,152 @@
 <!DOCTYPE html>
 <html lang="en">
-<link type="text/css" rel="stylesheet" href="css/options.css">
+<link type="text/css" rel="stylesheet" href="css/main.css">
 
 <head>
     <meta charset="UTF-8">
     <title>Z-Game</title>
+    <script type="text/javascript" src="js/three.js-master/build/three.js"></script>
+    <script type="text/javascript" src="exLibs/jquery-1.9.0.js"></script>
+    <script type="text/javascript" src="exLibs/stats.js"></script>
+    <script type="text/javascript" src="exLibs/dat.gui.js"></script>
+    <script type="text/javascript" src="exLibs/OBJLoader.js"></script>
+    <script type="text/javascript" src="exLibs/MTLLoader.js"></script>
+    <script type="text/javascript" src="exLibs/physi.js"></script>
+    <script type="text/javascript" src="exLibs/howler.js"></script>
+    <script type="text/javascript" src="js/gameFiles/zombie.js"></script>
+    <script type="text/javascript" src="js/gameFiles/crosshair.js"></script>
+    <script type="text/javascript" src="js/gameFiles/avatar.js"></script>
+    <script type="text/javascript" src="js/gameFiles/bullet.js"></script>
+    <script type="text/javascript" src="js/gameFiles/gameScene.js"></script>
+    <script type="text/javascript" src="js/gameFiles/gameStartScript.js"></script>
+
+    <div id="blocker">
+        <h1 align="center" ><span style="color:crimson" id="Z-GAME"> Z-GAME </span></h1>
+        <a href = "menu/Options.html"><h2 align="center"><span style="color: rebeccapurple" id="Options"> Options </span> </h2></a>
+        <h2 align="center"><span style="color: yellowgreen" id="Play" class="Play" onclick="main()"> Play </span> </h2>
+        <div id="instructions">
+            <!--
+            <span id="title" style="font-size:30px">Click to start game</span>
+            <br/>
+            Move: WASD
+            <br/>
+            Jump: Space
+            <br/>
+            Left click: Shoot
+            <br/>
+            Look: Mouse
+            <br/>
+            Pause: ESC
+            -->
+        </div>
+
+    </div>
+
+    <style>
+        body{
+            margin: 0;
+            overflow: hidden;
+        }
+
+        #blocker {
+
+            position: absolute;
+
+            width: 100%;
+            height: 100%;
+
+            background-color: rgba(0,0,0,1);
+        }
+
+        #instructions {
+
+            width: 100%;
+            height: 100%;
+
+            display: -webkit-box;
+            display: -moz-box;
+            display: box;
+
+            -webkit-box-orient: horizontal;
+            -moz-box-orient: horizontal;
+            box-orient: horizontal;
+
+            -webkit-box-pack: center;
+            -moz-box-pack: center;
+            box-pack: center;
+
+            -webkit-box-align: center;
+            -moz-box-align: center;
+            box-align: center;
+
+            color: #ffffff;
+            text-align: center;
+
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-<div class="center">
 
-    <h1 ><span style="color:crimson"> Z-GAME </span></h1>
-    <a href = "menu/Options.html"><h2 ><span style="color: rebeccapurple" > Options </span> </h2></a>
-    <a href = "CGVGame.html"><h2 ><span style="color: yellowgreen" > Play </span> </h2></a>
+<div id="Stats-output">
 
 </div>
+
+<div style="position:absolute; left:100px; top:10px" id="Messages">
+
+</div>
+
+<div id="WebGL-output">
+
+</div>
+<script type="module">
+    import {GLTFLoader} from "./js/three.js-master/examples/jsm/loaders/GLTFLoader.js";
+    let gunGtlfloader = new GLTFLoader();
+
+    //gun
+    gunGtlfloader.load(
+        'models/handGunWithHand1.glb',
+        function (gunWithHand) {
+            let gun = gunWithHand.scene;
+            gun.position.z = -5;
+            gun.position.y = -1.5;
+            gun.position.x = 1.5;
+            gun.rotation.x = Math.PI/2;
+            gun.rotation.z = Math.PI/2;
+            importGun(gun);
+            //checkIfLoaded();
+
+        },
+        function ( xhr ) {
+
+            console.log('Player loading: ' + (xhr.loaded/xhr.total * 100) + '%');
+
+        },
+        function ( error ) {
+
+            console.error( 'Error loading gun: ' + error);
+
+        }
+    );
+
+    //zombie
+    let zLoader = new GLTFLoader();
+    zLoader.load(
+        '../models/zombie1.glb',
+        function (zombieImport) {
+            importZombie(zombieImport);
+            let zombieImportScene = zombieImport.scene;
+            zombieImportScene.rotation.x = 90;
+            zombieImportScene.scale(7,7,7);
+        },
+        function (xhr) {
+            console.log('Zombie model loading: ' + (xhr.loaded/xhr.total * 100) + '%');
+        },
+        function (err) {
+            console.error('Error loading Zombie model: ' + err);
+        }
+    );
+</script>
 
 </body>
 </html>
