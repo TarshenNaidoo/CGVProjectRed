@@ -102,6 +102,8 @@
 <script type="module">
     import {GLTFLoader} from "./js/three.js-master/examples/jsm/loaders/GLTFLoader.js";
     let gunGtlfloader = new GLTFLoader();
+
+    //gun
     gunGtlfloader.load(
         'models/handGunWithHand1.glb',
         function (gunWithHand) {
@@ -111,7 +113,7 @@
             gun.position.x = 1.5;
             gun.rotation.x = Math.PI/2;
             gun.rotation.z = Math.PI/2;
-            loadGun(gun);
+            importGun(gun);
             //checkIfLoaded();
 
         },
@@ -124,6 +126,24 @@
 
             console.error( 'Error loading gun: ' + error);
 
+        }
+    );
+
+    //zombie
+    let zLoader = new GLTFLoader();
+    zLoader.load(
+        '../models/zombie1.glb',
+        function (zombieImport) {
+            importZombie(zombieImport);
+            let zombieImportScene = zombieImport.scene;
+            zombieImportScene.rotation.x = 90;
+            zombieImportScene.scale(7,7,7);
+        },
+        function (xhr) {
+            console.log('Zombie model loading: ' + (xhr.loaded/xhr.total * 100) + '%');
+        },
+        function (err) {
+            console.error('Error loading Zombie model: ' + err);
         }
     );
 </script>

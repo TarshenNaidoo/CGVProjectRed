@@ -13,8 +13,11 @@ let controls;// = new PointerLockControls(camera, document.body);
 
 //external assets:
 let gun = null;
-let zombieModel = null;
+let zombieImport = null;
 
+let height = 10;
+
+let delta = 1/60;
 let moveForward = false;
 let moveBackward = false;
 let moveLeft = false;
@@ -29,12 +32,12 @@ let sceneChildrenDisplayOnce = true;
     //$('.Play').onclick(main(event));
 //}
 
-function loadGun(newGun){
+function importGun(newGun){
     gun = newGun;
 }
 
-function loadZombie(newZombie){
-    //zombieModel = newZombie
+function importZombie(newZombie){
+    zombieImport = newZombie;
 }
 
 function loadControls(newCamera, newControls){
@@ -294,8 +297,8 @@ async function main() {
     window.addEventListener("mousewheel", onMouseWheel, true); //most browsers
     window.addEventListener("DOMMouseScroll", onMouseWheel, true); //for firefox
 
-    scene = new gameScene(renderer.domElement, camera);
     controls = new PointerLockControls.PointerLockControls(camera, document.body);
+    scene = new gameScene(renderer.domElement, camera);
     scene.add(controls.getObject());
 
     createGUI(true);

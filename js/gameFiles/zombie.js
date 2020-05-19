@@ -1,25 +1,62 @@
 class Zombie {
 
-    constructor (zombie, level) {
+    constructor (level, x, y, z) {
 
-        this.zombie = zombie;
+        this.zombie = new THREE.Object3D();
+        let mesh = new THREE.MeshBasicMaterial({color:0x777777});
+        mesh.transparent = true;
+        mesh.opacity = 0.25;
+        this.hitbox = new Physijs.Mesh(
+            new THREE.BoxBufferGeometry(
+                3,3,3
+            ), mesh);
+        //this.zombieModel = new THREE.Mesh(zombieImport.scene.geometry, zombieImport.scene.material);
+        this.zombieModel = zombieImport.scene;
+        console.log(this.zombieModel.position.x);
+        //this.loadZombie();
+        this.zombie.add(this.zombieModel);
+        this.zombie.add(this.hitbox);
+        this.zombie.position.set(x,height,z);
         this.direction = [];
-        this.force = level*2;
+        this.rayCaster = new THREE.Raycaster( this.zombie.position, new THREE.Vector3( 0, 0, 0 ), 0, 1 );
+        //this.force = level*2;
         this.zombieHealth = 1;
-        this.init = true;
-        this.originalPosition = new THREE.Vector3();
-        this.hitTime = performance.now();
+        //this.originalPosition = new THREE.Vector3();
+    }
+
+    async loadZombie(){
+        let gltfLoader = await import('../three.js-master/examples/jsm/loaders/GLTFLoader.js')
+        let that = this;
+        let loader = new gltfLoader();
+        loader.load(
+            '../models/zombie1.glb',
+            function (zombieImport) {
+                that.zombieModel = zombieImport.scene;
+                that.zombie.add(that.zombieModel);
+                console.log("added zombie");
+            },
+            function (xhr) {
+                console.log('Zombie model loading: ' + (xhr.loaded/xhr.total * 100) + '%');
+            },
+            function (err) {
+                console.error('Error loading Zombie model: ' + err);
+            }
+        );
     }
 
     addBulletListener(){
         let that = this;
-        this.zombie.addEventListener('collision', function(
+        this.zombie.hitbox.addEventListener('collision', function(
             otherObject,
             velocity,
             rotation,
             normal) {
-                if (performance.now() - this.hitTime > 1) {
-                    that.hit();
+                if (velocity.dot> 500) {
+                    if (performance.now() - this.hitTime > 1) {
+                        that.hit();
+                    }
+
+                    otherObject.visible = false;
                 }
             }
         );

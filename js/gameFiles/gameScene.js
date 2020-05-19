@@ -7,16 +7,13 @@ class gameScene extends Physijs.Scene {
         this.isPaused = false;
         this.background =  new THREE.Color (0x87ceeb);
         this.camera = theCamera;
-        this.cameraPos = 10;
-
+        this.objects = [];
         this.avatar = this.createAvatar();
-        //this.camera = theCamera;
-        //this.camera.add(this.crosshair);
         this.crosshair = this.createCrosshair();
         this.camera.add(this.crosshair);
-        //this.map = null;
         this.zombies = [];
-        //this.skybox = null;
+        this.zombieNum = 2;
+        this.createZombies();
         this.bullets = [];
         this.maxBullets = 20;
         this.actualAmmo = this.maxBullets;
@@ -30,7 +27,6 @@ class gameScene extends Physijs.Scene {
         this.lastScore = 0;
         this.level = 1;
 
-
         this.createHUD();
         this.avatar.loadWeapons();
         this.place = this.createPlace();
@@ -41,6 +37,7 @@ class gameScene extends Physijs.Scene {
         this.createLights();
 
         this.add(this.place);
+        this.objects.push(this.place);
     }
 
     display(){
@@ -187,7 +184,7 @@ class gameScene extends Physijs.Scene {
     }
 
     createAvatar(){
-        let avatar = new Avatar(this.camera);
+        let avatar = new Avatar(this.camera, this);
         this.add(avatar.getObject());
         return avatar;
     }
@@ -216,46 +213,11 @@ class gameScene extends Physijs.Scene {
 
 
     createZombies() {
-        let zLoader = new THREE.GLTFLoader();
-        let that = this;
-        zLoader.load(
-            '../models/zombie1.glb',
-            //"models/zombie1.glb",
-            function (zombieScene) {
-                //function (gltf) {
-                //let zombie = gltf.scene;
-                let zombie = zombieScene.scene;
-                let posCon = 6;
-                let zombieAlternate = 1;
-                let zombieNum = 5;
-                for (let i = (-zombieNum/2)*posCon ; i < (zombieNum/2)*posCon ; i += posCon) {
-                    //let newZombie = zombie.clone();
-
-                    let physicsZombie = new Physijs.BoxMesh(
-                        new THREE.BoxGeometry(zombie.geometry),
-                        //zombie.geometries,
-                        new THREE.MeshBasicMaterial({opacity:0.0})
-                        //zombie.material
-                    );
-
-                    let newZombie = new Zombie(physicsZombie,that.level);
-                    //console.log("here");
-                    newZombie.setInitialPosition(i * 5,newZombie.getPosition().y,i + i * zombieAlternate)
-                    zombieAlternate *= -1;
-                    that.zombies.push(newZombie);
-                    that.add(newZombie.zombie);
-                    //console.log("help");
-                }
-                //checkIfLoaded();
-
-            },
-            function (xhr) {
-                console.log('Zombie model loading: ' + (xhr.loaded/xhr.total * 100) + '%');
-            },
-            function (err) {
-                console.error('Error loading Zombie model: ' + err);
-            }
-        );
+        for (let i = 0 ; i < this.zombieNum ; i++){
+            let generatedZombie = new Zombie(this.level, (-this.zombieNum + i)*5, 0, -50)
+            this.zombies.push(generatedZombie);
+            this.add(generatedZombie.zombie);
+        }
     }
 
     endGame() {
@@ -278,15 +240,12 @@ class gameScene extends Physijs.Scene {
 
     animate() {
 
-
-        if (jumping && this.camera.position.y <= 10) {
+        if (jumping) {
             this.avatar.jump();
         }
 
-        this.avatar.simGravity(1/60);
+        this.avatar.animate();
 
-        console.log();
-        this.avatar.move(1/60,moveForward, moveBackward, moveLeft, moveRight);
         if (sceneChildrenDisplayOnce) {
             //console.log("Children: " + this.children.length);
             sceneChildrenDisplayOnce  = false;
