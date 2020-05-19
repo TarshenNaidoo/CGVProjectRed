@@ -14,6 +14,7 @@ let controls;// = new PointerLockControls(camera, document.body);
 //external assets:
 let gun = null;
 let zombieImport = null;
+let zombieScale = 7;
 
 let height = 10;
 

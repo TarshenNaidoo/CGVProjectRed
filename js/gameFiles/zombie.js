@@ -8,16 +8,18 @@ class Zombie {
         mesh.opacity = 0.25;
         this.hitbox = new Physijs.Mesh(
             new THREE.BoxBufferGeometry(
-                3,3,3
+                7,10,7
             ), mesh);
         //this.zombieModel = new THREE.Mesh(zombieImport.scene.geometry, zombieImport.scene.material);
         this.zombieModel = zombieImport.scene;
-        this.hitbox.position.set(this.zombieModel.position.x, this.zombieModel.position.y, this.zombieModel.position.z);
-        console.log(this.zombieModel.position.x);
+        this.zombieModel.position.x = x;
+        this.zombieModel.position.y = y;
+        this.hitbox.position.set(this.zombieModel.position.x + 1, 5, this.zombieModel.position.z+1);
+            console.log(this.zombieModel.position.x);
         //this.loadZombie();
         this.zombie.add(this.zombieModel);
         this.zombie.add(this.hitbox);
-        this.zombie.position.set(x,height,z);
+        this.zombie.position.set(x,2,z);
         this.direction = [];
         this.rayCaster = new THREE.Raycaster( this.zombie.position, new THREE.Vector3( 0, 0, 0 ), 0, 1 );
         //this.force = level*2;
