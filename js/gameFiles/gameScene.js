@@ -12,17 +12,15 @@ class gameScene extends Physijs.Scene {
         this.crosshair = this.createCrosshair();
         this.camera.add(this.crosshair);
         this.zombies = [];
-        this.zombieNum = 2;
         this.createZombies();
         this.bullets = [];
-        this.maxBullets = 20;
+        this.maxBullets = 19;
         this.actualAmmo = this.maxBullets;
-        for (let i = 0 ; i < this.maxBullets ; i++){
-            this.bullets.push(new Bullet(i));
+        for (let i = 0 ; i <= this.maxBullets ; i++){
+            this.bullets.push(new Bullet());
             this.add(this.bullets[i].bullet);
         }
         //this.reload();
-        this.bulletsShot = 0;
         this.score = 0;
         this.lastScore = 0;
         this.level = 1;
@@ -35,6 +33,9 @@ class gameScene extends Physijs.Scene {
         this.pointLight = null;
         this.spotLight = null;
         this.createLights();
+
+        //this.add(gun);
+        //gun.position.y = 15;
 
         this.add(this.place);
         this.objects.push(this.place);
@@ -62,7 +63,7 @@ class gameScene extends Physijs.Scene {
         ammo.style.position = 'absolute';
         ammo.style.width = "1";
         ammo.style.height = "1";
-        ammo.innerHTML = "Ammo: " + this.actualAmmo;
+        ammo.innerHTML = "Ammo: " + (this.actualAmmo+1);
         ammo.style.top = 100 + 'px';
         ammo.style.left = 50 + 'px';
         ammo.style.fontSize = 25 + 'px';
@@ -98,7 +99,7 @@ class gameScene extends Physijs.Scene {
 
     updateAmmo() {
         let text = document.getElementById("ammo");
-        text.innerHTML = "Ammo: " + this.actualAmmo;
+        text.innerHTML = "Ammo: " + (this.actualAmmo+1);
     }
 
     updateScore (increaseScore) {
@@ -125,7 +126,7 @@ class gameScene extends Physijs.Scene {
     }
     //this creates the lights for the scene. If the scene already has lights, we can comment this out
     createLights() {
-        this.pointLight = new THREE.PointLight(0xccddee, 0.75);
+        this.pointLight = new THREE.PointLight(0xccddee, 2);
         this.pointLight.position.y = 50;
         this.add (this.pointLight);
         //let pointlight = new THREE.PointLight(0x333333,1);
@@ -184,8 +185,8 @@ class gameScene extends Physijs.Scene {
     }
 
     createAvatar(){
-        let avatar = new Avatar(this.camera, this);
-        this.add(avatar.getObject());
+        let avatar = new Avatar(this);
+        //camera.add(avatar.getObject());
         return avatar;
     }
 
@@ -203,8 +204,7 @@ class gameScene extends Physijs.Scene {
          else if (!shooting) {
             this.bullets[this.maxBullets-this.actualAmmo].shoot(
                 this.camera.position,
-                this.crosshair.getPosition(),
-                this.avatar.getPower()
+                this.avatar.getSpeed()
             );
             this.actualAmmo--;
         }
@@ -213,8 +213,8 @@ class gameScene extends Physijs.Scene {
 
 
     createZombies() {
-        for (let i = 0 ; i < this.zombieNum ; i++){
-            let generatedZombie = new Zombie(this.level, (-this.zombieNum + i)*5, 0, -50)
+        for (let i = 0 ; i < zombieNum ; i++){
+            let generatedZombie = new Zombie(this.level, (-zombieNum + i)*5, 0, -50, i)
             this.zombies.push(generatedZombie);
             this.add(generatedZombie.zombie);
         }
@@ -253,6 +253,11 @@ class gameScene extends Physijs.Scene {
         if (shooting) {
             this.avatar.animateWeapon();
         }
+        
+        let currentBullet = this.maxBullets-this.actualAmmo;
+        if (currentBullet === 0) {currentBullet = this.maxBullets+1;}
+
+        this.bullets[currentBullet-1].animate();
 
         for (let i = 0 ; i < this.zombies.length ; i++) {
             this.zombies[i].animate();
