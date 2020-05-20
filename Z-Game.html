@@ -103,6 +103,8 @@
     import {GLTFLoader} from "./js/three.js-master/examples/jsm/loaders/GLTFLoader.js";
     let gunGtlfloader = new GLTFLoader();
 
+    let zNum = 5;
+    zombieNum = zNum;
     //gun
     gunGtlfloader.load(
         'models/handGunWithHand1.glb',
@@ -119,7 +121,7 @@
         },
         function ( xhr ) {
 
-            console.log('Player loading: ' + (xhr.loaded/xhr.total * 100) + '%');
+            console.log('Gun loading: ' + (xhr.loaded/xhr.total * 100) + '%');
 
         },
         function ( error ) {
@@ -130,20 +132,51 @@
     );
 
     //zombie
-    let zLoader = new GLTFLoader();
-    zLoader.load(
-        '../models/zombieWalk6.glb',
-        function (zombieImport) {
-            importZombie(zombieImport);
-            let zombieImportScene = zombieImport.scene;
-            //zombieImportScene.rotation.x = 90;
-            zombieImportScene.scale.set(7,7,7);
+    let zombieImportArray = [];
+    for (let i = 0 ; i < zNum ; i++) {
+        let zLoader = new GLTFLoader();
+        zLoader.load(
+            '../models/zombieWalk6.glb',
+            function (zombieImport) {
+                let zombieImportScene = zombieImport.scene;
+                //zombieImportScene.rotation.x = 90;
+                zombieImportScene.scale.set(7,7,7);
+
+                zombieImportArray.push(zombieImportScene);
+                if (zombieImportArray.length === zombieNum) {
+                    importZombie(zombieImportArray);
+                }
+
+            },
+            function (xhr) {
+                console.log('Zombie model loading: ' + (xhr.loaded/xhr.total * 100) + '%');
+            },
+            function (err) {
+                console.error('Error loading Zombie model: ' + err);
+            }
+        );
+    }
+
+
+    let bulletLoader = new GLTFLoader();
+    bulletLoader.load(
+        '../models/metalOrbGit.glb',
+        function (bulletImport) {
+            let bullet = bulletImport.scene;
+            bullet.castShadow = true;
+            bullet._dirtyPosition = true;
+            bullet.position.y = 5;
+            bullet.position.x = -10;
+            bullet.scale.set(0.25,0.25,0.25);
+            importBullet(bullet);
+
+
         },
         function (xhr) {
-            console.log('Zombie model loading: ' + (xhr.loaded/xhr.total * 100) + '%');
+            console.log('Bullet model loading: ' + (xhr.loaded/xhr.total * 100) + '%');
         },
         function (err) {
-            console.error('Error loading Zombie model: ' + err);
+            console.error('Error loading bullet model: ' + err);
         }
     );
 </script>
