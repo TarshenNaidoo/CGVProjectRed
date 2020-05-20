@@ -10,11 +10,13 @@ let camera;// = new THREE.PerspectiveCamera(45, window.innerWidth / window.inner
 
 let controls;// = new PointerLockControls(camera, document.body);
 
+let zombieNum;
 
 //external assets:
 let gun = null;
-let zombieImport = null;
+let zombieImportArray = null;
 let zombieScale = 7;
+let bullet = null;
 
 let height = 10;
 
@@ -37,8 +39,12 @@ function importGun(newGun){
     gun = newGun;
 }
 
-function importZombie(newZombie){
-    zombieImport = newZombie;
+function importZombie(newZombieArray){
+    zombieImportArray = newZombieArray;
+}
+
+function importBullet(newBullet){
+    bullet = newBullet;
 }
 
 function loadControls(newCamera, newControls){
