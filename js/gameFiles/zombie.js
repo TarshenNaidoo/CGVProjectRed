@@ -72,16 +72,6 @@ class Zombie {
         );
     }
 
-    setInitialPosition(x,y,z) {
-        this.zombie.position.x = x;
-        this.zombie.position.y = y;
-        this.zombie.position.z = z;
-        this.originalPosition.x = x;
-        this.originalPosition.y = y;
-        this.originalPosition.z = z;
-
-    }
-
     hit(){
         this.zombieHealth--;
         this.hitTime = performance.now();
