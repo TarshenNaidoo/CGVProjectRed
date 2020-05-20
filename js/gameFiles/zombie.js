@@ -1,6 +1,6 @@
 class Zombie {
 
-    constructor (level, x, y, z) {
+    constructor (level, x, y, z, i) {
 
         this.zombie = new THREE.Object3D();
         let mesh = new THREE.MeshBasicMaterial({color:0x777777});
@@ -11,11 +11,10 @@ class Zombie {
                 7,10,7
             ), mesh);
         //this.zombieModel = new THREE.Mesh(zombieImport.scene.geometry, zombieImport.scene.material);
-        this.zombieModel = zombieImport.scene;
+        this.zombieModel = zombieImportArray[i];
         this.zombieModel.position.x = x;
         this.zombieModel.position.y = y;
         this.hitbox.position.set(this.zombieModel.position.x + 1, 5, this.zombieModel.position.z+1);
-            console.log(this.zombieModel.position.x);
         //this.loadZombie();
         this.zombie.add(this.zombieModel);
         this.zombie.add(this.hitbox);
