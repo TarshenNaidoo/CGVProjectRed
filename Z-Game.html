@@ -6,13 +6,13 @@
     <meta charset="UTF-8">
     <title>Z-Game</title>
     <script type="text/javascript" src="src/js/three.js-master/build/three.js"></script>
-    <script type="text/javascript" src="src/exLibs/jquery-1.9.0.js"></script>
-    <script type="text/javascript" src="src/exLibs/stats.js"></script>
-    <script type="text/javascript" src="src/exLibs/dat.gui.js"></script>
-    <script type="text/javascript" src="src/exLibs/OBJLoader.js"></script>
-    <script type="text/javascript" src="src/exLibs/MTLLoader.js"></script>
-    <script type="text/javascript" src="src/exLibs/physi.js"></script>
-    <script type="text/javascript" src="src/exLibs/howler.js"></script>
+    <script type="text/javascript" src="exLibs/jquery-1.9.0.js"></script>
+    <script type="text/javascript" src="exLibs/stats.js"></script>
+    <script type="text/javascript" src="exLibs/dat.gui.js"></script>
+    <script type="text/javascript" src="exLibs/OBJLoader.js"></script>
+    <script type="text/javascript" src="exLibs/MTLLoader.js"></script>
+    <script type="text/javascript" src="exLibs/physi.js"></script>
+    <script type="text/javascript" src="exLibs/howler.js"></script>
     <script type="text/javascript" src="src/js/gameFiles/zombie.js"></script>
     <script type="text/javascript" src="src/js/gameFiles/crosshair.js"></script>
     <script type="text/javascript" src="src/js/gameFiles/avatar.js"></script>
@@ -104,20 +104,19 @@
     let loadDone = 0;
     let loadTotal = 0;
 
-    import {GLTFLoader} from "./js/three.js-master/examples/jsm/loaders/GLTFLoader.js";
+    import {GLTFLoader} from "./src/js/three.js-master/examples/jsm/loaders/GLTFLoader.js";
     let gunGtlfloader = new GLTFLoader();
 
     //gun
     loadTotal++;
     gunGtlfloader.load(
-        'models/',
+        'models/MagicianAllAni.glb',
         function (gunWithHand) {
             let gun = gunWithHand.scene;
-            gun.position.z = -5;
-            gun.position.y = -1.5;
-            gun.position.x = 1.5;
-            gun.rotation.x = Math.PI/2;
-            gun.rotation.z = Math.PI/2;
+            gun.position.z = 0;
+            gun.position.y = -1;
+            gun.position.x = -0.25;
+            gun.rotation.y = Math.PI;
             importGun(gun);
             loadDone++;
             checkLoad();
@@ -143,7 +142,7 @@
     for (let i = 0 ; i < zNum ; i++) {
         let zLoader = new GLTFLoader();
         zLoader.load(
-            '../models/zombieWalk6.glb',
+            'models/zombieWalk6.glb',
             function (zombieImport) {
 
                 let zombieImportScene = zombieImport.scene;
@@ -175,7 +174,7 @@
     let bulletLoader = new GLTFLoader();
     loadTotal++;
     bulletLoader.load(
-        '../models/metalOrbGit.glb',
+        './models/metalOrbGit.glb',
         function (bulletImport) {
             let bullet = bulletImport.scene;
             bullet.castShadow = true;
@@ -183,6 +182,7 @@
             bullet.position.y = 5;
             bullet.position.x = -10;
             bullet.scale.set(0.25,0.25,0.25);
+            bullet.visible = false;
             importBullet(bullet);
 
             loadDone++;
