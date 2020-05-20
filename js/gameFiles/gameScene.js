@@ -192,9 +192,10 @@ class gameScene extends Physijs.Scene {
 
     reload() {
         for (let i = 0 ; i < this.bullets.length ; i++) {
-            this.bullets[i] = new Bullet(i);
+            this.bullets[i] = new Bullet();
         }
         this.actualAmmo = this.maxBullets;
+        bullet.visible = false;
     }
     shoot() {
         if (this.actualAmmo <= 0) {
@@ -246,10 +247,6 @@ class gameScene extends Physijs.Scene {
 
         this.avatar.animate();
 
-        if (sceneChildrenDisplayOnce) {
-            //console.log("Children: " + this.children.length);
-            sceneChildrenDisplayOnce  = false;
-        }
         if (shooting) {
             this.avatar.animateWeapon();
         }

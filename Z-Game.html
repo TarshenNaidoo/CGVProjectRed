@@ -23,7 +23,7 @@
     <div id="blocker">
         <h1 align="center" ><span style="color:crimson" id="Z-GAME"> Z-GAME </span></h1>
         <h2 align="center"><span style="color: rebeccapurple" id="Options"> Options </span> </h2>
-        <h2 align="center"><span style="color: yellowgreen" id="Play" class="Play" onclick="main()"> Play </span> </h2>
+        <h2 align="center"><span style="color: white" id="Play" class="Play"> Loading... </span> </h2>
         <div id="instructions">
             <!--
             <span id="title" style="font-size:30px">Click to start game</span>
@@ -100,12 +100,15 @@
 
 </div>
 <script type="module">
+
+    let loadDone = 0;
+    let loadTotal = 0;
+
     import {GLTFLoader} from "./js/three.js-master/examples/jsm/loaders/GLTFLoader.js";
     let gunGtlfloader = new GLTFLoader();
 
-    let zNum = 5;
-    zombieNum = zNum;
     //gun
+    loadTotal++;
     gunGtlfloader.load(
         'models/handGunWithHand1.glb',
         function (gunWithHand) {
@@ -116,7 +119,8 @@
             gun.rotation.x = Math.PI/2;
             gun.rotation.z = Math.PI/2;
             importGun(gun);
-            //checkIfLoaded();
+            loadDone++;
+            checkLoad();
 
         },
         function ( xhr ) {
@@ -133,6 +137,9 @@
 
     //zombie
     let zombieImportArray = [];
+    let zNum = 5;
+    zombieNum = zNum;
+    loadTotal += zNum;
     for (let i = 0 ; i < zNum ; i++) {
         let zLoader = new GLTFLoader();
         zLoader.load(
@@ -151,6 +158,8 @@
                 if (zombieImportArray.length === zombieNum) {
                     importZombie(zombieImportArray);
                 }
+                loadDone += 1;
+                checkLoad();
 
             },
             function (xhr) {
@@ -164,6 +173,7 @@
 
 
     let bulletLoader = new GLTFLoader();
+    loadTotal++;
     bulletLoader.load(
         '../models/metalOrbGit.glb',
         function (bulletImport) {
@@ -175,7 +185,8 @@
             bullet.scale.set(0.25,0.25,0.25);
             importBullet(bullet);
 
-
+            loadDone++;
+            checkLoad();
         },
         function (xhr) {
             console.log('Bullet model loading: ' + (xhr.loaded/xhr.total * 100) + '%');
@@ -184,6 +195,25 @@
             console.error('Error loading bullet model: ' + err);
         }
     );
+    function checkLoad(){
+        if (loadDone === loadTotal){
+            console.log("done!")
+            let play = document.getElementById("Play");
+            play.style.color = "yellowgreen";
+            play.innerHTML = "Play!";
+            play.onclick = function() {
+                loadMain();
+            }
+        } else {console.log("loading still");}
+    }
+
+    function loadMain(){
+        let play = document.getElementById("Play");
+        play.style.color = "orange";
+        play.innerHTML = "Starting...";
+        main();
+    }
+
 </script>
 
 </body>
