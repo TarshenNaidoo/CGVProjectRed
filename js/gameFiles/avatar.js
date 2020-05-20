@@ -1,12 +1,11 @@
 class Avatar {
-    constructor(camera, scene) {
+    constructor(scene) {
 
         this.avatar = new THREE.Object3D;
         this.scene = scene;
         controls.getObject().add(this.avatar);
         this.cameraHeight = height;
         controls.getObject().position.y = this.cameraHeight;
-        console.log(controls.getObject().position.y);
         this.rayCaster = new THREE.Raycaster( controls.getObject().position, new THREE.Vector3( 0, - 1, 0 ), this.cameraHeight, this.cameraHeight );
         this.canJump = true;
         this.hp = 100;
@@ -16,19 +15,15 @@ class Avatar {
         this.activeWeapon = this.weapon0;
         this.avatar.add(this.activeWeapon);
         this.weaponNumber = 0;
-        this.goingUp = true;
-        this.recoil = true;
-        this.positionLimit = 82;
-        this.power = 10000;
-
+        this.speed = 150;
         this.velocity = new THREE.Vector3();
         this.direction = new THREE.Vector3();
         this.mass = 50;
 
     }
 
-    getPower(){
-        return this.power;
+    getSpeed(){
+        return this.speed;
     }
 
     getObject(){
@@ -106,11 +101,11 @@ class Avatar {
 
         if ( moveForward || moveBackward ) this.velocity.z -= this.direction.z * 400.0 * delta;
         else {
-            if (this.velocity.z > -0.1){this.velocity.z = 0;}
+            if (Math.abs(this.velocity.z) < 0.1){this.velocity.z = 0;}
         }
         if ( moveLeft || moveRight ) this.velocity.x -= this.direction.x * 400.0 * delta;
         else {
-            if (this.velocity.x > -0.1){this.velocity.x = 0;}
+            if (Math.abs(this.velocity.x) < 0.1){this.velocity.x = 0;}
         }
 
         controls.moveForward(-this.velocity.z * delta);
