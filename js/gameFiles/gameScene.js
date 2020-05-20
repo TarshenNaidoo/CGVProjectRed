@@ -253,7 +253,7 @@ class gameScene extends Physijs.Scene {
         if (shooting) {
             this.avatar.animateWeapon();
         }
-        
+
         let currentBullet = this.maxBullets-this.actualAmmo;
         if (currentBullet === 0) {currentBullet = this.maxBullets+1;}
 
