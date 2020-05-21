@@ -15,6 +15,7 @@ class Avatar {
         this.AnimationClips = playerAnimation;
         this.lightAttackClip = THREE.AnimationClip.findByName(this.AnimationClips, 'LightAttack');
         this.playerLightAttack = this.mixer.clipAction(this.lightAttackClip);
+        this.playerLightAttack.setLoop(THREE.LoopOnce);
         this.moveClip = THREE.AnimationClip.findByName(this.AnimationClips, 'ManWalking');
         this.playerMove = this.mixer.clipAction(this.moveClip);
         this.IdleClip = THREE.AnimationClip.findByName(this.AnimationClips, 'ManIdle');
