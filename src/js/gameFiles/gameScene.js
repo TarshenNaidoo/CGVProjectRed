@@ -2,7 +2,7 @@
 class gameScene extends Physijs.Scene {
 
     constructor(renderer, theCamera, controls) {
-        super({fixedTimeStep: 1 / 60});
+        super({fixedTimeStep: delta});
         this.setGravity(new THREE.Vector3(0,-50, 0));
         this.isPaused = false;
         this.background =  new THREE.Color (0x87ceeb);
@@ -170,7 +170,10 @@ class gameScene extends Physijs.Scene {
 
         for ( let i = 0, l = position.count; i < l; i ++ ) {
 
-            color.setHSL( Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
+            //color.setHSL( Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
+            let randVar = Math.random();
+            //console.log(randVar)
+            color.setRGB(randVar*0.75,0.75,(1-randVar)*0.4*0.75);
             colors.push( color.r, color.g, color.b );
 
         }
@@ -182,6 +185,7 @@ class gameScene extends Physijs.Scene {
         let floor = new THREE.Mesh( floorGeometry, floorMaterial );
 
         //let physiFloor = new Physijs.PlaneMesh(floorGeometry,floorMaterial, 10);
+        //place.add(floor);
         place.add(floor);
         return place;
     }
