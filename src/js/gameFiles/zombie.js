@@ -8,7 +8,7 @@ class Zombie {
         this.zombieModel.position.y = y;
         let mesh = new THREE.MeshBasicMaterial({color:0x777777});
         mesh.transparent = true;
-        mesh.opacity = 0.25;
+        mesh.opacity = 0;
         this.hitbox = new Physijs.Mesh(
             new THREE.BoxBufferGeometry(
                 7,10,7
