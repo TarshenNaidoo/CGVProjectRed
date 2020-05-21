@@ -31,6 +31,7 @@ class Bullet {
     }
 
     animate() {
+        this.mixer.update(delta);
 
         if (this.launched) {
             this.bullet.position.x += this.direction.x*delta * this.speed;
@@ -51,6 +52,10 @@ class Bullet {
                     )
                 ) > 200
             ) {
+                if (this.shootAction.isRunning()){
+                    this.shootAction.stop();
+                    this.shootAction.reset();
+                }
                 this.bullet.visible = false;
                 this.launched = false;
                 this.scene.stopPlayerShootAnimation();

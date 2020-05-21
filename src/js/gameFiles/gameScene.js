@@ -186,7 +186,9 @@ class gameScene extends Physijs.Scene {
 
         //let physiFloor = new Physijs.PlaneMesh(floorGeometry,floorMaterial, 10);
         //place.add(floor);
-        place.add(floor);
+        place.add(floor)
+        //let worldModel = new World();
+        //place.add(worldModel.getWorld());
         return place;
     }
 
