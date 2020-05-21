@@ -10,7 +10,14 @@ class Avatar {
         this.canJump = true;
         this.hp = 100;
         this.controls = controls;
-        this.weapon0 = gun;
+        this.weapon0 = player;
+        this.mixer = playerMixer;
+        this.AnimationClips = playerAnimation;
+        this.moveClip = THREE.AnimationClip.findByName(this.AnimationClips, 'ManWalking');
+        this.playerMove = this.mixer.clipAction(this.moveClip);
+        this.moveClip = THREE.AnimationClip.findByName(this.AnimationClips, 'ManIdle');
+        this.playerIdle = this.mixer.clipAction(this.moveClip);
+        this.playerIdle.play();
         this.weapon1 = new THREE.Object3D;
         this.activeWeapon = this.weapon0;
         this.avatar.add(this.activeWeapon);
@@ -87,11 +94,8 @@ class Avatar {
         }
          */
     }
-
     animate(){
-
-
-
+        // { x-z movement
         this.velocity.x -= this.velocity.x * 10 * delta;
         this.velocity.z -= this.velocity.z * 10 * delta;
 
@@ -110,26 +114,20 @@ class Avatar {
 
         controls.moveForward(-this.velocity.z * delta);
         controls.moveRight(-this.velocity.x * delta);
+        //}
 
-
-
+        //{y movement
         this.rayCaster.ray.origin.copy((controls.getObject().position.clone()));
         //console.log("camera y pos: " + controls.getObject().position.y + ", height minimum: " + this.cameraHeight);
         this.velocity.y -= 9.8 * this.mass * delta;
-
-
         let intersections = this.rayCaster.intersectObjects(this.scene.objects);
-
         let onObject = intersections.length > 0;
-
         if ( onObject === true ) {
             console.log("true");
             velocity.y = Math.max( 0, velocity.y );
             this.canJump = true;
 
         }
-
-
         if ( controls.getObject().position.y < this.cameraHeight && this.velocity.y < 0) {
 
             this.velocity.y = 0;
@@ -137,6 +135,24 @@ class Avatar {
 
         }
         controls.getObject().position.y += this.velocity.y * delta;
+        //}
+
+        //{idle and moving animation control
+        if (this.velocity.z != 0 || this.velocity.x != 0) {
+            this.playerIdle.paused = true;
+            if (this.playerMove.isScheduled()){
+                this.playerMove.paused = false;
+            } else {
+                this.playerMove.play();
+            }
+        } else {
+            if (this.playerMove.isScheduled()){
+                this.playerMove.paused = true;
+            }
+            this.playerIdle.paused = false;
+        }
+        this.mixer.update(delta);
+        //}
 
     }
 

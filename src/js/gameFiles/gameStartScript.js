@@ -13,7 +13,10 @@ let controls;// = new PointerLockControls(camera, document.body);
 let zombieNum;
 
 //external assets:
-let gun = null;
+let player = null;
+let playerAnimation = null;
+let playerMixer = null;
+
 let zombieImportArray = null;
 let zombieScale = 7;
 let bullet = null;
@@ -35,8 +38,16 @@ let sceneChildrenDisplayOnce = true;
     //$('.Play').onclick(main(event));
 //}
 
-function importGun(newGun){
-    gun = newGun;
+function importPlayer(newPlayer){
+    player = newPlayer.scene;
+    player.position.z = 0;
+    player.position.y = -0.85;
+    player.position.x = -0.25;
+    player.rotation.y = Math.PI;
+
+    playerMixer = new THREE.AnimationMixer(player);
+    playerAnimation = newPlayer.animations;
+
 }
 
 function importZombie(newZombieArray){

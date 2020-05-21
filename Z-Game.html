@@ -111,13 +111,9 @@
     loadTotal++;
     gunGtlfloader.load(
         'models/MagicianAllAni.glb',
-        function (gunWithHand) {
-            let gun = gunWithHand.scene;
-            gun.position.z = 0;
-            gun.position.y = -1;
-            gun.position.x = -0.25;
-            gun.rotation.y = Math.PI;
-            importGun(gun);
+        function (playerModel) {
+            importPlayer(playerModel);
+
             loadDone++;
             checkLoad();
 
