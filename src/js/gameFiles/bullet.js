@@ -1,6 +1,6 @@
 class Bullet {
 
-    constructor() {
+    constructor(scene) {
 
         this.material = new THREE.MeshStandardMaterial(0xeeeeee);
         this.bulletWidth = 1;
@@ -10,6 +10,11 @@ class Bullet {
         this.direction = new THREE.Vector3 (0,0,0);
         this.initialPosition = new THREE.Vector3(0,0,0);
         this.speed = 0;
+        this.scene = scene;
+        this.mixer = bulletMixer;
+        this.AnimationClips = bulletAnimation;
+        this.shootClip = THREE.AnimationClip.findByName(this.AnimationClips, 'Orbit');
+        this.shootAction = this.mixer.clipAction(this.shootClip);
     }
 
     getLaunched() {
@@ -31,7 +36,6 @@ class Bullet {
             this.bullet.position.x += this.direction.x*delta * this.speed;
             this.bullet.position.y += this.direction.y*delta * this.speed;
             this.bullet.position.z += this.direction.z*delta * this.speed;
-
             if (
                 Math.sqrt(
                     Math.pow(
@@ -45,12 +49,21 @@ class Bullet {
                     Math.pow(this.bullet.position.z - this.initialPosition.z,
                         2
                     )
-                ) > 50
-            ) {this.bullet.visible = false; this.launched = false}
+                ) > 200
+            ) {
+                this.bullet.visible = false;
+                this.launched = false;
+                this.scene.stopPlayerShootAnimation();
+            }
         }
     }
 
     shoot(position, speed) {
+        if (this.shootAction.isRunning()){
+            this.shootAction.stop();
+            this.shootAction.reset();
+        }
+        this.shootAction.play();
         this.launched = true;
         this.bullet.visible = true;
         this.speed = speed;

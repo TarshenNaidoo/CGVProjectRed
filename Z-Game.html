@@ -172,14 +172,8 @@
     bulletLoader.load(
         './models/metalOrbGit.glb',
         function (bulletImport) {
-            let bullet = bulletImport.scene;
-            bullet.castShadow = true;
-            bullet._dirtyPosition = true;
-            bullet.position.y = 5;
-            bullet.position.x = -10;
-            bullet.scale.set(0.25,0.25,0.25);
-            bullet.visible = false;
-            importBullet(bullet);
+
+            importBullet(bulletImport);
 
             loadDone++;
             checkLoad();

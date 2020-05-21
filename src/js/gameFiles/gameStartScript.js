@@ -20,6 +20,8 @@ let playerMixer = null;
 let zombieImportArray = null;
 let zombieScale = 7;
 let bullet = null;
+let bulletMixer = null;
+let bulletAnimation = null;
 
 let height = 10;
 
@@ -55,7 +57,15 @@ function importZombie(newZombieArray){
 }
 
 function importBullet(newBullet){
-    bullet = newBullet;
+    bullet = newBullet.scene;
+    bullet.castShadow = true;
+    bullet.position.y = 5;
+    bullet.position.x = -10;
+    bullet.scale.set(0.25,0.25,0.25);
+    bullet.visible = false;
+
+    bulletMixer = new THREE.AnimationMixer(bullet);
+    bulletAnimation = newBullet.animations;
 }
 
 function loadControls(newCamera, newControls){

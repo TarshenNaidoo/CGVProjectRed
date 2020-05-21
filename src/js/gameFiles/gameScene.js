@@ -17,7 +17,7 @@ class gameScene extends Physijs.Scene {
         this.maxBullets = 19;
         this.actualAmmo = this.maxBullets;
         for (let i = 0 ; i <= this.maxBullets ; i++){
-            this.bullets.push(new Bullet());
+            this.bullets.push(new Bullet(this));
             this.add(this.bullets[i].bullet);
         }
         //this.reload();
@@ -39,6 +39,8 @@ class gameScene extends Physijs.Scene {
 
         this.add(this.place);
         this.objects.push(this.place);
+
+        this.tracktime = 0;
     }
 
     display(){
@@ -190,9 +192,18 @@ class gameScene extends Physijs.Scene {
         return avatar;
     }
 
+    stopPlayerShootAnimation() {
+        if (this.avatar.playerLightAttack.isRunning()){
+            this.avatar.playerLightAttack.stop();
+            this.avatar.playerLightAttack.reset();
+        }
+
+        //console.log(performance.now()- this.tracktime);
+    }
+
     reload() {
         for (let i = 0 ; i < this.bullets.length ; i++) {
-            this.bullets[i] = new Bullet();
+            this.bullets[i] = new Bullet(this);
         }
         this.actualAmmo = this.maxBullets;
         bullet.visible = false;
@@ -207,6 +218,8 @@ class gameScene extends Physijs.Scene {
                 this.camera.position,
                 this.avatar.getSpeed()
             );
+            this.tracktime = performance.now();
+            this.avatar.shoot();
             this.actualAmmo--;
         }
         this.updateAmmo();

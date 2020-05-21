@@ -13,10 +13,12 @@ class Avatar {
         this.weapon0 = player;
         this.mixer = playerMixer;
         this.AnimationClips = playerAnimation;
+        this.lightAttackClip = THREE.AnimationClip.findByName(this.AnimationClips, 'LightAttack');
+        this.playerLightAttack = this.mixer.clipAction(this.lightAttackClip);
         this.moveClip = THREE.AnimationClip.findByName(this.AnimationClips, 'ManWalking');
         this.playerMove = this.mixer.clipAction(this.moveClip);
-        this.moveClip = THREE.AnimationClip.findByName(this.AnimationClips, 'ManIdle');
-        this.playerIdle = this.mixer.clipAction(this.moveClip);
+        this.IdleClip = THREE.AnimationClip.findByName(this.AnimationClips, 'ManIdle');
+        this.playerIdle = this.mixer.clipAction(this.IdleClip);
         this.playerIdle.play();
         this.weapon1 = new THREE.Object3D;
         this.activeWeapon = this.weapon0;
@@ -59,6 +61,14 @@ class Avatar {
         return this.weaponNumber;
     }
 
+    shoot() {
+        if (this.playerLightAttack.isRunning()){
+            this.playerLightAttack.stop();
+            this.playerLightAttack.reset();
+        }
+        this.playerLightAttack.play();
+    }
+
     jump() {
         if (this.canJump){
             this.velocity.y += 100;
@@ -66,36 +76,8 @@ class Avatar {
         }
     }
 
-    move(delta, moveForward, moveBackward, moveLeft, moveRight) {
+    move() {
 
-        //console.log("velocity x:" + this.velocity.x + ", velocity z: " + this.velocity.z);
-        //console.log("delta: " + delta);
-        //if (velocity.x < 0.1 && moveLeft === false && moveRight === false) {velocity.x = 0;}
-        //if (velocity.z < 0.1 && moveForward === false && moveRight === false) {velocity.z = 0;}
-        //this.hitBox.setLinearVelocity(velocity);
-
-        //this.camera.position.x += (-velocity.x * delta);
-        //this.camera.position.z += (-velocity.z * delta);
-        //this.hitBox.position.z += velocity.z*delta;
-        //this.hitBox.position.x += velocity.x*delta;
-        //console.log(this.hitBox.position.y);
-
-    }
-
-    //called when user presses q or mouse wheel down or up
-    changeWeapon() {
-        /* not implemented yet
-        if (this.weaponNumber == 0) {
-            this.weaponNumber = 1;
-            this.activeWeapon = this.weapon1;
-        } else if (this.weaponNumber == 1) {
-            this.weaponNumber = 0;
-            this.activeWeapon = this.weapon0;
-        }
-         */
-    }
-    animate(){
-        // { x-z movement
         this.velocity.x -= this.velocity.x * 10 * delta;
         this.velocity.z -= this.velocity.z * 10 * delta;
 
@@ -114,7 +96,24 @@ class Avatar {
 
         controls.moveForward(-this.velocity.z * delta);
         controls.moveRight(-this.velocity.x * delta);
-        //}
+
+    }
+
+    //called when user presses q or mouse wheel down or up
+    changeWeapon() {
+        /* not implemented yet
+        if (this.weaponNumber == 0) {
+            this.weaponNumber = 1;
+            this.activeWeapon = this.weapon1;
+        } else if (this.weaponNumber == 1) {
+            this.weaponNumber = 0;
+            this.activeWeapon = this.weapon0;
+        }
+         */
+    }
+    animate(){
+
+        this.move();
 
         //{y movement
         this.rayCaster.ray.origin.copy((controls.getObject().position.clone()));
