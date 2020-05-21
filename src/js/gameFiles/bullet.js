@@ -50,7 +50,7 @@ class Bullet {
                     Math.pow(this.bullet.position.z - this.initialPosition.z,
                         2
                     )
-                ) > 200
+                ) > 160
             ) {
                 if (this.shootAction.isRunning()){
                     this.shootAction.stop();
@@ -66,6 +66,8 @@ class Bullet {
     shoot(position, speed) {
         if (this.shootAction.isRunning()){
             this.shootAction.stop();
+            this.shootAction.reset();
+        } else {
             this.shootAction.reset();
         }
         this.shootAction.play();
