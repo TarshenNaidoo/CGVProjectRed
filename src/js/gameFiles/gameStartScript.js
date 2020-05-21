@@ -17,6 +17,8 @@ let player = null;
 let playerAnimation = null;
 let playerMixer = null;
 
+//add imported objects here and set them to null
+
 let zombieImportArray = null;
 
 let world = null;
@@ -70,9 +72,12 @@ function importBullet(newBullet){
 }
 
 function importWorld(newWorld){
-    world = newWorld.scene
-    world.position.y -= 8.448;
+    world = newWorld.scene;
+    world.position.y = 2;
+    world.position.z = 20;
 }
+
+//add import functions here
 
 function loadControls(newCamera, newControls){
     camera = newCamera;

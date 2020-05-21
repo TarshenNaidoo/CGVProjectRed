@@ -17,6 +17,7 @@
     <script type="text/javascript" src="src/js/gameFiles/crosshair.js"></script>
     <script type="text/javascript" src="src/js/gameFiles/avatar.js"></script>
     <script type="text/javascript" src="src/js/gameFiles/bullet.js"></script>
+    <script type="text/javascript" src="src/js/gameFiles/world.js"></script>
     <script type="text/javascript" src="src/js/gameFiles/gameScene.js"></script>
     <script type="text/javascript" src="src/js/gameFiles/gameStartScript.js"></script>
 
@@ -186,13 +187,23 @@
         }
     );
 
+    //for each object
+    //create a new gltfLoader() object
+    //add one to loadtotal for each object imported
+    // load the object using <loader name>.load(
+    // '<path to file>',
+    // function(<import object>){ <onload function>}, ##call a function in gameStartScript and pass parameter to assign to an object
+    // function(xhr) {<update function>} ##keep console logging in the same format as above
+    // function(xhr) {<error function>} ##keep console error in the same format as above
+
+    /*
     let worldLoader = new GLTFLoader();
     loadTotal++;
     worldLoader.load(
-        './models/Draft/landscape.glb',
+        './models/Draft/world.glb',
         function (worldImport) {
 
-            importWorld(worldImport);
+            importWorld(worldImport); //calling function in gameStartScript
 
             loadDone++;
             checkLoad();
@@ -205,6 +216,7 @@
         console.error('Error loading world model: ' + err);
         }
     )
+     */
 
 
     function checkLoad(){
