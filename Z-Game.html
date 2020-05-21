@@ -185,6 +185,28 @@
             console.error('Error loading bullet model: ' + err);
         }
     );
+
+    let worldLoader = new GLTFLoader();
+    loadTotal++;
+    worldLoader.load(
+        './models/Draft/landscape.glb',
+        function (worldImport) {
+
+            importWorld(worldImport);
+
+            loadDone++;
+            checkLoad();
+
+        },
+        function (xhr){
+            console.log('World model loading: ' + (xhr.loaded/xhr.total * 100) + '%');
+        },
+        function (err){
+        console.error('Error loading world model: ' + err);
+        }
+    )
+
+
     function checkLoad(){
         if (loadDone === loadTotal){
             console.log("done!")

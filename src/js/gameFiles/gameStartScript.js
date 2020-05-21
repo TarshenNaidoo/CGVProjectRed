@@ -18,7 +18,8 @@ let playerAnimation = null;
 let playerMixer = null;
 
 let zombieImportArray = null;
-let zombieScale = 7;
+
+let world = null;
 let bullet = null;
 let bulletMixer = null;
 let bulletAnimation = null;
@@ -66,6 +67,11 @@ function importBullet(newBullet){
 
     bulletMixer = new THREE.AnimationMixer(bullet);
     bulletAnimation = newBullet.animations;
+}
+
+function importWorld(newWorld){
+    world = newWorld.scene
+    world.position.y -= 8.448;
 }
 
 function loadControls(newCamera, newControls){
