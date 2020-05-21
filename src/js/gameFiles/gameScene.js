@@ -4,6 +4,8 @@ class gameScene extends Physijs.Scene {
     constructor(renderer, theCamera, controls) {
         super({fixedTimeStep: delta});
         this.setGravity(new THREE.Vector3(0,-50, 0));
+        this.skybox = null;
+        this.createSkybox();
         this.isPaused = false;
         this.background =  new THREE.Color (0x87ceeb);
         this.camera = theCamera;
@@ -20,26 +22,17 @@ class gameScene extends Physijs.Scene {
             this.bullets.push(new Bullet(this));
             this.add(this.bullets[i].bullet);
         }
-        //this.reload();
         this.score = 0;
         this.lastScore = 0;
         this.level = 1;
-
         this.createHUD();
         this.avatar.loadWeapons();
         this.place = this.createPlace();
-        //this.createZombies();
-
         this.pointLight = null;
         this.spotLight = null;
         this.createLights();
-
-        //this.add(gun);
-        //gun.position.y = 15;
-
         this.add(this.place);
         this.objects.push(this.place);
-
         this.tracktime = 0;
     }
 
@@ -135,6 +128,11 @@ class gameScene extends Physijs.Scene {
         //this.add(pointlight);
 
 
+    }
+
+    createSkybox(){
+        this.skybox = new Skybox();
+        this.add(this.skybox.getSkybox());
     }
 
     //this creates the 'place' as it were complete with a skybox and map
