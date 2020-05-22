@@ -253,7 +253,7 @@ class gameScene extends Physijs.Scene {
 
     createZombies() {
         for (let i = 0 ; i < zombieNum ; i++){
-            let generatedZombie = new Zombie(this.level, (-zombieNum + i)*5, 0, -50, i)
+            let generatedZombie = new Zombie(this.camera, this.level, (-zombieNum + i)*5, 0, -50, i)
             this.zombies.push(generatedZombie);
             this.add(generatedZombie.zombie);
         }
