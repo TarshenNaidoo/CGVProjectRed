@@ -295,7 +295,10 @@ class gameScene extends Physijs.Scene {
         this.bullets[currentBullet-1].animate();
 
         for (let i = 0 ; i < this.zombies.length ; i++) {
-            this.zombies[i].animate();
+            let zomAtt = this.zombies[i].animate();
+	        if (zomAtt === 0) {
+		        this.avatar.hp = 0;
+	        }
         }
 
         if (this.avatar.hp === 0) {
