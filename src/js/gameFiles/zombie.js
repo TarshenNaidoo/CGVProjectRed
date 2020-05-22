@@ -97,6 +97,7 @@ class Zombie {
                     //checks if Zombie is close enough then stops moving
                     let radius = Math.sqrt(Math.pow(zDirection.x,2) + Math.pow(zDirection.z,2));
                     if (radius < 5){
+			    avatar.hp--;
                         return;
                     }
                     //
