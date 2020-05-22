@@ -67,7 +67,7 @@ function importBullet(newBullet){
     bullet.position.y = 5;
     bullet.position.x = -10;
     bullet.scale.set(0.25,0.25,0.25);
-    bullet.visible = false;
+    //bullet.visible = false;
 
     bulletMixer = new THREE.AnimationMixer(bullet);
     bulletAnimation = newBullet.animations;
