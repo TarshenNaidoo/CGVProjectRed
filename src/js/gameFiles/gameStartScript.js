@@ -7,6 +7,8 @@ let mouseDown = false;
 let renderer = null;
 
 let camera;// = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+let cameraView = true;
+let cameraBreak = true;
 
 let controls;// = new PointerLockControls(camera, document.body);
 
@@ -84,6 +86,16 @@ function loadControls(newCamera, newControls){
     controls = newControls;
 }
 
+function switchControls(mode){
+
+    if (mode) {
+        scene.avatar.avatar.position.z = -5;
+    } else {
+        scene.avatar.avatar.position.z = 0;
+    }
+    console.log(scene.avatar.avatar.position.z)
+}
+
 function createGUI (withStats) {
     //let gui = new dat.GUI();
 
@@ -153,6 +165,13 @@ function onKeyDown (event) {
             case 32: // space
                 jumping = true;
                 break;
+
+            case 187:
+                if (cameraBreak){
+                    cameraView = !cameraView;
+                    switchControls(cameraView);
+                }
+                break;
                 /* currently we don't have functionality for weapon switching
             case 81: // q
                 if (!disparando) scene.changeWeapon();
@@ -191,6 +210,10 @@ function onKeyUp (event) {
 
             case 32: // space
                 jumping = false;
+                break;
+
+            case 187:
+                cameraBreak = true;
                 break;
         }
     }
@@ -252,7 +275,9 @@ async function main() {
         "            <br/>\n" +
         "            Look: Mouse\n" +
         "            <br/>\n" +
-        "            Pause: ESC"
+        "            Pause: ESC\n" +
+        "            <br/>\n" +
+        "            See character from behind: ="
     zgame.innerHTML = "";
     options.innerHTML = "";
     play.innerHTML = "";

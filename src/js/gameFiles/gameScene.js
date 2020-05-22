@@ -10,7 +10,7 @@ class gameScene extends Physijs.Scene {
         this.background =  new THREE.Color (0x87ceeb);
         this.camera = theCamera;
         this.objects = [];
-        this.avatar = this.createAvatar();
+        this.createAvatar();
         this.crosshair = this.createCrosshair();
         this.camera.add(this.crosshair);
         this.zombies = [];
@@ -191,9 +191,7 @@ class gameScene extends Physijs.Scene {
     }
 
     createAvatar(){
-        let avatar = new Avatar(this);
-        //camera.add(avatar.getObject());
-        return avatar;
+        this.avatar = new Avatar(this);
     }
 
     stopPlayerShootAnimation() {
