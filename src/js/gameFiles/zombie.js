@@ -17,7 +17,7 @@ class Zombie {
         this.zombie.position.set(x*2,2,z);
         this.direction = [];
         this.rayCaster = new THREE.Raycaster( this.zombie.position, new THREE.Vector3( 0, 0, 0 ), 0, 1 );
-        this.zombieHealth = 1;
+        this.zombieHealth = level;
     }
 
     async loadZombie(){

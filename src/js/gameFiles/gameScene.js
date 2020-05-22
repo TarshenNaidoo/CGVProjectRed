@@ -13,6 +13,7 @@ class gameScene extends Physijs.Scene {
         this.createAvatar();
         this.crosshair = this.createCrosshair();
         this.camera.add(this.crosshair);
+        this.level = 1;
         this.zombies = [];
         this.createZombies();
         this.bullets = [];
@@ -24,7 +25,6 @@ class gameScene extends Physijs.Scene {
         }
         this.score = 0;
         this.lastScore = 0;
-        this.level = 1;
         this.createHUD();
         this.avatar.loadWeapons();
         this.place = this.createPlace();
@@ -42,6 +42,13 @@ class gameScene extends Physijs.Scene {
         if (this.avatar.playerLightAttack.isRunning()){
             this.avatar.playerLightAttack.stop();
             this.avatar.playerLightAttack.reset();
+        }
+
+
+        for (let i = 0 ; i < this.zombies.length ; i++) {
+            this.zombies[i].zombieHealth = this.level;
+            this.zombies[i].zombieHit = 0;
+            this.zombies[i].zombie.visible = true;
         }
 
         this.score = 0;
