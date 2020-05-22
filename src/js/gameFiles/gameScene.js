@@ -36,6 +36,21 @@ class gameScene extends Physijs.Scene {
         this.tracktime = 0;
     }
 
+    resetScene(){
+        controls.getObject().position.set(0,10,0);
+        this.reloadAmmo();
+        if (this.avatar.playerLightAttack.isRunning()){
+            this.avatar.playerLightAttack.stop();
+            this.avatar.playerLightAttack.reset();
+        }
+
+        this.score = 0;
+        this.updateScore();
+        this.level = 0;
+        this.updateLevel();
+
+    }
+
     display(){
         this.crosshair.setVisible();
     }
@@ -203,16 +218,17 @@ class gameScene extends Physijs.Scene {
         //console.log(performance.now()- this.tracktime);
     }
 
-    reload() {
+    reloadAmmo() {
         for (let i = 0 ; i < this.bullets.length ; i++) {
             this.bullets[i] = new Bullet(this);
         }
         this.actualAmmo = this.maxBullets;
         bullet.visible = false;
+        this.updateAmmo();
     }
     shoot() {
         if (this.actualAmmo <= 0) {
-            this.reload();
+            this.reloadAmmo();
         }
         //'shooting' will be false the 2nd time this runs
          else if (!shooting) {
@@ -223,8 +239,8 @@ class gameScene extends Physijs.Scene {
             this.tracktime = performance.now();
             this.avatar.shoot();
             this.actualAmmo--;
+            this.updateAmmo();
         }
-        this.updateAmmo();
     }
 
 

@@ -50,6 +50,7 @@ class Zombie {
             rotation,
             normal) {
                 if (velocity.dot> 500) {
+                    console.log("le hit");
                     if (performance.now() - this.hitTime > 1) {
                         that.hit();
                     }

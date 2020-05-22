@@ -215,6 +215,10 @@ function onKeyUp (event) {
             case 187:
                 cameraBreak = true;
                 break;
+
+            case 82:
+                scene.resetScene();
+                break;
         }
     }
 }
