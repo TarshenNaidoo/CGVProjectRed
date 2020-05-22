@@ -37,6 +37,25 @@ class Bullet {
             this.bullet.position.x += this.direction.x*delta * this.speed;
             this.bullet.position.y += this.direction.y*delta * this.speed;
             this.bullet.position.z += this.direction.z*delta * this.speed;
+
+            let detectHit = false;
+            for (let i = 0 ; i < this.scene.zombies.length ; i++) {
+                if (
+                    Math.sqrt(
+                        Math.pow(this.bullet.position.x - this.scene.zombies[i].zombie.position.x, 2) +
+                        Math.pow(this.bullet.position.y - this.scene.zombies[i].zombie.position.y, 2) +
+                        Math.pow(this.bullet.position.z - this.scene.zombies[i].zombie.position.z, 2)
+                    ) < 10 && this.scene.zombies[i].zombieHealth != 0
+                ) {
+                    this.scene.zombies[i].hit();
+                    this.bullet.visible = false;
+                    this.launched = false;
+                    this.scene.stopPlayerShootAnimation();
+                    this.scene.updateScore(1);
+                    break;
+                }
+                //console.log("Not within range of this zombie");
+            }
             if (
                 Math.sqrt(
                     Math.pow(

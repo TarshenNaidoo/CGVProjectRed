@@ -45,7 +45,7 @@ class gameScene extends Physijs.Scene {
         }
 
         this.score = 0;
-        this.updateScore();
+        this.updateScore(-this.score);
         this.level = 0;
         this.updateLevel();
 

@@ -4,11 +4,9 @@ class Zombie {
 
         this.zombie = new THREE.Object3D();
         this.zombieModel = zombieImportArray[i];
-        this.zombieModel.position.x = x;
-        this.zombieModel.position.y = y;
         let mesh = new THREE.MeshBasicMaterial({color:0x777777});
         mesh.transparent = true;
-        mesh.opacity = 0;
+        mesh.opacity = 0.25;
         this.hitbox = new Physijs.Mesh(
             new THREE.BoxBufferGeometry(
                 7,10,7
@@ -16,7 +14,7 @@ class Zombie {
         this.hitbox.position.set(this.zombieModel.position.x + 1, 5, this.zombieModel.position.z+1);
         this.zombie.add(this.zombieModel);
         this.zombie.add(this.hitbox);
-        this.zombie.position.set(x,2,z);
+        this.zombie.position.set(x*2,2,z);
         this.direction = [];
         this.rayCaster = new THREE.Raycaster( this.zombie.position, new THREE.Vector3( 0, 0, 0 ), 0, 1 );
         this.zombieHealth = 1;
