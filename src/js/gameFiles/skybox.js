@@ -22,7 +22,7 @@ class Skybox{
             this.materialArray[i].frustumCulled = false;
         }
 
-        this.skyboxGeo = new THREE.BoxGeometry(2000,2000,2000);
+        this.skyboxGeo = new THREE.BoxGeometry(1000,1000,1000);
         this.skybox = new THREE.Mesh(this.skyboxGeo, this.materialArray);
     }
 
