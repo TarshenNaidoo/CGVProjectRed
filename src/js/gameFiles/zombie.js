@@ -1,6 +1,6 @@
 class Zombie {
 
-    constructor (level, x, y, z, i) {
+    constructor (camera, level, x, y, z, i) {
 
         this.zombie = new THREE.Object3D();
         this.zombieModel = zombieImportArray[i];
@@ -18,6 +18,7 @@ class Zombie {
         this.direction = [];
         this.rayCaster = new THREE.Raycaster( this.zombie.position, new THREE.Vector3( 0, 0, 0 ), 0, 1 );
         this.zombieHealth = level;
+        this.camera = camera;
     }
 
     async loadZombie(){
@@ -77,5 +78,35 @@ class Zombie {
 
     animate()  {
         //do zombie movements here
+        let zomPos = new THREE.Vector3(
+            this.zombie.position.x,
+            this.zombie.position.y,
+            this.zombie.position.z
+        );
+	    let avatar = new Avatar(this);
+        let playerPos = avatar.getPosition();
+	    let Cam = new THREE.Vector3();
+	    Cam.x = this.camera.position.x;
+	    Cam.z = this.camera.position.z;
+	    //for (let i = 0; i < zombie.children.length ; i++) {
+                    let zDirection = new THREE.Vector3();
+
+                    zDirection.x = Cam.x - zomPos.x;
+		            zDirection.z = Cam.z - zomPos.z;
+
+                    //checks if Zombie is close enough then stops moving
+                    let radius = Math.sqrt(Math.pow(zDirection.x,2) + Math.pow(zDirection.z,2));
+                    if (radius < 5){
+			            avatar.hp = 0;
+                        return;
+                    }
+                    //
+                    zDirection.normalize();
+                    this.zombie.lookAt(Cam.x, this.zombie.position.y, Cam.z);
+
+                    let speed = 0.1;
+                    this.zombie.position.x += zDirection.x * speed;
+                    this.zombie.position.z += zDirection.z * speed;
+        //}
     }
 }
