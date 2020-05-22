@@ -43,9 +43,8 @@ class gameScene extends Physijs.Scene {
             this.avatar.playerLightAttack.stop();
             this.avatar.playerLightAttack.reset();
         }
-
-
         for (let i = 0 ; i < this.zombies.length ; i++) {
+            this.zombies[i].zombie.position.set((-zombieNum + i)*5, 2, -50)
             this.zombies[i].zombieHealth = this.level;
             this.zombies[i].zombieHit = 0;
             this.zombies[i].zombie.visible = true;
@@ -55,6 +54,8 @@ class gameScene extends Physijs.Scene {
         this.updateScore(-this.score);
         this.level = 0;
         this.updateLevel();
+        this.avatar.hp = 100;
+        this.updateHealth();
 
     }
 
@@ -128,6 +129,11 @@ class gameScene extends Physijs.Scene {
     updateLevel () {
         let level = document.getElementById("level");
         level.innerHTML = "Level: " + this.level;
+    }
+
+    updateHealth() {
+        let health = document.getElementById("health");
+        health.innerHTML = "HP: " + this.avatar.hp;
     }
 
     createCrosshair() {
@@ -253,7 +259,7 @@ class gameScene extends Physijs.Scene {
 
     createZombies() {
         for (let i = 0 ; i < zombieNum ; i++){
-            let generatedZombie = new Zombie(this.camera, this.level, (-zombieNum + i)*5, 0, -50, i)
+            let generatedZombie = new Zombie(this, this.level, (-zombieNum + i)*5, 2, -50, i)
             this.zombies.push(generatedZombie);
             this.add(generatedZombie.zombie);
         }
@@ -295,10 +301,7 @@ class gameScene extends Physijs.Scene {
         this.bullets[currentBullet-1].animate();
 
         for (let i = 0 ; i < this.zombies.length ; i++) {
-            let zomAtt = this.zombies[i].animate();
-	        if (zomAtt === 0) {
-		        this.avatar.hp = 0;
-	        }
+            this.zombies[i].animate();
         }
 
         if (this.avatar.hp === 0) {
@@ -345,16 +348,16 @@ class gameScene extends Physijs.Scene {
         blocker.style.display = 'none';
         enableControls = true;
         controls.enabled = true;
-        this.avatar.setInitialPosition();
-        this.reload();
-        this.updateAmmo();
-        this.score = 0;
-        this.updateScore(0);
+        controls.getObject().position.set(0,10,0);
+        this.avatar.hp = 100;
+        this.updateHealth();
+        this.reloadAmmo();
+        this.updateScore(-this.score);
         this.level = 1;
         this.updateLevel();
 
-        for (var i = 0 ; i < this.zombies.getZombiesSize() ; i++) {
-            this.remove(this.zombies.getZombies(i));
+        for (var i = 0 ; i < this.zombies.length ; i++) {
+            this.zombies.pop()
         }
         this.createZombies();
     }

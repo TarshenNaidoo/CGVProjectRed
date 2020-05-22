@@ -62,6 +62,13 @@ class Avatar {
         return this.weaponNumber;
     }
 
+    hit() {
+        if (this.hp > 0) {
+            this.hp--;
+            this.scene.updateHealth();
+        }
+    }
+
     shoot() {
         if (this.playerLightAttack.isRunning()){
             this.playerLightAttack.stop();
@@ -81,7 +88,6 @@ class Avatar {
 
         this.velocity.x -= this.velocity.x * 10 * delta;
         this.velocity.z -= this.velocity.z * 10 * delta;
-
         this.direction.z = Number(moveForward) - Number(moveBackward);
         this.direction.x = Number(moveRight) - Number(moveLeft);
         this.direction.normalize();
