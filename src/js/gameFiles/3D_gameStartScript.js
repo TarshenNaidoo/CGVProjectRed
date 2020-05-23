@@ -259,7 +259,7 @@ function animate() {
 
 //main function
 
-async function main() {
+async function main_3D() {
     let PointerLockControls = await import("../three.js-master/examples/jsm/controls/PointerLockControls.js")
     'use strict';
     Physijs.scripts.worker = '../../exLibs/physijs_worker.js';
@@ -268,7 +268,7 @@ async function main() {
     let instructions = document.getElementById('instructions');
     let zgame = document.getElementById("Z-GAME");
     let options = document.getElementById("Options");
-    let play = document.getElementById("Play");
+    let play = document.getElementById("Play_3D");
     instructions.innerHTML= "<span id=\"title\" style=\"font-size:30px\">Click to start game</span>\n" +
         "            <br/>\n" +
         "            Move: WASD\n" +
