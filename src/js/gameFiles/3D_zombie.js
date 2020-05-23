@@ -3,7 +3,7 @@ class Zombie {
     constructor (scene, level, x, y, z, i) {
 
         this.zombie = new THREE.Object3D();
-        this.zombieModel = zombieImportArray[i];
+        this.zombieModel = zombieImportArray_3D[i];
         let mesh = new THREE.MeshBasicMaterial({color:0x777777});
         mesh.transparent = true;
         mesh.opacity = 0;
@@ -45,8 +45,8 @@ class Zombie {
             this.zombie.position.z
         );
 	    let Cam = new THREE.Vector3();
-	    Cam.x = controls.getObject().position.x;
-	    Cam.z = controls.getObject().position.z;
+	    Cam.x = controls_3D.getObject().position.x;
+	    Cam.z = controls_3D.getObject().position.z;
 	    //for (let i = 0; i < zombie.children.length ; i++) {
                     let zDirection = new THREE.Vector3();
 

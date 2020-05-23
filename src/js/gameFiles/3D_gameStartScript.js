@@ -1,105 +1,99 @@
-let scene = null;
+let scene_3D = null;
 
-let stats = null;
+let stats_3D = null;
 
 let mouseDown = false;
 
-let renderer = null;
+let renderer_3D = null;
 
-let camera;// = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-let cameraView = true;
-let cameraBreak = true;
+let camera_3D;// = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+let cameraView_3D = true;
+let cameraBreak_3D = true;
 
-let controls;// = new PointerLockControls(camera, document.body);
+let controls_3D;// = new PointerLockControls(camera, document.body);
 
-let zombieNum;
+let zombieNum_3D;
 
 //external assets:
-let player = null;
-let playerAnimation = null;
-let playerMixer = null;
+let player_3D = null;
+let playerAnimation_3D = null;
+let playerMixer_3D = null;
 
 //add imported objects here and set them to null
 
-let zombieImportArray = null;
+let zombieImportArray_3D = null;
 
-let world = null;
-let bullet = null;
-let bulletMixer = null;
-let bulletAnimation = null;
+let world_3D = null;
+let bullet_3D = null;
+let bulletMixer_3D = null;
+let bulletAnimation_3D = null;
 
-let height = 10;
+let height_3D = 10;
 
-let delta = 1/60;
-let moveForward = false;
-let moveBackward = false;
-let moveLeft = false;
-let moveRight = false;
-let jumping = false;
-let shooting = false;
-let enableControls = false;
-
-let sceneChildrenDisplayOnce = true;
-
-//window.onload=function(){
-    //$('.Play').onclick(main(event));
-//}
+let delta_3D = 1/60;
+let moveForward_3D = false;
+let moveBackward_3D = false;
+let moveLeft_3D = false;
+let moveRight_3D = false;
+let jumping_3D = false;
+let shooting_3D = false;
+let enableControls_3D = false;
 
 function importPlayer(newPlayer){
-    player = newPlayer.scene;
-    player.position.z = 0;
-    player.position.y = -0.85;
-    player.position.x = -0.25;
-    player.rotation.y = Math.PI;
+    player_3D = newPlayer.scene;
+    player_3D.position.z = 0;
+    player_3D.position.y = -0.85;
+    player_3D.position.x = -0.25;
+    player_3D.rotation.y = Math.PI;
 
-    playerMixer = new THREE.AnimationMixer(player);
-    playerAnimation = newPlayer.animations;
+    playerMixer_3D = new THREE.AnimationMixer(player_3D);
+    playerAnimation_3D = newPlayer.animations;
 
 }
 
 function importZombie(newZombieArray){
-    zombieImportArray = newZombieArray;
+    zombieImportArray_3D = newZombieArray;
 }
 
 function importBullet(newBullet){
-    bullet = newBullet.scene;
-    bullet.castShadow = true;
-    bullet.position.y = 5;
-    bullet.position.x = -10;
-    bullet.scale.set(0.25,0.25,0.25);
+    bullet_3D = newBullet.scene;
+    bullet_3D.castShadow = true;
+    bullet_3D.position.y = 5;
+    bullet_3D.position.x = -10;
+    bullet_3D.scale.set(0.25,0.25,0.25);
     //bullet.visible = false;
 
-    bulletMixer = new THREE.AnimationMixer(bullet);
-    bulletAnimation = newBullet.animations;
+    bulletMixer_3D = new THREE.AnimationMixer(bullet_3D);
+    bulletAnimation_3D = newBullet.animations;
 }
 
 function importWorld(newWorld){
-    world = newWorld.scene;
-    world.position.y = 2;
-    world.position.z = 20;
+    world_3D = newWorld.scene;
+    world_3D.position.y = 2;
+    world_3D.position.z = 20;
 }
 
 //add import functions here
 
 function loadControls(newCamera, newControls){
-    camera = newCamera;
-    controls = newControls;
+    camera_3D = newCamera;
+    controls_3D = newControls;
 }
 
 function switchControls(mode){
 
     if (mode) {
-        scene.avatar.avatar.position.z = -5;
+        scene_3D.avatar.avatar.position.z = -5;
     } else {
-        scene.avatar.avatar.position.z = 0;
+        scene_3D.avatar.avatar.position.z = 0;
     }
-    console.log(scene.avatar.avatar.position.z)
+    console.log(scene_3D.avatar.avatar.position.z)
 }
 
 function createGUI (withStats) {
     //let gui = new dat.GUI();
 
-    if (withStats) stats = initStats();
+    if (withStats) stats_3D = initStats();
 
 }
 
@@ -128,10 +122,10 @@ function  setMessage(str) {
 }
 //processes the player shooting
 function onMouseDown (event) {
-    if (enableControls) {
+    if (enableControls_3D) {
         if (event.buttons === 1 && blocker.style.display === 'none') {
-            scene.shoot();
-            shooting = true;
+            scene_3D.shoot();
+            shooting_3D = true;
         }
     }
 }
@@ -139,37 +133,37 @@ function onMouseDown (event) {
 //processes player movement
 
 function onKeyDown (event) {
-    if (enableControls) {
+    if (enableControls_3D) {
         switch ( event.keyCode ) {
 
             case 38: // up
             case 87: // w
-                moveForward = true;
+                moveForward_3D = true;
                 break;
 
             case 37: // left
             case 65: // a
-                moveLeft = true;
+                moveLeft_3D = true;
                 break;
 
             case 40: // down
             case 83: // s
-                moveBackward = true;
+                moveBackward_3D = true;
                 break;
 
             case 39: // right
             case 68: // d
-                moveRight = true;
+                moveRight_3D = true;
                 break;
 
             case 32: // space
-                jumping = true;
+                jumping_3D = true;
                 break;
 
             case 187:
-                if (cameraBreak){
-                    cameraView = !cameraView;
-                    switchControls(cameraView);
+                if (cameraBreak_3D){
+                    cameraView_3D = !cameraView_3D;
+                    switchControls(cameraView_3D);
                 }
                 break;
                 /* currently we don't have functionality for weapon switching
@@ -180,44 +174,44 @@ function onKeyDown (event) {
         }
     }
 
-    if (event.keyCode === 80 && enableControls === false) { // p
-        scene.newGame();
+    if (event.keyCode === 80 && enableControls_3D === false) { // p
+        scene_3D.newGame();
     }
 }
 
 function onKeyUp (event) {
-    if (enableControls) {
+    if (enableControls_3D) {
         switch( event.keyCode ) {
             case 38: // up
             case 87: // w
-                moveForward = false;
+                moveForward_3D = false;
                 break;
 
             case 37: // left
             case 65: // a
-                moveLeft = false;
+                moveLeft_3D = false;
                 break;
 
             case 40: // down
             case 83: // s
-                moveBackward = false;
+                moveBackward_3D = false;
                 break;
 
             case 39: // right
             case 68: // d
-                moveRight = false;
+                moveRight_3D = false;
                 break;
 
             case 32: // space
-                jumping = false;
+                jumping_3D = false;
                 break;
 
             case 187:
-                cameraBreak = true;
+                cameraBreak_3D = true;
                 break;
 
             case 82:
-                scene.resetScene();
+                scene_3D.resetScene();
                 break;
         }
     }
@@ -225,17 +219,17 @@ function onKeyUp (event) {
 
 //changing weapon functionality
 function onMouseWheel (event) {
-    if (enableControls) {
-        if (!shooting) {
-            scene.changeWeapon();
+    if (enableControls_3D) {
+        if (!shooting_3D) {
+            scene_3D.changeWeapon();
         }
     }
 
 }
 
 function onWindowResize () {
-    scene.setCameraAspect(window.innerWidth/window.innerHeight);
-    renderer.setSize(window.innerWidth/window.innerHeight);
+    scene_3D.setCameraAspect(window.innerWidth/window.innerHeight);
+    renderer_3D.setSize(window.innerWidth/window.innerHeight);
 }
 
 function createRenderer() {
@@ -250,11 +244,11 @@ function createRenderer() {
 
 function animate() {
     requestAnimationFrame(animate);
-    stats.update();
+    stats_3D.update();
     //console.log("running");
-    scene.animate();
-    renderer.render(scene,scene.getCamera());
-    scene.simulate();
+    scene_3D.animate();
+    renderer_3D.render(scene_3D,scene_3D.getCamera());
+    scene_3D.simulate();
 }
 
 //main function
@@ -301,9 +295,9 @@ async function main_3D() {
                 document.webkitPointerLockElement === element
             ) {
                 controlsEnabled = true;
-                controls.enabled = true;
-                scene.isPaused = false;
-                enableControls = true;
+                controls_3D.enabled = true;
+                scene_3D.isPaused = false;
+                enableControls_3D = true;
 
                 blocker.style.display = 'none';
 
@@ -315,9 +309,9 @@ async function main_3D() {
 
                 instructions.style.fontSize = '50px';
                 instructions.innerHTML = "Paused";
-                enableControls = false;
-                controls.enabled = false;
-                scene.isPaused = true;
+                enableControls_3D = false;
+                controls_3D.enabled = false;
+                scene_3D.isPaused = true;
             }
         };
 
@@ -337,7 +331,7 @@ async function main_3D() {
         instructions.addEventListener('click', function (event) {
             instructions.style.display = 'none';
 
-            scene.display();
+            scene_3D.display();
             element.requestPointerLock =
                 element.requestPointerLock ||
                 element.mozRequestPointerLock ||
@@ -352,11 +346,11 @@ async function main_3D() {
 
     let controlsEnabled = false;
 
-    camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1500);
-    camera.position.y = 10;
-    renderer = createRenderer();
+    camera_3D = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1500);
+    camera_3D.position.y = 10;
+    renderer_3D = createRenderer();
 
-    $("WebGL-output").append(renderer.domElement);
+    $("WebGL-output").append(renderer_3D.domElement);
 
     window.addEventListener("resize", onWindowResize);
     window.addEventListener("mousedown", onMouseDown, true);
@@ -365,9 +359,9 @@ async function main_3D() {
     window.addEventListener("mousewheel", onMouseWheel, true); //most browsers
     window.addEventListener("DOMMouseScroll", onMouseWheel, true); //for firefox
 
-    controls = new PointerLockControls.PointerLockControls(camera, document.body);
-    scene = new gameScene(renderer.domElement, camera);
-    scene.add(controls.getObject());
+    controls_3D = new PointerLockControls.PointerLockControls(camera_3D, document.body);
+    scene_3D = new gameScene(renderer_3D.domElement, camera_3D);
+    scene_3D.add(controls_3D.getObject());
 
     createGUI(true);
 

@@ -3,16 +3,16 @@ class Avatar {
 
         this.avatar = new THREE.Object3D;
         this.scene = scene;
-        controls.getObject().add(this.avatar);
-        this.cameraHeight = height;
-        controls.getObject().position.y = this.cameraHeight;
-        this.rayCaster = new THREE.Raycaster( controls.getObject().position, new THREE.Vector3( 0, - 1, 0 ), this.cameraHeight, this.cameraHeight );
+        controls_3D.getObject().add(this.avatar);
+        this.cameraHeight = height_3D;
+        controls_3D.getObject().position.y = this.cameraHeight;
+        this.rayCaster = new THREE.Raycaster( controls_3D.getObject().position, new THREE.Vector3( 0, - 1, 0 ), this.cameraHeight, this.cameraHeight );
         this.canJump = true;
         this.hp = 100;
-        this.controls = controls;
-        this.weapon0 = player;
-        this.mixer = playerMixer;
-        this.AnimationClips = playerAnimation;
+        this.controls = controls_3D;
+        this.weapon0 = player_3D;
+        this.mixer = playerMixer_3D;
+        this.AnimationClips = playerAnimation_3D;
         this.lightAttackClip = THREE.AnimationClip.findByName(this.AnimationClips, 'LightAttack');
         this.playerLightAttack = this.mixer.clipAction(this.lightAttackClip);
         //this.playerLightAttack.setLoop(THREE.LoopOnce);
@@ -86,23 +86,23 @@ class Avatar {
 
     move() {
 
-        this.velocity.x -= this.velocity.x * 10 * delta;
-        this.velocity.z -= this.velocity.z * 10 * delta;
-        this.direction.z = Number(moveForward) - Number(moveBackward);
-        this.direction.x = Number(moveRight) - Number(moveLeft);
+        this.velocity.x -= this.velocity.x * 10 * delta_3D;
+        this.velocity.z -= this.velocity.z * 10 * delta_3D;
+        this.direction.z = Number(moveForward_3D) - Number(moveBackward_3D);
+        this.direction.x = Number(moveRight_3D) - Number(moveLeft_3D);
         this.direction.normalize();
 
-        if ( moveForward || moveBackward ) this.velocity.z -= this.direction.z * 400.0 * delta;
+        if ( moveForward_3D || moveBackward_3D ) this.velocity.z -= this.direction.z * 400.0 * delta_3D;
         else {
             if (Math.abs(this.velocity.z) < 0.1){this.velocity.z = 0;}
         }
-        if ( moveLeft || moveRight ) this.velocity.x -= this.direction.x * 400.0 * delta;
+        if ( moveLeft_3D || moveRight_3D ) this.velocity.x -= this.direction.x * 400.0 * delta_3D;
         else {
             if (Math.abs(this.velocity.x) < 0.1){this.velocity.x = 0;}
         }
 
-        controls.moveForward(-this.velocity.z * delta);
-        controls.moveRight(-this.velocity.x * delta);
+        controls_3D.moveForward(-this.velocity.z * delta_3D);
+        controls_3D.moveRight(-this.velocity.x * delta_3D);
 
     }
 
@@ -123,9 +123,9 @@ class Avatar {
         this.move();
 
         //{y movement
-        this.rayCaster.ray.origin.copy((controls.getObject().position.clone()));
+        this.rayCaster.ray.origin.copy((controls_3D.getObject().position.clone()));
         //console.log("camera y pos: " + controls.getObject().position.y + ", height minimum: " + this.cameraHeight);
-        this.velocity.y -= 9.8 * this.mass * delta;
+        this.velocity.y -= 9.8 * this.mass * delta_3D;
         let intersections = this.rayCaster.intersectObjects(this.scene.objects);
         let onObject = intersections.length > 0;
         if ( onObject === true ) {
@@ -134,13 +134,13 @@ class Avatar {
             this.canJump = true;
 
         }
-        if ( controls.getObject().position.y < this.cameraHeight && this.velocity.y < 0) {
+        if ( controls_3D.getObject().position.y < this.cameraHeight && this.velocity.y < 0) {
 
             this.velocity.y = 0;
             this.canJump = true;
 
         }
-        controls.getObject().position.y += this.velocity.y * delta;
+        controls_3D.getObject().position.y += this.velocity.y * delta_3D;
         //}
 
         //{idle and moving animation control
@@ -157,7 +157,7 @@ class Avatar {
             }
             this.playerIdle.paused = false;
         }
-        this.mixer.update(delta);
+        this.mixer.update(delta_3D);
         //}
 
     }
@@ -165,6 +165,6 @@ class Avatar {
     //called when user shoots. 'shooting' true in gameStartScript, causing gameScene->animate to call this
     animateWeapon() {
         //Do animation then set shooting to false here
-        shooting = false;
+        shooting_3D = false;
     }
 }

@@ -31,7 +31,7 @@ gunGtlfloader.load(
 //zombie
 let zombieImportArray = [];
 let zNum = 5;
-zombieNum = zNum;
+zombieNum_3D = zNum;
 loadTotal += zNum;
 for (let i = 0 ; i < zNum ; i++) {
     let zLoader = new GLTFLoader();
@@ -48,7 +48,7 @@ for (let i = 0 ; i < zNum ; i++) {
 
 
             zombieImportArray.push(zombieImportScene);
-            if (zombieImportArray.length === zombieNum) {
+            if (zombieImportArray.length === zombieNum_3D) {
                 importZombie(zombieImportArray);
             }
             loadDone += 1;

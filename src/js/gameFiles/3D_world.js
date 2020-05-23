@@ -9,7 +9,7 @@ class World {
     constructor() {
 
         this.world = new THREE.Object3D;
-        this.world.add(world);
+        this.world.add(world_3D);
 
         //To add objects in gameStartScript to the world, add them like
         //this.world.add(<object in gameStartScript>);

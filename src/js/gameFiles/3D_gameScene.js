@@ -2,7 +2,7 @@
 class gameScene extends Physijs.Scene {
 
     constructor(renderer, theCamera, controls) {
-        super({fixedTimeStep: delta});
+        super({fixedTimeStep: delta_3D});
         this.setGravity(new THREE.Vector3(0,-50, 0));
         this.skybox = null;
         this.createSkybox();
@@ -37,14 +37,14 @@ class gameScene extends Physijs.Scene {
     }
 
     resetScene(){
-        controls.getObject().position.set(0,10,0);
+        controls_3D.getObject().position.set(0,10,0);
         this.reloadAmmo();
         if (this.avatar.playerLightAttack.isRunning()){
             this.avatar.playerLightAttack.stop();
             this.avatar.playerLightAttack.reset();
         }
         for (let i = 0 ; i < this.zombies.length ; i++) {
-            this.zombies[i].zombie.position.set((-zombieNum + i)*5, 2, -50)
+            this.zombies[i].zombie.position.set((-zombieNum_3D + i)*5, 2, -50)
             this.zombies[i].zombieHealth = this.level;
             this.zombies[i].zombieHit = 0;
             this.zombies[i].zombie.visible = true;
@@ -236,7 +236,7 @@ class gameScene extends Physijs.Scene {
             this.bullets[i] = new Bullet(this);
         }
         this.actualAmmo = this.maxBullets;
-        bullet.visible = false;
+        bullet_3D.visible = false;
         this.updateAmmo();
     }
     shoot() {
@@ -244,7 +244,7 @@ class gameScene extends Physijs.Scene {
             this.reloadAmmo();
         }
         //'shooting' will be false the 2nd time this runs
-         else if (!shooting) {
+         else if (!shooting_3D) {
             this.bullets[this.maxBullets-this.actualAmmo].shoot(
                 this.camera.position,
                 this.avatar.getSpeed()
@@ -258,23 +258,23 @@ class gameScene extends Physijs.Scene {
 
 
     createZombies() {
-        for (let i = 0 ; i < zombieNum ; i++){
-            let generatedZombie = new Zombie(this, this.level, (-zombieNum + i)*5, 2, -50, i)
+        for (let i = 0 ; i < zombieNum_3D ; i++){
+            let generatedZombie = new Zombie(this, this.level, (-zombieNum_3D + i)*5, 2, -50, i)
             this.zombies.push(generatedZombie);
             this.add(generatedZombie.zombie);
         }
     }
 
     endGame() {
-        enableControls = false;
-        controls.enabled = false;
+        enableControls_3D = false;
+        controls_3D.enabled = false;
 
-        moveForward = false;
-        moveForward = false;
-        moveBackward = false;
-        moveLeft = false;
-        moveRight = false;
-        jumping = false;
+        moveForward_3D = false;
+        moveForward_3D = false;
+        moveBackward_3D = false;
+        moveLeft_3D = false;
+        moveRight_3D = false;
+        jumping_3D = false;
 
         blocker.style.display = 'block';
         instructions.style.display = '';
@@ -285,13 +285,13 @@ class gameScene extends Physijs.Scene {
 
     animate() {
 
-        if (jumping) {
+        if (jumping_3D) {
             this.avatar.jump();
         }
 
         this.avatar.animate();
 
-        if (shooting) {
+        if (shooting_3D) {
             this.avatar.animateWeapon();
         }
 
@@ -346,9 +346,9 @@ class gameScene extends Physijs.Scene {
 
     newGame(){
         blocker.style.display = 'none';
-        enableControls = true;
-        controls.enabled = true;
-        controls.getObject().position.set(0,10,0);
+        enableControls_3D = true;
+        controls_3D.enabled = true;
+        controls_3D.getObject().position.set(0,10,0);
         this.avatar.hp = 100;
         this.updateHealth();
         this.reloadAmmo();

@@ -5,14 +5,14 @@ class Bullet {
         this.material = new THREE.MeshStandardMaterial(0xeeeeee);
         this.bulletWidth = 1;
         this.launched = false;
-        this.bullet = bullet;
-        bullet.position.y = height;
+        this.bullet = bullet_3D;
+        bullet_3D.position.y = height_3D;
         this.direction = new THREE.Vector3 (0,0,0);
         this.initialPosition = new THREE.Vector3(0,0,0);
         this.speed = 0;
         this.scene = scene;
-        this.mixer = bulletMixer;
-        this.AnimationClips = bulletAnimation;
+        this.mixer = bulletMixer_3D;
+        this.AnimationClips = bulletAnimation_3D;
         this.shootClip = THREE.AnimationClip.findByName(this.AnimationClips, 'Orbit');
         this.shootAction = this.mixer.clipAction(this.shootClip);
     }
@@ -31,12 +31,12 @@ class Bullet {
     }
 
     animate() {
-        this.mixer.update(delta);
+        this.mixer.update(delta_3D);
 
         if (this.launched) {
-            this.bullet.position.x += this.direction.x*delta * this.speed;
-            this.bullet.position.y += this.direction.y*delta * this.speed;
-            this.bullet.position.z += this.direction.z*delta * this.speed;
+            this.bullet.position.x += this.direction.x*delta_3D * this.speed;
+            this.bullet.position.y += this.direction.y*delta_3D * this.speed;
+            this.bullet.position.z += this.direction.z*delta_3D * this.speed;
 
             let detectHit = false;
             for (let i = 0 ; i < this.scene.zombies.length ; i++) {
@@ -93,12 +93,12 @@ class Bullet {
         this.launched = true;
         this.bullet.visible = true;
         this.speed = speed;
-        this.direction.set(camera.getWorldDirection().x, camera.getWorldDirection().y, camera.getWorldDirection().z);
+        this.direction.set(camera_3D.getWorldDirection().x, camera_3D.getWorldDirection().y, camera_3D.getWorldDirection().z);
         this.direction.normalize();
-        this.bullet.rotation.set(camera.rotation.x, camera.rotation.y-Math.PI/2, camera.rotation.z);
-        this.bullet.position.set(camera.position.x + 3*this.direction.x, camera.position.y + 3*this.direction.y, camera.position.z + 3*this.direction.z);
+        this.bullet.rotation.set(camera_3D.rotation.x, camera_3D.rotation.y-Math.PI/2, camera_3D.rotation.z);
+        this.bullet.position.set(camera_3D.position.x + 3*this.direction.x, camera_3D.position.y + 3*this.direction.y, camera_3D.position.z + 3*this.direction.z);
 
-        this.initialPosition.set(camera.position.x, camera.position.y, camera.position.z);
+        this.initialPosition.set(camera_3D.position.x, camera_3D.position.y, camera_3D.position.z);
 
         //let sound = null;
 
