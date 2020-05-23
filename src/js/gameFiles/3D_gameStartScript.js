@@ -5,10 +5,10 @@ let stats_3D = null;
 let mouseDown = false;
 
 let renderer_3D = null;
+let delta_3D = 1/60;
 
 let camera_3D;// = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
 let cameraView_3D = true;
-let cameraBreak_3D = true;
 
 let controls_3D;// = new PointerLockControls(camera, document.body);
 
@@ -30,12 +30,12 @@ let bulletAnimation_3D = null;
 
 let height_3D = 10;
 
-let delta_3D = 1/60;
 let moveForward_3D = false;
 let moveBackward_3D = false;
 let moveLeft_3D = false;
 let moveRight_3D = false;
 let jumping_3D = false;
+let flying_3D = false;
 let shooting_3D = false;
 let enableControls_3D = false;
 
@@ -156,16 +156,11 @@ function onKeyDown (event) {
                 moveRight_3D = true;
                 break;
 
-            case 32: // space
-                jumping_3D = true;
+            case 16:
+                flying_3D = true;
                 break;
 
-            case 187:
-                if (cameraBreak_3D){
-                    cameraView_3D = !cameraView_3D;
-                    switchControls(cameraView_3D);
-                }
-                break;
+
                 /* currently we don't have functionality for weapon switching
             case 81: // q
                 if (!disparando) scene.changeWeapon();
@@ -207,11 +202,20 @@ function onKeyUp (event) {
                 break;
 
             case 187:
-                cameraBreak_3D = true;
+                cameraView_3D = !cameraView_3D;
+                switchControls(cameraView_3D);
                 break;
 
             case 82:
                 scene_3D.resetScene();
+                break;
+
+            case 32: // space
+                jumping_3D = true;
+                break;
+
+            case 16:
+                flying_3D = false;
                 break;
         }
     }
@@ -275,7 +279,9 @@ async function main_3D() {
         "            <br/>\n" +
         "            Pause: ESC\n" +
         "            <br/>\n" +
-        "            See character from behind: ="
+        "            See character from behind: =\n" +
+        "            <br/>\n" +
+        "            Fly: SHIFT"
     zgame.innerHTML = "";
     options.innerHTML = "";
     play.innerHTML = "";

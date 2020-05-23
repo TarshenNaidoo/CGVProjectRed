@@ -28,7 +28,7 @@ class Avatar {
         this.speed = 150;
         this.velocity = new THREE.Vector3();
         this.direction = new THREE.Vector3();
-        this.mass = 50;
+        this.mass = 20;
 
     }
 
@@ -125,18 +125,31 @@ class Avatar {
         //{y movement
         this.rayCaster.origin = (controls_3D.getObject().position);
         //console.log("camera y pos: " + controls.getObject().position.y + ", height minimum: " + this.cameraHeight);
-        let yDistanceOffset = 9.8 * this.mass * delta_3D
-        this.velocity.y -= yDistanceOffset;
+        let yDistanceOffset = 9.8 * this.mass * delta_3D;
+        if (!flying_3D) {
+            this.velocity.y -= yDistanceOffset;
+            console.log(this.velocity.y * delta_3D);
+        } else {
+            this.velocity.y += 4.5 * this.mass * delta_3D;
+        }
         this.rayCaster.far = yDistanceOffset + 0.5;
         let intersections = this.rayCaster.intersectObjects(this.scene.rayCastObjects, true);
         let onObject = intersections.length > 0;
         if ( onObject === true && this.velocity.y < 0) {
-            console.log("true " + controls_3D.getObject().position.y);
             this.velocity.y = Math.max( 0, this.velocity.y );
             this.canJump = true;
 
         }
-        controls_3D.getObject().position.y += this.velocity.y * delta_3D;
+
+        if (
+            controls_3D.getObject().position.y + this.velocity.y * delta_3D > 10 &&
+            controls_3D.getObject().position.y + this.velocity.y * delta_3D < 490
+        ) {
+            controls_3D.getObject().position.y += this.velocity.y * delta_3D;
+        } else {
+
+            this.velocity.y = 0;
+        }
         //}
 
         //{idle and moving animation control
@@ -153,6 +166,18 @@ class Avatar {
             }
             this.playerIdle.paused = false;
         }
+
+        //skybox bounds check
+        if(controls_3D.getObject().position.x < -490) {
+            controls_3D.getObject().position.x = -490;
+        } else if(controls_3D.getObject().position.x > 490) {
+            controls_3D.getObject().position.x = 490;
+        } else if(controls_3D.getObject().position.z < -490) {
+            controls_3D.getObject().position.z = -490;
+        } else if(controls_3D.getObject().position.z > 490) {
+            controls_3D.getObject().position.z = 490;
+        }
+
         this.mixer.update(delta_3D);
         //}
 
