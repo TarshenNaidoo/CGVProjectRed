@@ -121,7 +121,7 @@ function checkLoad(){
         console.log("done!")
         let play = document.getElementById("Play_3D");
         play.style.color = "yellowgreen";
-        play.innerHTML = "Play!";
+        play.innerHTML = "Play level 1: 3D";
         play.onclick = function() {
             loadMain();
         }
