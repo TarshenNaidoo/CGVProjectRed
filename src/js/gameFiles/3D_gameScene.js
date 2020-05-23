@@ -9,7 +9,7 @@ class gameScene extends Physijs.Scene {
         this.isPaused = false;
         this.background =  new THREE.Color (0x87ceeb);
         this.camera = theCamera;
-        this.objects = [];
+        this.rayCastObjects = [];
         this.createAvatar();
         this.crosshair = this.createCrosshair();
         this.camera.add(this.crosshair);
@@ -32,7 +32,7 @@ class gameScene extends Physijs.Scene {
         this.spotLight = null;
         this.createLights();
         this.add(this.place);
-        this.objects.push(this.place);
+        this.rayCastObjects.push(this.place);
         this.tracktime = 0;
     }
 

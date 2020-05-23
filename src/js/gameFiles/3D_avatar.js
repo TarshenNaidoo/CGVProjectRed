@@ -6,7 +6,7 @@ class Avatar {
         controls_3D.getObject().add(this.avatar);
         this.cameraHeight = height_3D;
         controls_3D.getObject().position.y = this.cameraHeight;
-        this.rayCaster = new THREE.Raycaster( controls_3D.getObject().position, new THREE.Vector3( 0, - 1, 0 ), this.cameraHeight, this.cameraHeight );
+        this.rayCaster = new THREE.Raycaster( controls_3D.getObject().position, new THREE.Vector3( 0, - 1, 0 ), 0, 2 );
         this.canJump = true;
         this.hp = 100;
         this.controls = controls_3D;
@@ -123,20 +123,16 @@ class Avatar {
         this.move();
 
         //{y movement
-        this.rayCaster.ray.origin.copy((controls_3D.getObject().position.clone()));
+        this.rayCaster.origin = (controls_3D.getObject().position);
         //console.log("camera y pos: " + controls.getObject().position.y + ", height minimum: " + this.cameraHeight);
-        this.velocity.y -= 9.8 * this.mass * delta_3D;
-        let intersections = this.rayCaster.intersectObjects(this.scene.objects);
+        let yDistanceOffset = 9.8 * this.mass * delta_3D
+        this.velocity.y -= yDistanceOffset;
+        this.rayCaster.far = yDistanceOffset + 0.5;
+        let intersections = this.rayCaster.intersectObjects(this.scene.rayCastObjects, true);
         let onObject = intersections.length > 0;
-        if ( onObject === true ) {
-            console.log("true");
-            velocity.y = Math.max( 0, velocity.y );
-            this.canJump = true;
-
-        }
-        if ( controls_3D.getObject().position.y < this.cameraHeight && this.velocity.y < 0) {
-
-            this.velocity.y = 0;
+        if ( onObject === true && this.velocity.y < 0) {
+            console.log("true " + controls_3D.getObject().position.y);
+            this.velocity.y = Math.max( 0, this.velocity.y );
             this.canJump = true;
 
         }

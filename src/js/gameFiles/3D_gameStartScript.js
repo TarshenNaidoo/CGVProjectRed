@@ -347,7 +347,7 @@ async function main_3D() {
     let controlsEnabled = false;
 
     camera_3D = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1500);
-    camera_3D.position.y = 10;
+    camera_3D.position.y = 100;
     renderer_3D = createRenderer();
 
     $("WebGL-output").append(renderer_3D.domElement);
