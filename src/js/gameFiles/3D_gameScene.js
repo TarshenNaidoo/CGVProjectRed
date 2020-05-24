@@ -197,9 +197,12 @@ class gameScene extends Physijs.Scene {
         for ( let i = 0, l = position.count; i < l; i ++ ) {
 
             //color.setHSL( Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
-            let randVar = Math.random();
+            let randVar = Math.random() * 0.5 + 0.25;
+            let randR = randVar + (Math.random() - 0.5) * 0.2;
+            let randG = randVar + (Math.random() - 0.5) * 0.2;
+            let randB = randVar + (Math.random() - 0.5) * 0.2;
             //console.log(randVar)
-            color.setRGB(randVar*0.75,0.75,(1-randVar)*0.4*0.75);
+            color.setRGB(randR,randG,randB);
             colors.push( color.r, color.g, color.b );
 
         }

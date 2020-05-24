@@ -3,32 +3,32 @@ class Avatar {
 
         this.avatar = new THREE.Object3D;
         this.scene = scene;
-        controls_3D.getObject().add(this.avatar);
-        this.cameraHeight = height_3D;
+        controls_3D.getObject().add(this.avatar); //adds avatar to camera
+        this.cameraHeight = height_3D; //sets the initial height
         controls_3D.getObject().position.y = this.cameraHeight;
+        //raycaster used for detecting ground underneath player when applying gravity
         this.rayCaster = new THREE.Raycaster( controls_3D.getObject().position, new THREE.Vector3( 0, - 1, 0 ), 0, 2 );
         this.canJump = true;
         this.hp = 100;
         this.controls = controls_3D;
-        this.weapon0 = player_3D;
-        this.mixer = playerMixer_3D;
-        this.AnimationClips = playerAnimation_3D;
+        this.weapon0 = player_3D; // this is the player model
+        this.mixer = playerMixer_3D; //contains animation data
+        this.AnimationClips = playerAnimation_3D; //contains animation data
         this.lightAttackClip = THREE.AnimationClip.findByName(this.AnimationClips, 'LightAttack');
         this.playerLightAttack = this.mixer.clipAction(this.lightAttackClip);
-        //this.playerLightAttack.setLoop(THREE.LoopOnce);
         this.moveClip = THREE.AnimationClip.findByName(this.AnimationClips, 'ManWalking');
         this.playerMove = this.mixer.clipAction(this.moveClip);
         this.IdleClip = THREE.AnimationClip.findByName(this.AnimationClips, 'ManIdle');
         this.playerIdle = this.mixer.clipAction(this.IdleClip);
         this.playerIdle.play();
-        this.weapon1 = new THREE.Object3D;
+        this.weapon1 = new THREE.Object3D; //secondary model if implemented
         this.activeWeapon = this.weapon0;
-        this.avatar.add(this.activeWeapon);
-        this.weaponNumber = 0;
-        this.speed = 150;
-        this.velocity = new THREE.Vector3();
-        this.direction = new THREE.Vector3();
-        this.mass = 20;
+        this.avatar.add(this.activeWeapon); //adds model to main avatar group
+        this.weaponNumber = 0; //keeps track of current avatar model
+        this.speed = 150; //controls the speed of the bullet when shooting it
+        this.velocity = new THREE.Vector3(); // Force applied to the player model each frame. Is updated each frame
+        this.direction = new THREE.Vector3(); //direction of the player. Usually normalized
+        this.mass = 20; //mass of the player. Not necessarily in KGs
 
     }
 
@@ -86,55 +86,46 @@ class Avatar {
 
     move() {
 
-        this.velocity.x -= this.velocity.x * 10 * delta_3D;
-        this.velocity.z -= this.velocity.z * 10 * delta_3D;
-        this.direction.z = Number(moveForward_3D) - Number(moveBackward_3D);
-        this.direction.x = Number(moveRight_3D) - Number(moveLeft_3D);
-        this.direction.normalize();
+        this.velocity.x -= this.velocity.x * 10 * delta_3D; //simulates friction
+        this.velocity.z -= this.velocity.z * 10 * delta_3D; //simulates friction
+        this.direction.z = Number(moveForward_3D) - Number(moveBackward_3D); //determines z direction
+        this.direction.x = Number(moveRight_3D) - Number(moveLeft_3D); //determines x direction
+        this.direction.normalize(); //normalizes direction vector if there is x and z movement
 
-        if ( moveForward_3D || moveBackward_3D ) this.velocity.z -= this.direction.z * 400.0 * delta_3D;
+        if ( moveForward_3D || moveBackward_3D ) this.velocity.z -= this.direction.z * 400.0 * delta_3D; //applies force to direction vector and adds to velocity
         else {
-            if (Math.abs(this.velocity.z) < 0.1){this.velocity.z = 0;}
+            if (Math.abs(this.velocity.z) < 0.1){this.velocity.z = 0;} // sets velocity to 0 so there isn't a hyperbola
         }
-        if ( moveLeft_3D || moveRight_3D ) this.velocity.x -= this.direction.x * 400.0 * delta_3D;
+        if ( moveLeft_3D || moveRight_3D ) this.velocity.x -= this.direction.x * 400.0 * delta_3D; //applies force to direction vector and adds to velocity
         else {
-            if (Math.abs(this.velocity.x) < 0.1){this.velocity.x = 0;}
+            if (Math.abs(this.velocity.x) < 0.1){this.velocity.x = 0;} // sets velocity to 0 so there isn't a hyperbola
         }
 
-        controls_3D.moveForward(-this.velocity.z * delta_3D);
-        controls_3D.moveRight(-this.velocity.x * delta_3D);
+        controls_3D.moveForward(-this.velocity.z * delta_3D); //final movement offset
+        controls_3D.moveRight(-this.velocity.x * delta_3D); //final movement offset
 
     }
 
-    //called when user presses q or mouse wheel down or up
-    changeWeapon() {
-        /* not implemented yet
-        if (this.weaponNumber == 0) {
-            this.weaponNumber = 1;
-            this.activeWeapon = this.weapon1;
-        } else if (this.weaponNumber == 1) {
-            this.weaponNumber = 0;
-            this.activeWeapon = this.weapon0;
-        }
-         */
-    }
-    animate(){
+    applyGravity(){
+        this.rayCaster.origin = (controls_3D.getObject().position); //updates raycaster origin to camera origin
 
-        this.move();
+        let yDistanceOffset = 9.8 * this.mass * delta_3D; //absolute value of gravity
 
-        //{y movement
-        this.rayCaster.origin = (controls_3D.getObject().position);
-        //console.log("camera y pos: " + controls.getObject().position.y + ", height minimum: " + this.cameraHeight);
-        let yDistanceOffset = 9.8 * this.mass * delta_3D;
+        //if the player is not flying, gravity will be applied, otherwise a force to make the player fly is applied
+
         if (!flying_3D) {
             this.velocity.y -= yDistanceOffset;
             console.log(this.velocity.y * delta_3D);
         } else {
             this.velocity.y += 4.5 * this.mass * delta_3D;
         }
+
+        //makes sure the raycaster can detect everything within the next application of gravity
         this.rayCaster.far = yDistanceOffset + 0.5;
         let intersections = this.rayCaster.intersectObjects(this.scene.rayCastObjects, true);
         let onObject = intersections.length > 0;
+
+        //if there are intersections and the player is falling; apply no gravity and enable jumping
         if ( onObject === true && this.velocity.y < 0) {
             this.velocity.y = Math.max( 0, this.velocity.y );
             this.canJump = true;
@@ -150,6 +141,19 @@ class Avatar {
 
             this.velocity.y = 0;
         }
+    }
+
+    changeWeapon() {
+
+    }
+    animate(){
+
+        this.move();
+
+        this.applyGravity();
+
+        //{y movement
+
         //}
 
         //{idle and moving animation control

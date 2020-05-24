@@ -1,45 +1,41 @@
 let scene_3D = null;
 
-let stats_3D = null;
-
-let mouseDown = false;
-
 let renderer_3D = null;
-let delta_3D = 1/60;
+let delta_3D = 1/60; //controls fps timestep
 
-let camera_3D;// = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-let cameraView_3D = true;
+let camera_3D; // = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+let cameraView_3D = true; //control Variable used when switching between 3rd person and 1st person view
 
-let controls_3D;// = new PointerLockControls(camera, document.body);
+let controls_3D; // = new PointerLockControls(camera, document.body);
 
-let zombieNum_3D;
+let zombieNum_3D = 5; //number of zombies within this level
 
 //external assets:
-let player_3D = null;
-let playerAnimation_3D = null;
-let playerMixer_3D = null;
+let player_3D = null; //see function importPlayer below
+let playerAnimation_3D = null; //see function importPlayer below
+let playerMixer_3D = null; //see function importPlayer below
 
 //add imported objects here and set them to null
 
-let zombieImportArray_3D = null;
+let zombieImportArray_3D = null; //see function importZombie below
 
-let world_3D = null;
-let bullet_3D = null;
-let bulletMixer_3D = null;
-let bulletAnimation_3D = null;
+let bullet_3D = null; //see function importBullet below
+let bulletMixer_3D = null; //see function importBullet below
+let bulletAnimation_3D = null; //see function importBullet below
 
-let height_3D = 10;
+let height_3D = 10; //controls the minimum height of the character so that it doesn't move below ground level
 
-let moveForward_3D = false;
-let moveBackward_3D = false;
-let moveLeft_3D = false;
-let moveRight_3D = false;
-let jumping_3D = false;
-let flying_3D = false;
-let shooting_3D = false;
+let moveForward_3D = false; //identifies whether the play is moving in this direction
+let moveBackward_3D = false; //identifies whether the play is moving in this direction
+let moveLeft_3D = false; //identifies whether the play is moving in this direction
+let moveRight_3D = false; //identifies whether the play is moving in this direction
+let jumping_3D = false; //identifies whether the play is jumping
+let flying_3D = false; //identifies whether the play is flying
+let shooting_3D = false; //identifies whether the play is shooting
 let enableControls_3D = false;
 
 function importPlayer(newPlayer){
+    //adds the player model and animations to variables
     player_3D = newPlayer.scene;
     player_3D.position.z = 0;
     player_3D.position.y = -0.85;
@@ -52,33 +48,32 @@ function importPlayer(newPlayer){
 }
 
 function importZombie(newZombieArray){
+    //array containing zombie models
     zombieImportArray_3D = newZombieArray;
 }
 
 function importBullet(newBullet){
+    //all bullet objects will share this bullet model and reposition/make visible or invisible when needed
+    //animations are imported
     bullet_3D = newBullet.scene;
     bullet_3D.castShadow = true;
     bullet_3D.position.y = 5;
     bullet_3D.position.x = -10;
     bullet_3D.scale.set(0.25,0.25,0.25);
-    //bullet.visible = false;
+    bullet_3D.visible = false;
 
     bulletMixer_3D = new THREE.AnimationMixer(bullet_3D);
     bulletAnimation_3D = newBullet.animations;
 }
 
-function importWorld(newWorld){
-    world_3D = newWorld.scene;
-    world_3D.position.y = 2;
-    world_3D.position.z = 20;
-}
-
-//add import functions here
+//future function for view switching
 
 function loadControls(newCamera, newControls){
     camera_3D = newCamera;
     controls_3D = newControls;
 }
+
+//controls view switching for now until other control schemes are implemented
 
 function switchControls(mode){
 
@@ -88,31 +83,6 @@ function switchControls(mode){
         scene_3D.avatar.avatar.position.z = 0;
     }
     console.log(scene_3D.avatar.avatar.position.z)
-}
-
-function createGUI (withStats) {
-    //let gui = new dat.GUI();
-
-    if (withStats) stats_3D = initStats();
-
-}
-
-//Requires a previously created div in ZGame to work. Currently not implemented
-function initStats(){
-
-    let stats = new Stats();
-    stats.setMode(0) //0: fps, 1:ms
-
-    stats.domElement.style.position = 'absolute';
-    stats.domElement.style.left = '0px';
-    stats.domElement.style.top = '0px';
-
-    //let statsElement = document.getElementById("Stats-output");
-    //statsElement.append(stats.domElement);
-    $("Stats-output").append(stats.domElement);
-    return stats;
-    //animate();
-
 }
 
 //Requires a previously created div in ZGame to work. Currently not implemented
@@ -130,7 +100,7 @@ function onMouseDown (event) {
     }
 }
 
-//processes player movement
+//processes input
 
 function onKeyDown (event) {
     if (enableControls_3D) {
@@ -159,13 +129,6 @@ function onKeyDown (event) {
             case 16:
                 flying_3D = true;
                 break;
-
-
-                /* currently we don't have functionality for weapon switching
-            case 81: // q
-                if (!disparando) scene.changeWeapon();
-                break;
-                */
         }
     }
 
@@ -221,7 +184,7 @@ function onKeyUp (event) {
     }
 }
 
-//changing weapon functionality
+//changing weapon functionality (not implemented)
 function onMouseWheel (event) {
     if (enableControls_3D) {
         if (!shooting_3D) {
@@ -231,10 +194,14 @@ function onMouseWheel (event) {
 
 }
 
+//attempts to resize window when window dimensions change
+
 function onWindowResize () {
     scene_3D.setCameraAspect(window.innerWidth/window.innerHeight);
     renderer_3D.setSize(window.innerWidth/window.innerHeight);
 }
+
+//creates the renderer and sets properties
 
 function createRenderer() {
     let renderer = new THREE.WebGLRenderer({antialias:true});
@@ -246,16 +213,17 @@ function createRenderer() {
     return renderer;
 }
 
+//layer 1 recursive animate function
+
 function animate() {
     requestAnimationFrame(animate);
-    stats_3D.update();
     //console.log("running");
     scene_3D.animate();
     renderer_3D.render(scene_3D,scene_3D.getCamera());
-    scene_3D.simulate();
+    scene_3D.simulate(); //simulates physijs objects
 }
 
-//main function
+//Main method
 
 async function main_3D() {
     let PointerLockControls = await import("../three.js-master/examples/jsm/controls/PointerLockControls.js")
@@ -285,7 +253,8 @@ async function main_3D() {
     zgame.innerHTML = "";
     options.innerHTML = "";
     play.innerHTML = "";
-    //let title = document.getElementById('title');
+
+    //confirms that browser supports pointer lock controls
     let havePointerLock =
         'pointerLockElement' in document ||
         'mozPointerLockElement' in document ||
@@ -300,9 +269,7 @@ async function main_3D() {
                 document.mozPointerLockElement === element ||
                 document.webkitPointerLockElement === element
             ) {
-                controlsEnabled = true;
-                controls_3D.enabled = true;
-                scene_3D.isPaused = false;
+                controls_3D.enabled = true; //keeps track if game is paused
                 enableControls_3D = true;
 
                 blocker.style.display = 'none';
@@ -350,8 +317,6 @@ async function main_3D() {
         instructions.innerHTML = 'Your browser doesn\'t support Pointer Lock API';
     }
 
-    let controlsEnabled = false;
-
     camera_3D = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1500);
     camera_3D.position.y = 100;
     renderer_3D = createRenderer();
@@ -368,8 +333,6 @@ async function main_3D() {
     controls_3D = new PointerLockControls.PointerLockControls(camera_3D, document.body);
     scene_3D = new gameScene(renderer_3D.domElement, camera_3D);
     scene_3D.add(controls_3D.getObject());
-
-    createGUI(true);
 
     animate();
 }

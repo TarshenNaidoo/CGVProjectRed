@@ -1,11 +1,19 @@
-
+// this class will load all objects needed for the game when the game is opened
 let loadDone = 0;
 let loadTotal = 0;
 
 import {GLTFLoader} from "../three.js-master/examples/jsm/loaders/GLTFLoader.js";
 let gunGtlfloader = new GLTFLoader();
+let that = this;
 
-//gun
+//Whenever a new object is going to be imported - i.e. A new importer and asynchronous task is created; increase
+//loadTotal by 1 the line before loading the import. When the import is successfully handled, increase loadDone by 1
+//and call checkLoad() to verify that no other imports are running and everything is loaded.
+//load function is an abstract function as follows:
+//<loader name>.load(<import path as string>, function onLoad, function onUpdate, function onError);
+//to refer to 3D_gameStartScript context; use 'that' instead of 'this' (context within .load is GLTFLoader.js)
+
+//gun import
 loadTotal++;
 gunGtlfloader.load(
     'models/MagicianAllAni.glb',
@@ -29,11 +37,10 @@ gunGtlfloader.load(
 );
 
 //zombie
-let zombieImportArray = [];
-let zNum = 5;
-zombieNum_3D = zNum;
-loadTotal += zNum;
-for (let i = 0 ; i < zNum ; i++) {
+let zombieImportArray = []; //Will hold all zombie objects of type Object3D or Group (not sure but should be handled the
+                            //same
+loadTotal += zombieNum_3D;  //zombieNum_3D is declared in 3D_gameStartScript
+for (let i = 0 ; i < zombieNum_3D ; i++) {
     let zLoader = new GLTFLoader();
     zLoader.load(
         'models/zombieWalk6.glb',
@@ -44,6 +51,9 @@ for (let i = 0 ; i < zNum ; i++) {
             zombieImportScene.scale.set(7,7,7);
             zombieImportScene.traverse((object) => {
                 if (object.isMesh) object.frustumCulled = false;
+                //Traverses Mesh and ensures that the zombie mesh will not be derendered. This is due to a bug where the
+                //the bounding box for the mesh is to small. Simplest solution is to prevent this. The performance impact
+                //is negligible
             });
 
 
@@ -84,37 +94,10 @@ bulletLoader.load(
     }
 );
 
-//for each object
-//create a new gltfLoader() object
-//add one to loadtotal for each object imported
-// load the object using <loader name>.load(
-// '<path to file>',
-// function(<import object>){ <onload function>}, ##call a function in gameStartScript and pass parameter to assign to an object
-// function(xhr) {<update function>} ##keep console logging in the same format as above
-// function(xhr) {<error function>} ##keep console error in the same format as above
 
-/*
-let worldLoader = new GLTFLoader();
-loadTotal++;
-worldLoader.load(
-    './models/Draft/world.glb',
-    function (worldImport) {
 
-        importWorld(worldImport); //calling function in gameStartScript
-
-        loadDone++;
-        checkLoad();
-
-    },
-    function (xhr){
-        console.log('World model loading: ' + (xhr.loaded/xhr.total * 100) + '%');
-    },
-    function (err){
-    console.error('Error loading world model: ' + err);
-    }
-)
- */
-
+//function checks that all created imports have completed successfully, and then changes text to Play and
+//adds onclick function to start the game
 
 function checkLoad(){
     if (loadDone === loadTotal){
