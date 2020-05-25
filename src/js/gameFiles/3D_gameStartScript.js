@@ -131,6 +131,10 @@ function onKeyDown (event) {
             case 16:
                 flying_3D = true;
                 break;
+
+            case 32: // space
+                jumping_3D = true;
+                break;
         }
     }
 
@@ -173,10 +177,6 @@ function onKeyUp (event) {
 
             case 82: //'r'
                 scene_3D.resetScene();
-                break;
-
-            case 32: // space
-                jumping_3D = true;
                 break;
 
             case 16: //shift

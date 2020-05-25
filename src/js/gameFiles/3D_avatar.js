@@ -2,6 +2,7 @@ class Avatar {
     constructor(scene) {
 
         this.avatar = new THREE.Object3D;
+        this.range = 7.5;
         this.scene = scene;
         controls_3D.getObject().add(this.avatar); //adds avatar to camera
         this.cameraHeight = height_3D; //sets the initial height
@@ -28,7 +29,8 @@ class Avatar {
         this.speed = 150; //controls the speed of the bullet when shooting it
         this.velocity = new THREE.Vector3(); // Force applied to the player model each frame. Is updated each frame
         this.direction = new THREE.Vector3(); //direction of the player. Usually normalized
-        this.mass = 20; //mass of the player. Not necessarily in KGs
+        this.mass = 35; //mass of the player. Not necessarily in KGs
+        this.force = 40;
 
     }
 
@@ -55,7 +57,7 @@ class Avatar {
     }
 
     setInitialPosition() {
-        this.avatar.position.set(0,2.5,0);
+        this.avatar.position.set(0,height_3D,0);
     }
 
     getActiveWeapon() {
@@ -85,18 +87,18 @@ class Avatar {
     }
 
     move() {
-
         this.velocity.x -= this.velocity.x * 10 * delta_3D; //simulates friction
         this.velocity.z -= this.velocity.z * 10 * delta_3D; //simulates friction
         this.direction.z = Number(moveForward_3D) - Number(moveBackward_3D); //determines z direction
         this.direction.x = Number(moveRight_3D) - Number(moveLeft_3D); //determines x direction
         this.direction.normalize(); //normalizes direction vector if there is x and z movement
 
-        if ( moveForward_3D || moveBackward_3D ) this.velocity.z -= this.direction.z * 400.0 * delta_3D; //applies force to direction vector and adds to velocity
+
+        if ( moveForward_3D || moveBackward_3D ) this.velocity.z -= this.direction.z * this.force * 10 * delta_3D; //applies force to direction vector and adds to velocity
         else {
             if (Math.abs(this.velocity.z) < 0.1){this.velocity.z = 0;} // sets velocity to 0 so there isn't a hyperbola
         }
-        if ( moveLeft_3D || moveRight_3D ) this.velocity.x -= this.direction.x * 400.0 * delta_3D; //applies force to direction vector and adds to velocity
+        if ( moveLeft_3D || moveRight_3D ) this.velocity.x -= this.direction.x * this.force * 10 * delta_3D; //applies force to direction vector and adds to velocity
         else {
             if (Math.abs(this.velocity.x) < 0.1){this.velocity.x = 0;} // sets velocity to 0 so there isn't a hyperbola
         }
@@ -131,20 +133,13 @@ class Avatar {
 
         }
 
-        if (
-            controls_3D.getObject().position.y + this.velocity.y * delta_3D > 10 &&
-            controls_3D.getObject().position.y + this.velocity.y * delta_3D < 490
-        ) {
-            controls_3D.getObject().position.y += this.velocity.y * delta_3D;
-        } else {
 
-            this.velocity.y = 0;
-        }
+        controls_3D.getObject().position.y += this.velocity.y * delta_3D;
     }
 
     controlAnimations(){
-        if (this.velocity.z != 0 || this.velocity.x != 0) {
-            this.playerIdle.paused = true;
+        if (this.velocity.z != 0 || this.velocity.x != 0) { //if we are moving...
+            this.playerIdle.paused = true; //pause idle animation, check if walking animation is running and then walk;
             if (this.playerMove.isScheduled()){
                 this.playerMove.paused = false;
             } else {
@@ -160,7 +155,82 @@ class Avatar {
         this.mixer.update(delta_3D);
     }
 
-    checkSkybox() {
+    getAvatarPosition(){
+        let position = new THREE.Vector3();
+        position.x = controls_3D.getObject().position.x + this.avatar.position.x;
+        position.y = controls_3D.getObject().position.y + this.avatar.position.y;
+        position.z = controls_3D.getObject().position.z + this.avatar.position.z;
+
+        return position;
+    }
+    /*
+    This function applies force to the player's velocity if the objects in the specific array is within range.
+    If within range, get the direction of the object, reverse it normalize and apply a force factor. Then apply that force
+    to the velocity vector. the direction of velocity cannot change so it will be a minimum of 0 no matter how many forces
+    act upon the avatar. If the avatar is within 0.8 of the collision detection range 'distance', then a big factor
+    will be applied to the velocity vector to prevent movement any closer in that direction
+     */
+
+    applyCollisions(){
+        for (let i = 0 ; i < this.scene.collisionObjects.length ; i++) {
+
+            let avatarPosition = this.getAvatarPosition(); //gets the avatar's position relative to scene
+            let distance =
+                Math.sqrt(
+                    Math.pow(avatarPosition.x - this.scene.collisionObjects[i][0].x,2) +
+                    Math.pow(avatarPosition.y - this.scene.collisionObjects[i][0].y,2) +
+                    Math.pow(avatarPosition.z - this.scene.collisionObjects[i][0].z, 2)
+                ); // distance between avatar and enemy;
+
+            if (i == 0){
+                console.log(distance - (this.range + this.scene.collisionObjects[i][1]));
+            }
+
+            if (this.range + this.scene.collisionObjects[i][1] > distance){
+                let xComp = avatarPosition.x - this.scene.collisionObjects[i][0].x//x direction towards enemy
+                let yComp = avatarPosition.y - this.scene.collisionObjects[i][0].y//y direction towards enemy
+                let zComp = avatarPosition.z - this.scene.collisionObjects[i][0].z//z direction towards enemy
+
+                let collisionDirection = new THREE.Vector3(xComp,yComp,zComp);
+                collisionDirection.normalize();
+                if ((this.range + this.scene.collisionObjects[i][1]) * 0.8 > distance){
+                    /* if the player is within a smaller range, a significantly higher force will be applied in order
+                    to prevent movement any closer. This works in conjunction with the following lines below
+                    the if-else
+                    */
+                    collisionDirection.x *= (this.scene.collisionObjects[i][2] * this.force);
+                    collisionDirection.y *= (this.scene.collisionObjects[i][2] * this.force);
+                    collisionDirection.z *= (this.scene.collisionObjects[i][2] * this.force);
+                } else {
+                    collisionDirection.x *= this.scene.collisionObjects[i][2];//apply force to opposite direction
+                    collisionDirection.y *= this.scene.collisionObjects[i][2];//apply force to opposite direction
+                    collisionDirection.z *= this.scene.collisionObjects[i][2];//apply force to opposite direction
+                }
+
+                /*
+                If you are moving in opposite directions to the directional force, the directional force will be
+                applied but will not force you backwards
+                */
+
+                console.log("velocity.x: " + this.velocity.x + ", " + collisionDirection.x);
+
+                //the following apply only if the 2 vectors collide (i.e. have opposite directions
+
+                if (!(this.velocity.x * collisionDirection.x > 0)) {
+                    this.velocity.x = this.velocity.x + collisionDirection.x;
+                }
+                if (!(this.velocity.y * collisionDirection.y > 0)) {
+                    this.velocity.y = collisionDirection.y;
+                }
+                if (!(this.velocity.z * collisionDirection.z > 0)) {
+                    this.velocity.z = collisionDirection.z;
+                }
+            }
+        }
+
+    }
+
+    checkSkyboxBounds() {
         if(controls_3D.getObject().position.x < -490) {
             controls_3D.getObject().position.x = -490;
         } else if(controls_3D.getObject().position.x > 490) {
@@ -175,6 +245,10 @@ class Avatar {
     changeWeapon() {
 
     }
+    /*
+    note: applyGravity() and move() should be called before applyCollisions() so that the play can't 'ignore'
+    collisions by simply overriding it with their own movements
+     */
     animate(){
 
         this.jump();
@@ -183,9 +257,12 @@ class Avatar {
 
         this.applyGravity();
 
+        this.applyCollisions();
+
         this.controlAnimations();
 
-        this.checkSkybox();
+        this.checkSkyboxBounds();
+
         //}
 
     }

@@ -21,7 +21,8 @@ class Zombie {
         this.zombieHealth = level;
         this.scene = scene;
         this.hitTime = 0;
-        this.range = zombieScale/2;
+        this.range = zombieScale;
+        this.force = 1;
     }
 
     getObject(){

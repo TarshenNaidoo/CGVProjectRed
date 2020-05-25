@@ -259,7 +259,7 @@ class gameScene extends Physijs.Scene {
             let generatedZombie = new Zombie(this, this.level, (-zombieNum_3D + i)*5, 2, -50, i)
             this.zombies.push(generatedZombie);
 
-            this.collisionObjects.push({origin:generatedZombie.getObject().position, range:generatedZombie.range});
+            this.collisionObjects.push([generatedZombie.getObject().position, generatedZombie.range, generatedZombie.force]);
             this.add(generatedZombie.getObject());
         }
     }
@@ -285,6 +285,7 @@ class gameScene extends Physijs.Scene {
     animate() {
 
         if (enableControls_3D) {
+
 
             this.avatar.animate();
 
@@ -313,9 +314,10 @@ class gameScene extends Physijs.Scene {
                 if (this.avatar.hp === 0) {
                     this.endGame();
                 }
-                this.simulate();
 
             }
+
+            this.simulate();
         }
     }
 

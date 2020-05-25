@@ -39,8 +39,7 @@ class Sun{
 
     //Sunlight reaches total darkness at the "horizon"
     setIntensity(){
-        this.pointLight.intensity = Math.max(0,this.currentHeight/this.maxHeight);
-        console.log (this.pointLight.intensity);
+        this.pointLight.intensity = Math.max(0.5,this.currentHeight/this.maxHeight);
     }
 
     //continuously rotates the sun
