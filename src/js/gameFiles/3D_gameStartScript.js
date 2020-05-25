@@ -9,6 +9,7 @@ let cameraView_3D = true; //control Variable used when switching between 3rd per
 let controls_3D; // = new PointerLockControls(camera, document.body);
 
 let zombieNum_3D = 5; //number of zombies within this level
+let zombieScale = 7;
 
 //external assets:
 let player_3D = null; //see function importPlayer below
@@ -33,6 +34,7 @@ let jumping_3D = false; //identifies whether the play is jumping
 let flying_3D = false; //identifies whether the play is flying
 let shooting_3D = false; //identifies whether the play is shooting
 let enableControls_3D = false;
+let dev_enableControls_3D = true; //halts animation without showing the pause menu for debugging
 
 function importPlayer(newPlayer){
     //adds the player model and animations to variables
@@ -132,7 +134,7 @@ function onKeyDown (event) {
         }
     }
 
-    if (event.keyCode === 80 && enableControls_3D === false) { // p
+    if (event.keyCode === 80 && !enableControls_3D) { // p
         scene_3D.newGame();
     }
 }
@@ -164,12 +166,12 @@ function onKeyUp (event) {
                 jumping_3D = false;
                 break;
 
-            case 187:
+            case 187: //'='
                 cameraView_3D = !cameraView_3D;
                 switchControls(cameraView_3D);
                 break;
 
-            case 82:
+            case 82: //'r'
                 scene_3D.resetScene();
                 break;
 
@@ -177,8 +179,12 @@ function onKeyUp (event) {
                 jumping_3D = true;
                 break;
 
-            case 16:
+            case 16: //shift
                 flying_3D = false;
+                break;
+
+            case 84:
+                dev_enableControls_3D = !dev_enableControls_3D;
                 break;
         }
     }

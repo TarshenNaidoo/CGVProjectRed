@@ -17,6 +17,10 @@ class Bullet {
         this.shootAction = this.mixer.clipAction(this.shootClip);
     }
 
+    getObject(){
+        return this.bullet;
+    }
+
     getLaunched() {
         return this.launched;
     }
@@ -30,55 +34,68 @@ class Bullet {
             z: this.bullet.position.z, radius: this.bulletWidth/2};
     }
 
+    move(){
+
+        this.bullet.position.x += this.direction.x*delta_3D * this.speed;
+        this.bullet.position.y += this.direction.y*delta_3D * this.speed;
+        this.bullet.position.z += this.direction.z*delta_3D * this.speed;
+    }
+
+    confirmHit(){
+        for (let i = 0 ; i < this.scene.zombies.length ; i++) {
+            if (
+                this.scene.zombies[i].confirmHit(
+                    this.bullet.position.x,
+                    this.bullet.position.y,
+                    this.bullet.position.z
+                )
+            ) {
+                this.scene.zombies[i].hit();
+                this.bullet.visible = false;
+                this.launched = false;
+                this.scene.stopPlayerShootAnimation();
+                this.scene.updateScore(1);
+                break;
+            }
+        }
+    }
+
+    checkLimit(){
+        if (
+            Math.sqrt(
+                Math.pow(
+                    this.bullet.position.x - this.initialPosition.x,
+                    2
+                ) +
+                Math.pow(
+                    this.bullet.position.y - this.initialPosition.y,
+                    2
+                ) +
+                Math.pow(this.bullet.position.z - this.initialPosition.z,
+                    2
+                )
+            ) > 160
+        ) {
+            if (this.shootAction.isRunning()){
+                this.shootAction.stop();
+                this.shootAction.reset();
+            }
+            this.bullet.visible = false;
+            this.launched = false;
+            this.scene.stopPlayerShootAnimation();
+        }
+    }
+
     animate() {
         this.mixer.update(delta_3D);
 
         if (this.launched) {
-            this.bullet.position.x += this.direction.x*delta_3D * this.speed;
-            this.bullet.position.y += this.direction.y*delta_3D * this.speed;
-            this.bullet.position.z += this.direction.z*delta_3D * this.speed;
+            this.move();
 
-            let detectHit = false;
-            for (let i = 0 ; i < this.scene.zombies.length ; i++) {
-                if (
-                    Math.sqrt(
-                        Math.pow(this.bullet.position.x - this.scene.zombies[i].zombie.position.x, 2) +
-                        Math.pow(this.bullet.position.y - this.scene.zombies[i].zombie.position.y, 2) +
-                        Math.pow(this.bullet.position.z - this.scene.zombies[i].zombie.position.z, 2)
-                    ) < 10 && this.scene.zombies[i].zombieHealth != 0
-                ) {
-                    this.scene.zombies[i].hit();
-                    this.bullet.visible = false;
-                    this.launched = false;
-                    this.scene.stopPlayerShootAnimation();
-                    this.scene.updateScore(1);
-                    break;
-                }
-                //console.log("Not within range of this zombie");
-            }
-            if (
-                Math.sqrt(
-                    Math.pow(
-                        this.bullet.position.x-this.initialPosition.x,
-                        2
-                    ) +
-                    Math.pow(
-                        this.bullet.position.y - this.initialPosition.y,
-                        2
-                    ) +
-                    Math.pow(this.bullet.position.z - this.initialPosition.z,
-                        2
-                    )
-                ) > 160
-            ) {
-                if (this.shootAction.isRunning()){
-                    this.shootAction.stop();
-                    this.shootAction.reset();
-                }
-                this.bullet.visible = false;
-                this.launched = false;
-                this.scene.stopPlayerShootAnimation();
-            }
+            this.confirmHit();
+
+            this.checkLimit();
+
         }
     }
 

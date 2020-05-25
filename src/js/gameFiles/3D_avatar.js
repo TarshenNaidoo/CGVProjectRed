@@ -142,22 +142,7 @@ class Avatar {
         }
     }
 
-    changeWeapon() {
-
-    }
-    animate(){
-
-        this.jump();
-
-        this.move();
-
-        this.applyGravity();
-
-        //{y movement
-
-        //}
-
-        //{idle and moving animation control
+    controlAnimations(){
         if (this.velocity.z != 0 || this.velocity.x != 0) {
             this.playerIdle.paused = true;
             if (this.playerMove.isScheduled()){
@@ -172,7 +157,10 @@ class Avatar {
             this.playerIdle.paused = false;
         }
 
-        //skybox bounds check
+        this.mixer.update(delta_3D);
+    }
+
+    checkSkybox() {
         if(controls_3D.getObject().position.x < -490) {
             controls_3D.getObject().position.x = -490;
         } else if(controls_3D.getObject().position.x > 490) {
@@ -182,8 +170,22 @@ class Avatar {
         } else if(controls_3D.getObject().position.z > 490) {
             controls_3D.getObject().position.z = 490;
         }
+    }
 
-        this.mixer.update(delta_3D);
+    changeWeapon() {
+
+    }
+    animate(){
+
+        this.jump();
+
+        this.move();
+
+        this.applyGravity();
+
+        this.controlAnimations();
+
+        this.checkSkybox();
         //}
 
     }

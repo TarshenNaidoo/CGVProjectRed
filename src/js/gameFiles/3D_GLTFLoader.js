@@ -47,8 +47,10 @@ for (let i = 0 ; i < zombieNum_3D ; i++) {
         function (zombieImport) {
 
             let zombieImportScene = zombieImport.scene;
+            zombieImportScene.receiveShadow = true;
+            zombieImportScene.castShadow = true;
             //zombieImportScene.rotation.x = 90;
-            zombieImportScene.scale.set(7,7,7);
+            zombieImportScene.scale.set(zombieScale,zombieScale,zombieScale);
             zombieImportScene.traverse((object) => {
                 if (object.isMesh) object.frustumCulled = false;
                 //Traverses Mesh and ensures that the zombie mesh will not be derendered. This is due to a bug where the

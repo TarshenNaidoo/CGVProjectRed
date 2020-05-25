@@ -26,7 +26,7 @@ class Skybox{
         this.skybox = new THREE.Mesh(this.skyboxGeo, this.materialArray);
     }
 
-    getSkybox(){
+    getObject(){
         return this.skybox;
     }
 }

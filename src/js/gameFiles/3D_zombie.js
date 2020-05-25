@@ -8,10 +8,11 @@ class Zombie {
         mesh.transparent = true;
         mesh.opacity = 0;
         this.hitbox = new Physijs.Mesh(
-            new THREE.BoxBufferGeometry(
-                7,10,7
+            new THREE.CylinderBufferGeometry(
+                zombieScale/2,zombieScale/2,zombieScale*1.5, 20
             ), mesh);
-        this.hitbox.position.set(this.zombieModel.position.x + 1, 5, this.zombieModel.position.z+1);
+        this.hitbox.position.x = 0.17*zombieScale;
+        this.hitbox.position.y = zombieScale*0.75;
         this.zombie.add(this.zombieModel);
         this.zombie.add(this.hitbox);
         this.zombie.position.set(x*2,y,z);
@@ -20,6 +21,11 @@ class Zombie {
         this.zombieHealth = level;
         this.scene = scene;
         this.hitTime = 0;
+        this.range = zombieScale/2;
+    }
+
+    getObject(){
+        return this.zombie;
     }
 
     getPosition(){
@@ -28,6 +34,20 @@ class Zombie {
             this.zombie.position.y,
             this.zombie.position.z
         );
+    }
+
+    confirmHit(x,y,z){
+        if (
+            Math.sqrt(
+                Math.pow(x - (this.getObject().position.x + this.hitbox.position.x), 2) +
+                Math.pow(y - (this.getObject().position.y + this.hitbox.position.y), 2) +
+                Math.pow(z - (this.getObject().position.z + this.hitbox.position.z), 2)
+            ) < this.range && this.zombieHealth != 0
+        ){
+            return true;
+        } else {
+            return false;
+        }
     }
 
     hit(){

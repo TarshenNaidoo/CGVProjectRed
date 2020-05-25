@@ -1,7 +1,7 @@
 
 class gameScene extends Physijs.Scene {
 
-    constructor(renderer, theCamera, controls) {
+    constructor(renderer, theCamera) {
         super({fixedTimeStep: delta_3D});
         this.setGravity(new THREE.Vector3(0,-50, 0));
         this.skybox = null;
@@ -10,6 +10,7 @@ class gameScene extends Physijs.Scene {
         this.background =  new THREE.Color (0x87ceeb);
         this.camera = theCamera;
         this.rayCastObjects = [];
+        this.collisionObjects = [];
         this.createAvatar();
         this.crosshair = this.createCrosshair();
         this.camera.add(this.crosshair);
@@ -21,7 +22,7 @@ class gameScene extends Physijs.Scene {
         this.actualAmmo = this.maxBullets;
         for (let i = 0 ; i <= this.maxBullets ; i++){
             this.bullets.push(new Bullet(this));
-            this.add(this.bullets[i].bullet);
+            this.add(this.bullets[i].getObject());
         }
         this.score = 0;
         this.lastScore = 0;
@@ -154,7 +155,7 @@ class gameScene extends Physijs.Scene {
 
     createSkybox(){
         this.skybox = new Skybox();
-        this.add(this.skybox.getSkybox());
+        this.add(this.skybox.getObject());
     }
 
     //this creates the 'place' as it were complete with a skybox and map
@@ -225,8 +226,6 @@ class gameScene extends Physijs.Scene {
             this.avatar.playerLightAttack.stop();
             this.avatar.playerLightAttack.reset();
         }
-
-        //console.log(performance.now()- this.tracktime);
     }
 
     reloadAmmo() {
@@ -259,7 +258,9 @@ class gameScene extends Physijs.Scene {
         for (let i = 0 ; i < zombieNum_3D ; i++){
             let generatedZombie = new Zombie(this, this.level, (-zombieNum_3D + i)*5, 2, -50, i)
             this.zombies.push(generatedZombie);
-            this.add(generatedZombie.zombie);
+
+            this.collisionObjects.push({origin:generatedZombie.getObject().position, range:generatedZombie.range});
+            this.add(generatedZombie.getObject());
         }
     }
 
@@ -283,27 +284,39 @@ class gameScene extends Physijs.Scene {
 
     animate() {
 
-        this.avatar.animate();
+        if (enableControls_3D) {
 
-        this.sunlight.animate();
+            this.avatar.animate();
 
-        if (shooting_3D) {
-            this.avatar.animateWeapon();
+
+            if (shooting_3D) {
+                this.avatar.animateWeapon();
+            }
+
+            let currentBullet = this.maxBullets - this.actualAmmo;
+            if (currentBullet === 0) {
+                currentBullet = this.maxBullets + 1;
+            }
+
+            this.bullets[currentBullet - 1].animate();
+
+
+            if (dev_enableControls_3D) {
+
+                this.sunlight.animate();
+
+
+                for (let i = 0; i < this.zombies.length; i++) {
+                    this.zombies[i].animate();
+                }
+
+                if (this.avatar.hp === 0) {
+                    this.endGame();
+                }
+                this.simulate();
+
+            }
         }
-
-        let currentBullet = this.maxBullets-this.actualAmmo;
-        if (currentBullet === 0) {currentBullet = this.maxBullets+1;}
-
-        this.bullets[currentBullet-1].animate();
-
-        for (let i = 0 ; i < this.zombies.length ; i++) {
-            this.zombies[i].animate();
-        }
-
-        if (this.avatar.hp === 0) {
-            this.endGame();
-        }
-        this.simulate();
     }
 
     changeWeapon() {
@@ -312,10 +325,6 @@ class gameScene extends Physijs.Scene {
 
     getCamera () {
         return this.camera;
-    }
-
-    getCameraControls () {
-        return this.controls;
     }
 
     setCameraAspect (anAspectRatio) {
@@ -332,8 +341,8 @@ class gameScene extends Physijs.Scene {
 
         this.updateLevel();
 
-        for (let i = 0 ; i < this.zombies.getZombiesSize() ; i++) {
-            this.remove(this.zombies.getZombies(i));
+        for (let i = 0 ; i < this.zombies.length ; i++) {
+            this.remove(this.zombies.length(i));
         }
         this.zombies.zombiesOriginalPos = [];
         this.createZombies();
@@ -343,6 +352,7 @@ class gameScene extends Physijs.Scene {
     newGame(){
         blocker.style.display = 'none';
         enableControls_3D = true;
+        dev_enableControls_3D = true;
         controls_3D.enabled = true;
         controls_3D.getObject().position.set(0,10,0);
         this.avatar.hp = 100;
@@ -352,7 +362,7 @@ class gameScene extends Physijs.Scene {
         this.level = 1;
         this.updateLevel();
 
-        for (var i = 0 ; i < this.zombies.length ; i++) {
+        for (let i = 0 ; i < this.zombies.length ; i++) {
             this.zombies.pop()
         }
         this.createZombies();
