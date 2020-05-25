@@ -260,6 +260,7 @@ class gameScene extends Physijs.Scene {
             this.zombies.push(generatedZombie);
 
             this.collisionObjects.push([generatedZombie.getObject().position, generatedZombie.range, generatedZombie.force]);
+            this.rayCastObjects.push(generatedZombie.getObject());
             this.add(generatedZombie.getObject());
         }
     }

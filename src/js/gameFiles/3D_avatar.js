@@ -130,7 +130,6 @@ class Avatar {
         if ( onObject === true && this.velocity.y < 0) {
             this.velocity.y = Math.max( 0, this.velocity.y );
             this.canJump = true;
-
         }
 
 
