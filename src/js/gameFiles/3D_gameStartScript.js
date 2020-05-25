@@ -207,6 +207,7 @@ function createRenderer() {
     let renderer = new THREE.WebGLRenderer({antialias:true});
     renderer.setClearColor(new THREE.Color(0xEEEEEE), 0.1);
     renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.shadowMapType
     renderer.setSize(window.innerWidth,window.innerHeight);
     document.body.appendChild(renderer.domElement);
     renderer.shadowMap.enabled = true;

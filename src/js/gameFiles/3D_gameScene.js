@@ -28,8 +28,7 @@ class gameScene extends Physijs.Scene {
         this.createHUD();
         this.avatar.loadWeapons();
         this.place = this.createPlace();
-        this.pointLight = null;
-        this.spotLight = null;
+        this.sunlight = null;
         this.createLights();
         this.add(this.place);
         this.rayCastObjects.push(this.place);
@@ -149,13 +148,8 @@ class gameScene extends Physijs.Scene {
     }
     //this creates the lights for the scene. If the scene already has lights, we can comment this out
     createLights() {
-        this.pointLight = new THREE.PointLight(0xccddee, 2);
-        this.pointLight.position.y = 50;
-        this.add (this.pointLight);
-        //let pointlight = new THREE.PointLight(0x333333,1);
-        //this.add(pointlight);
-
-
+        this.sunlight = new Sun(0,300,0);
+        this.add(this.sunlight.getObject());
     }
 
     createSkybox(){
@@ -209,13 +203,14 @@ class gameScene extends Physijs.Scene {
 
         floorGeometry.setAttribute( 'color', new THREE.Float32BufferAttribute( colors, 3 ) );
 
-        let floorMaterial = new THREE.MeshBasicMaterial( { vertexColors: true } );
+        let floorMaterial = new THREE.MeshPhongMaterial( { vertexColors: true } );
 
         let floor = new THREE.Mesh( floorGeometry, floorMaterial );
 
         //let physiFloor = new Physijs.PlaneMesh(floorGeometry,floorMaterial, 10);
         //place.add(floor);
         place.add(floor)
+        floor.receiveShadow = true;
         //let worldModel = new World();
         //place.add(worldModel.getWorld());
         return place;
@@ -288,11 +283,9 @@ class gameScene extends Physijs.Scene {
 
     animate() {
 
-        if (jumping_3D) {
-            this.avatar.jump();
-        }
-
         this.avatar.animate();
+
+        this.sunlight.animate();
 
         if (shooting_3D) {
             this.avatar.animateWeapon();

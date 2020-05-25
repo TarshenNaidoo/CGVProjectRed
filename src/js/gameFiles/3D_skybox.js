@@ -10,12 +10,12 @@ class Skybox{
         this.texture_rt = new THREE.TextureLoader().load('../../src/textures/skybox2/sh_rt.png');
         this.texture_lf = new THREE.TextureLoader().load('../../src/textures/skybox2/sh_lf.png');
 
-        this.materialArray.push(new THREE.MeshBasicMaterial({map: this.texture_ft}));
-        this.materialArray.push(new THREE.MeshBasicMaterial({map: this.texture_bk}));
-        this.materialArray.push(new THREE.MeshBasicMaterial({map: this.texture_up}));
-        this.materialArray.push(new THREE.MeshBasicMaterial({map: this.texture_dn}));
-        this.materialArray.push(new THREE.MeshBasicMaterial({map: this.texture_rt}));
-        this.materialArray.push(new THREE.MeshBasicMaterial({map: this.texture_lf}));
+        this.materialArray.push(new THREE.MeshPhongMaterial({map: this.texture_ft}));
+        this.materialArray.push(new THREE.MeshPhongMaterial({map: this.texture_bk}));
+        this.materialArray.push(new THREE.MeshPhongMaterial({map: this.texture_up}));
+        this.materialArray.push(new THREE.MeshPhongMaterial({map: this.texture_dn}));
+        this.materialArray.push(new THREE.MeshPhongMaterial({map: this.texture_rt}));
+        this.materialArray.push(new THREE.MeshPhongMaterial({map: this.texture_lf}));
 
         for (let i = 0 ; i < this.materialArray.length ; i++) {
             this.materialArray[i].side = THREE.BackSide;

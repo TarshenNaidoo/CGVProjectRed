@@ -78,7 +78,7 @@ class Avatar {
     }
 
     jump() {
-        if (this.canJump){
+        if (this.canJump && jumping_3D){
             this.velocity.y += 100;
             this.canJump = false;
         }
@@ -115,7 +115,6 @@ class Avatar {
 
         if (!flying_3D) {
             this.velocity.y -= yDistanceOffset;
-            console.log(this.velocity.y * delta_3D);
         } else {
             this.velocity.y += 4.5 * this.mass * delta_3D;
         }
@@ -147,6 +146,8 @@ class Avatar {
 
     }
     animate(){
+
+        this.jump();
 
         this.move();
 
