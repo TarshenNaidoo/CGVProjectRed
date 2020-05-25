@@ -5,7 +5,7 @@ class Avatar {
         this.range = 7.5;
         this.scene = scene;
         controls_3D.getObject().add(this.avatar); //adds avatar to camera
-        this.cameraHeight = height_3D; //sets the initial height
+        this.cameraHeight = 5; //sets the initial height
         controls_3D.getObject().position.y = this.cameraHeight;
         //raycaster used for detecting ground underneath player when applying gravity
         this.rayCaster = new THREE.Raycaster( controls_3D.getObject().position, new THREE.Vector3( 0, - 1, 0 ), 0, 2 );
@@ -122,7 +122,7 @@ class Avatar {
         }
 
         //makes sure the raycaster can detect everything within the next application of gravity
-        this.rayCaster.far = yDistanceOffset + 0.5;
+        this.rayCaster.far = yDistanceOffset + this.cameraHeight;
         let intersections = this.rayCaster.intersectObjects(this.scene.rayCastObjects, true);
         let onObject = intersections.length > 0;
 
@@ -134,6 +134,9 @@ class Avatar {
 
 
         controls_3D.getObject().position.y += this.velocity.y * delta_3D;
+        if (controls_3D.getObject().position.y < this.cameraHeight){
+            controls_3D.getObject().position.y = this.cameraHeight;
+        }
     }
 
     controlAnimations(){
