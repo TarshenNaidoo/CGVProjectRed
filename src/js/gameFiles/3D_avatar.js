@@ -1,12 +1,12 @@
 class Avatar {
-    constructor(scene) {
+    constructor(scene, x,y,z) {
 
         this.avatar = new THREE.Object3D;
         this.range = 7.5;
         this.scene = scene;
         controls_3D.getObject().add(this.avatar); //adds avatar to camera
-        this.cameraHeight = 5; //sets the initial height
-        controls_3D.getObject().position.y = this.cameraHeight;
+        this.initialPosition = new THREE.Vector3(x,y,z); //sets the initial height
+        controls_3D.getObject().position.set(this.initialPosition.x, this.initialPosition.y, this.initialPosition.z);
         //raycaster used for detecting ground underneath player when applying gravity
         this.rayCaster = new THREE.Raycaster( controls_3D.getObject().position, new THREE.Vector3( 0, - 1, 0 ), 0, 2 );
         this.canJump = true;
@@ -34,6 +34,14 @@ class Avatar {
 
     }
 
+    reset(){
+        if (this.playerLightAttack.isRunning()){
+            this.playerLightAttack.stop();
+            this.playerLightAttack.reset();
+        }
+        this.hp = 100;
+    }
+
     getSpeed(){
         return this.speed;
     }
@@ -48,16 +56,8 @@ class Avatar {
         //load weapon 1
     }
 
-    getPosition() {
-        let pos = new THREE.Vector3();
-        pos.x = this.avatar.position.x;
-        pos.y = this.avatar.position.y;
-        pos.z = this.avatar.position.z;
-        return pos;
-    }
-
     setInitialPosition() {
-        this.avatar.position.set(0,height_3D,0);
+        this.controls.position.set(this.initialPosition.x, this.initialPosition.y+5, this.initialPosition.z);
     }
 
     getActiveWeapon() {
@@ -103,14 +103,13 @@ class Avatar {
             if (Math.abs(this.velocity.x) < 0.1){this.velocity.x = 0;} // sets velocity to 0 so there isn't a hyperbola
         }
 
-        controls_3D.moveForward(-this.velocity.z * delta_3D); //final movement offset
-        controls_3D.moveRight(-this.velocity.x * delta_3D); //final movement offset
+        this.controls.moveForward(-this.velocity.z * delta_3D); //final movement offset
+        this.controls.moveRight(-this.velocity.x * delta_3D); //final movement offset
 
     }
 
     applyGravity(){
-        this.rayCaster.origin = (controls_3D.getObject().position); //updates raycaster origin to camera origin
-
+        this.rayCaster.origin = (this.getAvatarPosition()); //updates raycaster origin to avatar's origin
         let yDistanceOffset = 9.8 * this.mass * delta_3D; //absolute value of gravity
 
         //if the player is not flying, gravity will be applied, otherwise a force to make the player fly is applied
@@ -122,20 +121,28 @@ class Avatar {
         }
 
         //makes sure the raycaster can detect everything within the next application of gravity
-        this.rayCaster.far = yDistanceOffset + this.cameraHeight;
+        this.rayCaster.far = yDistanceOffset * delta_3D + this.initialPosition.y;
         let intersections = this.rayCaster.intersectObjects(this.scene.rayCastObjects, true);
         let onObject = intersections.length > 0;
 
+        let closetY = 10000000000000000000;
+
+        //console.log(intersections[0]);
+
+        for (let i = 0 ; i < intersections.length ; i++) {
+            closetY = Math.min(Math.abs(intersections[i].distance - this.getAvatarPosition().y), closetY);
+        }
         //if there are intersections and the player is falling; apply no gravity and enable jumping
-        if ( onObject === true && this.velocity.y < 0) {
+        if ( onObject === true && this.velocity.y < 0 && closetY < this.initialPosition.y) {
             this.velocity.y = Math.max( 0, this.velocity.y );
+            console.log(this.initialPosition.y);
             this.canJump = true;
         }
 
 
-        controls_3D.getObject().position.y += this.velocity.y * delta_3D;
-        if (controls_3D.getObject().position.y < this.cameraHeight){
-            controls_3D.getObject().position.y = this.cameraHeight;
+        this.controls.getObject().position.y += this.velocity.y * delta_3D;
+        if (controls_3D.getObject().position.y < this.initialPosition.y){
+            controls_3D.getObject().position.y = this.initialPosition.y;
         }
     }
 
@@ -159,9 +166,9 @@ class Avatar {
 
     getAvatarPosition(){
         let position = new THREE.Vector3();
-        position.x = controls_3D.getObject().position.x + this.avatar.position.x;
-        position.y = controls_3D.getObject().position.y + this.avatar.position.y;
-        position.z = controls_3D.getObject().position.z + this.avatar.position.z;
+        position.x = this.controls.getObject().position.x + this.avatar.position.x;
+        position.y = this.controls.getObject().position.y + this.avatar.position.y;
+        position.z = this.controls.getObject().position.z + this.avatar.position.z;
 
         return position;
     }
@@ -179,34 +186,34 @@ class Avatar {
             let avatarPosition = this.getAvatarPosition(); //gets the avatar's position relative to scene
             let distance =
                 Math.sqrt(
-                    Math.pow(avatarPosition.x - this.scene.collisionObjects[i][0].x,2) +
-                    Math.pow(avatarPosition.y - this.scene.collisionObjects[i][0].y,2) +
-                    Math.pow(avatarPosition.z - this.scene.collisionObjects[i][0].z, 2)
+                    Math.pow(avatarPosition.x - this.scene.collisionObjects[i].getPosition().x,2) +
+                    Math.pow(avatarPosition.y - this.scene.collisionObjects[i].getPosition().y,2) +
+                    Math.pow(avatarPosition.z - this.scene.collisionObjects[i].getPosition().z, 2)
                 ); // distance between avatar and enemy;
 
             if (i == 0){
-                console.log(distance - (this.range + this.scene.collisionObjects[i][1]));
+                //console.log(distance - (this.range + this.scene.collisionObjects[i].range));
             }
 
-            if (this.range + this.scene.collisionObjects[i][1] > distance){
-                let xComp = avatarPosition.x - this.scene.collisionObjects[i][0].x//x direction towards enemy
-                let yComp = avatarPosition.y - this.scene.collisionObjects[i][0].y//y direction towards enemy
-                let zComp = avatarPosition.z - this.scene.collisionObjects[i][0].z//z direction towards enemy
+            if (this.range + this.scene.collisionObjects[i].range > distance && this.scene.collisionObjects[i].rendered){
+                let xComp = avatarPosition.x - this.scene.collisionObjects[i].getPosition().x//x direction towards enemy
+                let yComp = avatarPosition.y - this.scene.collisionObjects[i].getPosition().y//y direction towards enemy
+                let zComp = avatarPosition.z - this.scene.collisionObjects[i].getPosition().z//z direction towards enemy
 
                 let collisionDirection = new THREE.Vector3(xComp,yComp,zComp);
                 collisionDirection.normalize();
-                if ((this.range + this.scene.collisionObjects[i][1]) * 0.8 > distance){
-                    /* if the player is within a smaller range, a significantly higher force will be applied in order
-                    to prevent movement any closer. This works in conjunction with the following lines below
-                    the if-else
+                if ((this.range + this.scene.collisionObjects[i].range) * 0.8 > distance){
+                    /* if the player is within a smaller range, a the player's force will be applied in order
+                    to prevent movement any closer in the x-z. This works in conjunction with the following lines below
+                    the if-else. The player can still move closer but will move over the object instead
                     */
-                    collisionDirection.x *= (this.scene.collisionObjects[i][2] * this.force);
-                    collisionDirection.y *= (this.scene.collisionObjects[i][2] * this.force);
-                    collisionDirection.z *= (this.scene.collisionObjects[i][2] * this.force);
+                    collisionDirection.x *= (this.scene.collisionObjects[i].force * this.force);
+                    collisionDirection.y *= (this.scene.collisionObjects[i].force * this.force);
+                    collisionDirection.z *= (this.scene.collisionObjects[i].force * this.force);
                 } else {
-                    collisionDirection.x *= this.scene.collisionObjects[i][2];//apply force to opposite direction
-                    collisionDirection.y *= this.scene.collisionObjects[i][2];//apply force to opposite direction
-                    collisionDirection.z *= this.scene.collisionObjects[i][2];//apply force to opposite direction
+                    collisionDirection.x *= this.scene.collisionObjects[i].force;//apply force to opposite direction
+                    collisionDirection.y *= this.scene.collisionObjects[i].force;//apply force to opposite direction
+                    collisionDirection.z *= this.scene.collisionObjects[i].force;//apply force to opposite direction
                 }
 
                 /*

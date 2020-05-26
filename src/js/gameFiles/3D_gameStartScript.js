@@ -325,7 +325,7 @@ async function main_3D() {
     }
 
     camera_3D = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1500);
-    camera_3D.position.y = 100;
+    camera_3D.position.y = 10;
     renderer_3D = createRenderer();
 
     $("WebGL-output").append(renderer_3D.domElement);
@@ -338,7 +338,7 @@ async function main_3D() {
     window.addEventListener("DOMMouseScroll", onMouseWheel, true); //for firefox
 
     controls_3D = new PointerLockControls.PointerLockControls(camera_3D, document.body);
-    scene_3D = new gameScene(renderer_3D.domElement, camera_3D);
+    scene_3D = new gameScene(renderer_3D.domElement, camera_3D, 0,5,0);
     scene_3D.add(controls_3D.getObject());
 
     animate();

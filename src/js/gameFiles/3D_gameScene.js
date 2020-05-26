@@ -11,6 +11,11 @@ class gameScene extends Physijs.Scene {
         this.camera = theCamera;
         this.rayCastObjects = [];
         this.collisionObjects = [];
+        this.initialAvatarPosition = new THREE.Vector3(
+            controls_3D.getObject().position.x,
+            controls_3D.getObject().position.y,
+            controls_3D.getObject().position.z
+        );
         this.createAvatar();
         this.crosshair = this.createCrosshair();
         this.camera.add(this.crosshair);
@@ -37,24 +42,16 @@ class gameScene extends Physijs.Scene {
     }
 
     resetScene(){
-        controls_3D.getObject().position.set(0,10,0);
+        this.avatar.reset();
         this.reloadAmmo();
-        if (this.avatar.playerLightAttack.isRunning()){
-            this.avatar.playerLightAttack.stop();
-            this.avatar.playerLightAttack.reset();
-        }
         for (let i = 0 ; i < this.zombies.length ; i++) {
-            this.zombies[i].zombie.position.set((-zombieNum_3D + i)*5, 2, -50)
-            this.zombies[i].zombieHealth = this.level;
-            this.zombies[i].zombieHit = 0;
-            this.zombies[i].zombie.visible = true;
+            this.zombies[i].reset();
         }
 
         this.score = 0;
         this.updateScore(-this.score);
         this.level = 0;
         this.updateLevel();
-        this.avatar.hp = 100;
         this.updateHealth();
 
     }
@@ -218,7 +215,7 @@ class gameScene extends Physijs.Scene {
     }
 
     createAvatar(){
-        this.avatar = new Avatar(this);
+        this.avatar = new Avatar(this, this.initialAvatarPosition.x, this.initialAvatarPosition.y, this.initialAvatarPosition.z);
     }
 
     stopPlayerShootAnimation() {
@@ -259,7 +256,7 @@ class gameScene extends Physijs.Scene {
             let generatedZombie = new Zombie(this, this.level, (-zombieNum_3D + i)*5, 2, -50, i)
             this.zombies.push(generatedZombie);
 
-            this.collisionObjects.push([generatedZombie.getObject().position, generatedZombie.range, generatedZombie.force]);
+            this.collisionObjects.push(generatedZombie);
             this.rayCastObjects.push(generatedZombie.getObject());
             this.add(generatedZombie.getObject());
         }

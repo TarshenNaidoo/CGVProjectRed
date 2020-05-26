@@ -3,6 +3,7 @@ class Zombie {
     constructor (scene, level, x, y, z, i) {
 
         this.zombie = new THREE.Object3D();
+        this.zombieInitialPosition = new THREE.Vector3(x,y,z);
         this.zombieModel = zombieImportArray_3D[i];
         let mesh = new THREE.MeshBasicMaterial({color:0x777777});
         mesh.transparent = true;
@@ -19,10 +20,18 @@ class Zombie {
         this.direction = [];
         this.rayCaster = new THREE.Raycaster( this.zombie.position, new THREE.Vector3( 0, 0, 0 ), 0, 1 );
         this.zombieHealth = level;
+        this.zombieInitialHealth = level;
         this.scene = scene;
-        this.hitTime = 0;
         this.range = zombieScale;
         this.force = 1;
+        this.rendered = true;
+    }
+
+    reset(){
+        this.zombie.position.set(this.zombieInitialPosition.x,this.zombieInitialPosition.y,this.zombieInitialPosition.z);
+        this.zombieHealth = this.zombieInitialHealth;
+        this.rendered = true;
+        this.zombie.visible = true;
     }
 
     getObject(){
@@ -54,6 +63,7 @@ class Zombie {
     hit(){
         this.zombieHealth--;
         if (this.zombieHealth === 0) {
+            this.rendered = false;
             this.zombie.visible = false;
         }
     }
