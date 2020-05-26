@@ -135,7 +135,6 @@ class Avatar {
         //if there are intersections and the player is falling; apply no gravity and enable jumping
         if ( onObject === true && this.velocity.y < 0 && closetY < this.initialPosition.y) {
             this.velocity.y = Math.max( 0, this.velocity.y );
-            console.log(this.initialPosition.y);
             this.canJump = true;
         }
 
@@ -220,8 +219,6 @@ class Avatar {
                 If you are moving in opposite directions to the directional force, the directional force will be
                 applied but will not force you backwards
                 */
-
-                console.log("velocity.x: " + this.velocity.x + ", " + collisionDirection.x);
 
                 //the following apply only if the 2 vectors collide (i.e. have opposite directions
 

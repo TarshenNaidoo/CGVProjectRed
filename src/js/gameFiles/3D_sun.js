@@ -16,6 +16,7 @@ class Sun{
         this.sun.position.set(x,y,z); //sets the sun object to a specified position from the parent container
         this.timeStep = 1/60; //percentage of a minute it takes to complete dimming/brightening cycle
         this.currentHeight = y;
+        this.twilightHeight = -50;
     }
 
     animate(){
@@ -39,7 +40,15 @@ class Sun{
 
     //Sunlight reaches total darkness at the "horizon"
     setIntensity(){
-        this.pointLight.intensity = Math.max(0.5,this.currentHeight/this.maxHeight);
+        if (this.currentHeight >= this.opacityLimit) {
+            this.pointLight.intensity = Math.max(0,this.currentHeight/this.maxHeight);
+        } else if (this.currentHeight >= 0){
+            let intensityPercent = (this.opacityLimit - this.currentHeight)/this.opacityLimit;
+            this.pointLight.intensity = Math.max(this.currentHeight/this.maxHeight,intensityPercent);
+        } else {
+            let tempIntensity = 1*(1-(this.currentHeight/this.twilightHeight));
+            this.pointLight.intensity = Math.max(0,tempIntensity);
+        }
     }
 
     //continuously rotates the sun
