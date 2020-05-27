@@ -50,7 +50,6 @@ class Bullet {
                     this.bullet.position.z
                 )
             ) {
-                this.scene.zombies[i].hit();
                 this.bullet.visible = false;
                 this.launched = false;
                 this.scene.stopPlayerShootAnimation();

@@ -47,11 +47,11 @@ for (let i = 0 ; i < zombieNum_3D ; i++) {
         function (zombieImport) {
 
             let zombieImportScene = zombieImport.scene;
-            zombieImportScene.receiveShadow = true;
-            zombieImportScene.castShadow = true;
+            zombieImport.scene.receiveShadow = true;
+            zombieImport.scene.castShadow = true;
             //zombieImportScene.rotation.x = 90;
-            zombieImportScene.scale.set(zombieScale,zombieScale,zombieScale);
-            zombieImportScene.traverse((object) => {
+            zombieImport.scene.scale.set(zombieScale,zombieScale,zombieScale);
+            zombieImport.scene.traverse((object) => {
                 if (object.isMesh) object.frustumCulled = false;
                 //Traverses Mesh and ensures that the zombie mesh will not be derendered. This is due to a bug where the
                 //the bounding box for the mesh is to small. Simplest solution is to prevent this. The performance impact
@@ -59,7 +59,7 @@ for (let i = 0 ; i < zombieNum_3D ; i++) {
             });
 
 
-            zombieImportArray.push(zombieImportScene);
+            zombieImportArray.push(zombieImport);
             if (zombieImportArray.length === zombieNum_3D) {
                 importZombie(zombieImportArray);
             }

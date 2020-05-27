@@ -207,8 +207,18 @@ class gameScene extends Physijs.Scene {
 
         //let physiFloor = new Physijs.PlaneMesh(floorGeometry,floorMaterial, 10);
         //place.add(floor);
-        place.add(floor)
         floor.receiveShadow = true;
+        place.add(floor)
+        /*
+        let geometry = new THREE.BoxGeometry( 10, 10, 10 );
+        let material = new THREE.MeshPhongMaterial();
+        material.color.setHex(0x1DBEA8);
+        let cube = new THREE.Mesh( geometry, material );
+        cube.position.set(0,10,0);
+        cube.receiveShadow = true;
+        cube.castShadow = true;
+        this.add( cube );
+         */
         //let worldModel = new World();
         //place.add(worldModel.getWorld());
         return place;

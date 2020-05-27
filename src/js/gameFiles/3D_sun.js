@@ -6,22 +6,29 @@ class Sun{
         //rotates the sun object will orbit around the container preserving distance
         this.object = new THREE.Object3D();
         this.opacityLimit = 100;
+        this.colorLimit = 50;
         this.opacityPercent = 1;
         this.geometry = new THREE.SphereGeometry( 5, 32, 32 );
-        this.material = new THREE.MeshBasicMaterial( {color: 0xf9d71c, transparent:true, opacity:0.5} );
+        this.material = new THREE.MeshBasicMaterial( {color:0xffff00, transparent:true, opacity:0.5} );
         this.sun = new THREE.Mesh( this.geometry, this.material );
-        this.pointLight = new THREE.PointLight({color:0xf9d71c, intensity:1, distance: 50, decay:2});
+        this.pointLight = new THREE.PointLight({intensity:1, distance: 50, decay:2});
+        this.pointLight.color.b = (150/255);
         this.sun.add(this.pointLight);
         this.object.add(this.sun);
         this.sun.position.set(x,y,z); //sets the sun object to a specified position from the parent container
-        this.timeStep = 1/60; //percentage of a minute it takes to complete dimming/brightening cycle
+        this.timeStep = (1/60) * (1/2) ; //percentage of a minute it takes to complete dimming/brightening cycle
         this.currentHeight = y;
         this.twilightHeight = -50;
+        this.sun.castShadow = false;
+        this.sun.receiveShadow = false;
+        this.pointLight.castShadow = true;
     }
 
     animate(){
+
         this.currentHeight = this.sun.position.y * Math.cos(this.object.rotation.z);
         this.setRotation();
+        this.setColor();
         this.setIntensity();
         this.setOpacity();
 
@@ -38,11 +45,22 @@ class Sun{
         this.sun.material.opacity = this.opacityPercent;
     }
 
+    setColor(){
+        if (Math.abs(this.currentHeight) < this.colorLimit){
+            let colorModifier = Math.abs(this.currentHeight/this.colorLimit);
+            if (colorModifier > 1) {colorModifier = 1;}
+            console.log(this.pointLight.color.g);
+            this.pointLight.color.r = 1;
+            this.pointLight.color.g = Math.max(0.4,1*colorModifier);
+            this.pointLight.color.b = (150/255)*colorModifier;
+        }
+    }
+
     //Sunlight reaches total darkness at the "horizon"
     setIntensity(){
         if (this.currentHeight >= this.opacityLimit) {
-            this.pointLight.intensity = Math.max(0,this.currentHeight/this.maxHeight);
-        } else if (this.currentHeight >= 0){
+            this.pointLight.intensity = this.currentHeight/this.maxHeight;
+        } else if (this.currentHeight >= 0){//will run when the sun is setting
             let intensityPercent = (this.opacityLimit - this.currentHeight)/this.opacityLimit;
             this.pointLight.intensity = Math.max(this.currentHeight/this.maxHeight,intensityPercent);
         } else {
