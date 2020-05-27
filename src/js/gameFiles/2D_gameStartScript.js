@@ -33,11 +33,11 @@ let moveRight_2D = false; //identifies whether the play is moving in this direct
 let jumping_2D = false; //identifies whether the play is jumping
 let flying_2D = false; //identifies whether the play is flying
 let shooting_2D = false; //identifies whether the play is shooting
-let enableControls_2D = false;
+let enableControls_2D = false; //pause control variable
 let dev_enableControls_2D = true; //halts animation without showing the pause menu for debugging
 
 function importPlayer(newPlayer){
-    //adds the player model and animations to variables
+    //adds the player model, moves it to correct position and animations to variables
     player_2D = newPlayer.scene;
     player_2D.position.z = 0;
     player_2D.position.y = -0.85;
@@ -137,10 +137,6 @@ function onKeyDown (event) {
                 break;
         }
     }
-
-    if (event.keyCode === 80 && !enableControls_2D) { // p
-        scene_2D.newGame();
-    }
 }
 
 function onKeyUp (event) {
@@ -186,6 +182,7 @@ function onKeyUp (event) {
             case 84:
                 dev_enableControls_2D = !dev_enableControls_2D;
                 break;
+
         }
     }
 }
@@ -255,7 +252,9 @@ async function main_2D() {
         "            <br/>\n" +
         "            See character from behind: =\n" +
         "            <br/>\n" +
-        "            Fly: SHIFT"
+        "            Fly: SHIFT\n" +
+        "            <br/>\n" +
+        "            Dev Pause: T"
     zgame.innerHTML = "";
     options.innerHTML = "";
     play.innerHTML = "";

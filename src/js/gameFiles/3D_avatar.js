@@ -39,6 +39,7 @@ class Avatar {
             this.playerLightAttack.stop();
             this.playerLightAttack.reset();
         }
+        this.setInitialPosition();
         this.hp = 100;
     }
 
@@ -79,6 +80,10 @@ class Avatar {
         this.playerLightAttack.play();
     }
 
+    /*
+    increases velocity by 100. this.canJump is set to false when the player hits 'space' and is set to true when
+    then avatar is on a object in the raycasting array in the scene class
+     */
     jump() {
         if (this.canJump && jumping_3D){
             this.velocity.y += 100;
@@ -86,6 +91,12 @@ class Avatar {
         }
     }
 
+    /*
+    Function applies a small amount of friction that approximates velocity to 0. Gets the x and z direction movement
+    then normalizes it to ensure consistent movement in all directions. Acceleration is then applied to the velocity
+    but will have diminishing returns since the friction code lines will eventually reverse last frame's acceleration
+    applied.
+     */
     move() {
         this.velocity.x -= this.velocity.x * 10 * delta_3D; //simulates friction
         this.velocity.z -= this.velocity.z * 10 * delta_3D; //simulates friction
@@ -108,6 +119,13 @@ class Avatar {
 
     }
 
+    /*
+    Function will set the raycaster to the avatar's origin. Decrease velocity for gravity or increase velocity if the
+    player is flying. Objects in raycasting array will be checked for intersections. The closet object's distance will
+    be checked. And if it is closer than a certain distance (initial y position for camera), velocity will be set to 0
+    to ensure that the player isn't 'shorter' or 'taller' than when they started the game. This will work for any height
+    level and for any object. So the player is always a certain height above the floor they are on
+     */
     applyGravity(){
         this.rayCaster.origin = (this.getAvatarPosition()); //updates raycaster origin to avatar's origin
         let yDistanceOffset = 9.8 * this.mass * delta_3D; //absolute value of gravity
@@ -145,6 +163,9 @@ class Avatar {
         }
     }
 
+    /*
+    This function controls the movement and idle animations of the avatar depending on if they are moving or not
+     */
     controlAnimations(){
         if (this.velocity.z != 0 || this.velocity.x != 0) { //if we are moving...
             this.playerIdle.paused = true; //pause idle animation, check if walking animation is running and then walk;

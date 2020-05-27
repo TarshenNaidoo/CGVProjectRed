@@ -142,10 +142,6 @@ function onKeyDown (event) {
                 break;
         }
     }
-
-    if (event.keyCode === 80 && !enableControls_3D) { // p
-        scene_3D.newGame();
-    }
 }
 
 function onKeyUp (event) {
@@ -190,6 +186,12 @@ function onKeyUp (event) {
 
             case 84:
                 dev_enableControls_3D = !dev_enableControls_3D;
+                break;
+
+            case 80:
+                if (!enableControls_2D){
+                    scene_2D.newGame(); //starts a new game at the end screen
+                }
                 break;
         }
     }

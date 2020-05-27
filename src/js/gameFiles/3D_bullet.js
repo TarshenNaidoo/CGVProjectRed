@@ -1,15 +1,13 @@
 class Bullet {
 
     constructor(scene) {
-
-        this.material = new THREE.MeshStandardMaterial(0xeeeeee);
         this.bulletWidth = 1;
-        this.launched = false;
+        this.launched = false; //tracks whether the bullet is fired
         this.bullet = bullet_3D;
-        bullet_3D.position.y = height_3D;
+        bullet_3D.position.y = height_3D; //set the bullets position to the camera's default position
         this.direction = new THREE.Vector3 (0,0,0);
         this.initialPosition = new THREE.Vector3(0,0,0);
-        this.speed = 0;
+        this.speed = 0; //will be overwritten byt the avatar's specified weapon power
         this.scene = scene;
         this.mixer = bulletMixer_3D;
         this.AnimationClips = bulletAnimation_3D;
@@ -19,14 +17,6 @@ class Bullet {
 
     getObject(){
         return this.bullet;
-    }
-
-    getLaunched() {
-        return this.launched;
-    }
-
-    resetLaunch(){
-        this.launched = false;
     }
 
     getParameters() {
@@ -41,6 +31,10 @@ class Bullet {
         this.bullet.position.z += this.direction.z*delta_3D * this.speed;
     }
 
+    /*
+    Determines whether the bullet is within range of a zombie. It attempts to register a hit. If successful,
+    the bullet will stop, turn invisible and stop the player's shooting animation
+     */
     confirmHit(){
         for (let i = 0 ; i < this.scene.zombies.length ; i++) {
             if (
@@ -59,6 +53,9 @@ class Bullet {
         }
     }
 
+    /*
+    Determine's the bullet's limit in distance from the player.
+     */
     checkLimit(){
         if (
             Math.sqrt(
@@ -98,6 +95,10 @@ class Bullet {
         }
     }
 
+    /*
+    shoot() launches the bullet: playing animations, becoming visible, with the trajectory being the player's current
+    facing direction
+     */
     shoot(position, speed) {
         if (this.shootAction.isRunning()){
             this.shootAction.stop();

@@ -1,16 +1,17 @@
 
-class gameScene extends Physijs.Scene {
+class gameScene extends Physijs.Scene {//tried to include a physics engine, it was too much effort for too little reward
 
     constructor(renderer, theCamera) {
         super({fixedTimeStep: delta_3D});
         this.setGravity(new THREE.Vector3(0,-50, 0));
         this.skybox = null;
         this.createSkybox();
-        this.isPaused = false;
-        this.background =  new THREE.Color (0x87ceeb);
+        this.background =  new THREE.Color (0x87ceeb); //temporary blue background
         this.camera = theCamera;
-        this.rayCastObjects = [];
-        this.collisionObjects = [];
+        this.rayCastObjects = []; //objects that the player can stand on. Excluding objects that can move eg zombies
+        this.collisionObjects = []; //objects that the player can collide with and apply a force towards the player
+
+        //contains the avatar's initial position for resets
         this.initialAvatarPosition = new THREE.Vector3(
             controls_3D.getObject().position.x,
             controls_3D.getObject().position.y,
@@ -19,29 +20,28 @@ class gameScene extends Physijs.Scene {
         this.createAvatar();
         this.crosshair = this.createCrosshair();
         this.camera.add(this.crosshair);
-        this.level = 1;
+        this.level = 1; //increases after all zombies are defeated, controls zombie health and maybe movement
         this.zombies = [];
         this.createZombies();
         this.bullets = [];
         this.maxBullets = 19;
-        this.actualAmmo = this.maxBullets;
+        this.actualAmmo = this.maxBullets; //this decreases after every projectile fired
         for (let i = 0 ; i <= this.maxBullets ; i++){
             this.bullets.push(new Bullet(this));
             this.add(this.bullets[i].getObject());
         }
         this.score = 0;
-        this.lastScore = 0;
+        this.lastScore = 0; //updated after the game ends to the current game's score
         this.createHUD();
-        this.avatar.loadWeapons();
+        this.avatar.loadWeapons(); //is used to swap avatar models if we implement it
         this.place = this.createPlace();
         this.sunlight = null;
         this.createLights();
         this.add(this.place);
         this.rayCastObjects.push(this.place);
-        this.tracktime = 0;
     }
 
-    resetScene(){
+    resetScene(){ //called when 'r' is pressed
         this.avatar.reset();
         this.reloadAmmo();
         for (let i = 0 ; i < this.zombies.length ; i++) {
@@ -204,23 +204,8 @@ class gameScene extends Physijs.Scene {
         let floorMaterial = new THREE.MeshPhongMaterial( { vertexColors: true } );
 
         let floor = new THREE.Mesh( floorGeometry, floorMaterial );
-
-        //let physiFloor = new Physijs.PlaneMesh(floorGeometry,floorMaterial, 10);
-        //place.add(floor);
         floor.receiveShadow = true;
         place.add(floor)
-        /*
-        let geometry = new THREE.BoxGeometry( 10, 10, 10 );
-        let material = new THREE.MeshPhongMaterial();
-        material.color.setHex(0x1DBEA8);
-        let cube = new THREE.Mesh( geometry, material );
-        cube.position.set(0,10,0);
-        cube.receiveShadow = true;
-        cube.castShadow = true;
-        this.add( cube );
-         */
-        //let worldModel = new World();
-        //place.add(worldModel.getWorld());
         return place;
     }
 
@@ -228,7 +213,7 @@ class gameScene extends Physijs.Scene {
         this.avatar = new Avatar(this, this.initialAvatarPosition.x, this.initialAvatarPosition.y, this.initialAvatarPosition.z);
     }
 
-    stopPlayerShootAnimation() {
+    stopPlayerShootAnimation() { //stops the shooting animations after the bullet ends it's trajectory
         if (this.avatar.playerLightAttack.isRunning()){
             this.avatar.playerLightAttack.stop();
             this.avatar.playerLightAttack.reset();
@@ -285,35 +270,41 @@ class gameScene extends Physijs.Scene {
 
         blocker.style.display = 'block';
         instructions.style.display = '';
-        instructions.style.fontSize = "50px";
+        instructions.style.fontSize = "30px";
 
         instructions.innerHTML = "Final Score: " + this.score + ", press P to play again";
     }
 
+    /*
+    If enableControls_3D is false (i.e. The game is fully paused with a menu,) The player will not be able to move.
+    If the game is fully unpaused but dev_enableControls_3D is false ( i.e. 'T' is pressed), the player will be able to
+    move and shoot. Zombies will die etc.
+     */
     animate() {
 
         if (enableControls_3D) {
 
-
             this.avatar.animate();
-
 
             if (shooting_3D) {
                 this.avatar.animateWeapon();
             }
 
+            /*
+            Next 4-5 lines describe the bullet, if currentBullet is 0, there the bullet appears and is stationary.
+            Setting it to the the max bullets + 1 fixes it. Yes, the actual array containing the bullets has 1 more
+            bullet than in this.maxBullets but somehow this is the conclusion I came to. Dunno if this is a computer
+            science sin, I don't care really.
+             */
             let currentBullet = this.maxBullets - this.actualAmmo;
             if (currentBullet === 0) {
                 currentBullet = this.maxBullets + 1;
             }
-
             this.bullets[currentBullet - 1].animate();
 
 
             if (dev_enableControls_3D) {
-
                 this.sunlight.animate();
-
 
                 for (let i = 0; i < this.zombies.length; i++) {
                     this.zombies[i].animate();
@@ -324,7 +315,6 @@ class gameScene extends Physijs.Scene {
                 }
 
             }
-
             this.simulate();
         }
     }
@@ -345,14 +335,10 @@ class gameScene extends Physijs.Scene {
     newLevel() {
         this.avatar.setInitialPosition();
 
-        if (this.score - this.lastScore !== this.maxBullets) {
-            this.score = this.lastScore + this.maxBullets;
-        }
-
         this.updateLevel();
 
         for (let i = 0 ; i < this.zombies.length ; i++) {
-            this.remove(this.zombies.length(i));
+            this.zombies.pop();
         }
         this.zombies.zombiesOriginalPos = [];
         this.createZombies();
