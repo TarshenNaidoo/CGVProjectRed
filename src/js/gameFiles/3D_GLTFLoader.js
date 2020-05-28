@@ -18,6 +18,15 @@ loadTotal++;
 gunGtlfloader.load(
     'models/MagicianAllNewAnime.glb',
     function (playerModel) {
+
+        playerModel.scene.traverse((object) => {
+                if (object.isMesh) {
+                    object.frustumCulled = false;
+                    object.receiveShadow = true;
+                    object.castShadow = true;
+                }
+            }
+        )
         importPlayer(playerModel);
 
         loadDone++;
@@ -46,14 +55,11 @@ for (let i = 0 ; i < zombieNum_3D ; i++) {
         'models/zombieWalk6.glb',
         function (zombieImport) {
 
-            let zombieImportScene = zombieImport.scene;
-            zombieImport.scene.receiveShadow = true;
-            zombieImport.scene.castShadow = true;
-            //zombieImportScene.rotation.x = 90;
             zombieImport.scene.scale.set(zombieScale,zombieScale,zombieScale);
             zombieImport.scene.traverse((object) => {
                 if (object.isMesh){
                     object.frustumCulled = false;
+                    object.receiveShadow = true;
                     object.castShadow = true;
                 }
                 //Traverses Mesh and ensures that the zombie mesh will not be derendered. This is due to a bug where the
@@ -115,6 +121,31 @@ for (let i = 0 ; i < lanternNum_3D ; i++){
             console.error('Error loading lantern model: ' + err);
         }
     )
+}
+
+let cloudLoaderArray = [];
+loadTotal += cloudNum_3D;
+for (let i = 0 ; i < cloudNum_3D ; i++) {
+    let cloudLoader = new GLTFLoader();
+    cloudLoader.load(
+        './models/cloudGroupAni.glb',
+        function (cloud){
+            cloudLoaderArray.push(cloud);
+
+            if (cloudLoaderArray.length === cloudNum_3D){
+                importCloud(cloudLoaderArray);
+            }
+            loadDone++;
+            checkLoad();
+        },
+        function (xhr) {
+            console.log('Cloud model loading: ' + (xhr.loaded/xhr.total * 100) + '%');
+        },
+        function (err) {
+            console.error('Error loading Cloud model: ' + err);
+        }
+    )
+
 }
 
 

@@ -1,9 +1,11 @@
 class Zombie {
 
-    constructor (scene, level, x, y, z, i) {
+    constructor (scene, level,i) {
 
         this.zombie = new THREE.Object3D();
-        this.zombieInitialPosition = new THREE.Vector3(x,y,z);
+        let initialX = (Math.random()-0.5)*2*200;
+        let initialY = (Math.random()-0.5)*2*200
+        this.zombieInitialPosition = new THREE.Vector3(initialX,2,initialY);
         this.zombieModel = zombieImportArray_3D[i][0]; //references the zombie model
         let mesh = new THREE.MeshBasicMaterial({color:0x777777});
         mesh.transparent = true;
@@ -17,7 +19,7 @@ class Zombie {
         this.hitbox.position.y = zombieScale*0.75;
         this.zombie.add(this.zombieModel);
         this.zombie.add(this.hitbox);
-        this.zombie.position.set(x*2,y,z);
+        this.zombie.position.set(initialX*2,2,initialY);
         //rayCaster would have been used if we implemented global collisions but I dunno
         this.rayCaster = new THREE.Raycaster( this.zombie.position, new THREE.Vector3( 0, 0, 0 ), 0, 1 );
         this.zombieHealth = level;

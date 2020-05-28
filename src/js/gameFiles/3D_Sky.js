@@ -1,22 +1,40 @@
-class Sun{
+class Sky{
 
     constructor(x,y,z, scene) {
         this.scene = scene;
-        this.sunMaxHeight = y;
-
         this.sky = new THREE.Object3D();
-        //this.object is an empty container is added to the scene ath (0,0,0) and contains the sun. As the object
-        //rotates the sun object will orbit around the container preserving distance
-        this.object = new THREE.Object3D();
-        this.sky.add(this.object);
-        this.sunOpacityLimit = 100; //point at which sun becomes invisible (Is greater than 0)
+        this.timeStep = (1/60) * (1/2) ; //percentage of a minute it takes to complete dimming/brightening cycle
+
         /*
-        this.sunColorLimit. Should be positive and sun starts to become red between this point and the horizon.
+        sunGroup:
+        is an empty container is added to the scene ath (0,0,0) and contains the sun. As the object rotates;
+        the sun object will orbit around the container preserving distance from the origin of the scene.
+
+        sunOpacityLimit:
+        point at which sun becomes invisible (Is greater than 0).
+
+        sunColorLimit:
+        Should be positive and sun starts to become red between this point and the horizon.
         Color becomes reversed between the horizon and the negative of this.sunColorLimit.
+
+        sunOpacityPercent:
+        controls the opacity of the sun and is modified each frame.
+
+        sunTwilightHeight:
+        controls the height the sun continues to emit light below the horizon. Sort of like real life
+
+        distanceMetric:
+        This is the original distance between the sun and the player and will be used to scale the sun to appear the
+        same size to the player no matter where they are
          */
+
+        this.sunGroup = new THREE.Object3D();
+        this.sky.add(this.sunGroup);
+        this.sunMaxHeight = y;
+        this.sunOpacityLimit = 100;
         this.sunColorLimit = 50;
         this.sunScaleLimit = 1.5;
-        this.sunOpacityPercent = 1; //controls the opacity of the sun and is modified each frame
+        this.sunOpacityPercent = 1;
         this.sunGeometry = new THREE.SphereBufferGeometry( this.sunScaleLimit, 32, 32 );
         this.sunMaterial = new THREE.MeshStandardMaterial( {
             emissive: 0xffff00,
@@ -26,18 +44,13 @@ class Sun{
             opacity:0.5
         } );
         this.sun = new THREE.Mesh( this.sunGeometry, this.sunMaterial );
-        this.sunPointLight = new THREE.PointLight({intensity:1, decay:2});
+        this.sunPointLight = new THREE.PointLight({intensity:18000, decay:2});
         this.sunPointLight.color.b = (150/255);
         this.sunPointLight.castShadow = true;
         this.sun.add(this.sunPointLight);
-        this.object.add(this.sun);
-        this.sun.position.set(x,y,z); //sets the sun object to a specified position from the parent container
-        this.timeStep = (1/60) * (1/2) ; //percentage of a minute it takes to complete dimming/brightening cycle
+        this.sunGroup.add(this.sun);
+        this.sun.position.set(x,y,z);
         this.sunCurrentHeight = y;
-        /*
-        this.sunTwilightHeight controls the height the sun continues to emit light below the horizon. Sort of like real
-        life
-         */
         this.sunTwilightHeight = -50;
         this.sun.castShadow = false;
         this.sun.receiveShadow = false;
@@ -50,6 +63,9 @@ class Sun{
             Math.pow(playerPosition.z + sunPosition.z,2)
         );
 
+        /*
+        Moon stuff:
+         */
         this.moonMesh = new THREE.SphereBufferGeometry( 5, 32, 32 );
         this.moonMaterial = new THREE.MeshStandardMaterial({
             emissive: 0xc2c5cc,
@@ -63,25 +79,38 @@ class Sun{
         this.moon.receiveShadow = false;
         this.moon.castShadow = true;
         this.moon.position.set(0,y,0);
+        this.moonPower = 400;
         this.sky.add(this.moon);
 
-    }
+        this.cloudGroup = new THREE.Object3D();
+        this.cloudGroupArray = [];
 
+        for (let i = 0 ; i < cloudNum_3D ; i++) {
+            let cloudGroup = new Cloud(i);
+
+            this.cloudGroupArray.push(cloudGroup)
+            this.cloudGroup.add(cloudGroup.getObject());
+        }
+
+        this.sky.add(this.cloudGroup);
+
+
+    }
     getSky(){
         return this.sky;
     }
 
     getSunPosition(){
         return new THREE.Vector3(
-            this.getSky().position.x + this.object.position.x + this.sun.position.x,
-            this.getSky().position.y + this.object.position.y + this.sun.position.y,
-            this.getSky().position.z + this.object.position.z + this.sun.position.z
+            this.getSky().position.x + this.sunGroup.position.x + this.sun.position.x,
+            this.getSky().position.y + this.sunGroup.position.y + this.sun.position.y,
+            this.getSky().position.z + this.sunGroup.position.z + this.sun.position.z
         );
     }
 
     animate(){
 
-        this.sunCurrentHeight = this.sun.position.y * Math.cos(this.object.rotation.z);
+        this.sunCurrentHeight = this.sun.position.y * Math.cos(this.sunGroup.rotation.z);
         this.setSunRotation();
         this.setSunColor();
         this.setSunIntensity();
@@ -91,13 +120,24 @@ class Sun{
         this.setMoonIntensity();
         this.setMoonOpacity();
 
+        this.animateCloudGroup();
 
     }
 
+    animateCloudGroup(){
+        for (let i = 0 ; i < this.cloudGroup.children.length ;i++) {
+            this.cloudGroupArray[i].animate();
+        }
+    }
+
+    /*
+    Sets the moon light emitting power to be directly proportional to the suns height below the horizon. This increases
+    until the sun's emitting light is 0.
+     */
     setMoonIntensity(){
         let moonPower = 0;
         if (this.sunCurrentHeight <= 0) {
-            moonPower = 400*Math.max(1, this.sunCurrentHeight/this.sunTwilightHeight);
+            moonPower =this.moonPower*Math.max(1, this.sunCurrentHeight/this.sunTwilightHeight);
             //console.log(moonIntensity);
         } else {
             moonPower = 0;
@@ -105,6 +145,13 @@ class Sun{
         this.moonPointLight.power = moonPower;
 
     }
+
+    /*
+    The moon's opacity is set to be proportional the sun's height. The moon is completely opaque when the sun is above
+    the first threshold, starts to fade as the sun crosses the first threshold, fades further when the sun crosses the
+    horizon, and becomes completely transparent after the second threshold. This process is reversed when the sun
+    starts to rise again
+     */
 
     setMoonOpacity(){
         let moonOpacity = null;
@@ -127,6 +174,12 @@ class Sun{
         this.moon.material.opacity = moonOpacity;
     }
 
+    /*
+    This function gets the sun's current distance between itself and the player and divides it by the original distance
+    calculated in the constructor. This scales the sun up if the player has moved a net distance away or scaled down if
+    the player has moved a net distance towards the sun.
+     */
+
     setSunScale(){
         let curDistance = Math.sqrt(
             Math.pow(this.getSunPosition().x + controls_3D.getObject().position.x,2)+
@@ -148,46 +201,35 @@ class Sun{
         this.sunMaterial.opacity = this.sunOpacityPercent;
     }
 
+    /*
+    The sun's green value will be scaled down from full to 0.4 (102 rgb value), and the blue from rgb value of 150 to
+    0. This changes the sky to a bright yellowish color to red-oranges color.
+     */
     setSunColor(){
         if (Math.abs(this.sunCurrentHeight) < this.sunColorLimit){
             let colorModifier = Math.abs(this.sunCurrentHeight/this.sunColorLimit);
             if (colorModifier > 1) {colorModifier = 1;}
             this.sunPointLight.color.r = 1;
-            this.sunPointLight.color.g = Math.max(0.4,1*colorModifier);
+            //this.sunPointLight.color.g = Math.max(0.4,1*colorModifier);
+            this.sunPointLight.color.g = 0.4 + colorModifier * 0.6;
             this.sunPointLight.color.b = (150/255)*colorModifier;
         }
     }
 
     //Sunlight reaches total darkness at the "horizon"
     setSunIntensity(){
-        /*
-
-       old method of dynamically adjusting light will make the sunset brighter
-        if (this.sunCurrentHeight >= this.sunOpacityLimit) {
-            this.sunPointLight.power = 18000 * ((this.sunCurrentHeight-this.sunOpacityLimit)/(this.sunMaxHeight-this.sunOpacityLimit));
-            console.log(this.sunPointLight.power);
-        } else if (this.sunCurrentHeight >= 0){//will run when the sun is setting
-            let intensityPercent = 18000 * ((this.sunOpacityLimit - this.sunCurrentHeight)/this.sunOpacityLimit);
-            this.sunPointLight.power = Math.max(this.sunCurrentHeight/this.maxHeight,intensityPercent);
-        } else {
-            let tempIntensity = 1*(1-(this.sunCurrentHeight/this.sunTwilightHeight));
-            this.sunPointLight.intensity = Math.max(0,tempIntensity);
-        }
-
-         */
 
         if (this.sunCurrentHeight >= this.sunTwilightHeight) {
             this.sunPointLight.power = 18000 * ((this.sunCurrentHeight+Math.abs(this.sunTwilightHeight))/(this.sunMaxHeight+Math.abs(this.sunTwilightHeight)));
         } else {
-            //let tempPower = 1000*(1-(this.sunCurrentHeight/this.sunTwilightHeight));
-            this.sunPointLight.intensity = 0;//Math.max(0,tempPower);
+            this.sunPointLight.intensity = 0;
         }
 
     }
 
     //continuously rotates the sun
     setSunRotation(){
-        this.object.rotation.z +=(2*Math.PI)*this.timeStep * delta_3D;
+        this.sunGroup.rotation.z +=(2*Math.PI)*this.timeStep * delta_3D;
     }
 
 }

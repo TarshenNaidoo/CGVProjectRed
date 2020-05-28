@@ -15,15 +15,18 @@ let playerAnimation_3D = null; //see function importPlayer below
 let playerMixer_3D = null; //see function importPlayer below
 
 let zombieImportArray_3D = []; //see function importZombie below
-let zombieNum_3D = 5; //number of zombies within this level
+let zombieNum_3D = Math.floor(Math.random()*9+1); //number of zombies within this level
 let zombieScale = 7;
 
 let bullet_3D = null; //see function importBullet below
 let bulletMixer_3D = null; //see function importBullet below
 let bulletAnimation_3D = null; //see function importBullet below
 
-let lanternNum_3D = 3;
+let lanternNum_3D = Math.floor(Math.random()*9+1);
 let lanternArray_3D = [];
+
+let cloudNum_3D = Math.floor(Math.random()*7+3);
+let cloudArray_3D = [];
 
 let height_3D = 10; //controls the minimum height of the character so that it doesn't move below ground level
 
@@ -76,6 +79,17 @@ function importBullet(newBullet){
 
 function importLantern(newLanternArray){
     lanternArray_3D = newLanternArray;
+}
+
+function importCloud(newCloudArray){
+
+    for (let i = 0 ; i < newCloudArray.length ; i++){
+        let cloudMixer_3D = new THREE.AnimationMixer(newCloudArray[i].scene);
+        let cloudAnimation_3D = newCloudArray[i].animations;
+        //console.log(newCloudArray[i].scene);
+
+        cloudArray_3D.push([newCloudArray[i].scene, cloudMixer_3D, cloudAnimation_3D]);
+    }
 }
 
 //future function for view switching

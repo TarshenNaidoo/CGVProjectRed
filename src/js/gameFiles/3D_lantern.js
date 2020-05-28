@@ -7,7 +7,7 @@ class Lantern{
         this.object.add(this.lantern);
         this.lanternLight = new THREE.PointLight({color:0xFDD023,intensity:1,distance:100,decay:2});
         this.object.add(this.lanternLight);
-        this.object.position.set((Math.random()*350+50),9.5, Math.random()*350+50);
+        this.object.position.set((Math.random()-0.5)*2*250,9.5, (Math.random()-0.5)*2*250);
     }
 
     getObject(){

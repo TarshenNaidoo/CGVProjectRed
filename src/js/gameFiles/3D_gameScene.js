@@ -148,7 +148,7 @@ class gameScene extends Physijs.Scene {//tried to include a physics engine, it w
     }
     //this creates the lights for the scene. If the scene already has lights, we can comment this out
     createLights() {
-        this.sunlight = new Sun(0,300,0);
+        this.sunlight = new Sky(0,300,0);
         this.add(this.sunlight.getSky());
         this.hemiSphere = new THREE.HemisphereLight(0xEEEEEE, 0x000000, 0.2);
 
@@ -254,10 +254,9 @@ class gameScene extends Physijs.Scene {//tried to include a physics engine, it w
         }
     }
 
-
     createZombies() {
         for (let i = 0 ; i < zombieNum_3D ; i++){
-            let generatedZombie = new Zombie(this, this.level, (-zombieNum_3D + i)*5, 2, -50, i)
+            let generatedZombie = new Zombie(this, this.level, i)
             this.zombies.push(generatedZombie);
 
             this.collisionObjects.push(generatedZombie);
