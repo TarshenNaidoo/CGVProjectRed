@@ -35,7 +35,9 @@ class gameScene extends Physijs.Scene {//tried to include a physics engine, it w
         this.createHUD();
         this.avatar.loadWeapons(); //is used to swap avatar models if we implement it
         this.place = this.createPlace();
-        this.sunlight = null;
+        this.sunlight = null; //holds the sun object, now including moon
+        this.lanternArray = [];
+        this.hemiSphere = null;
         this.createLights();
         this.add(this.place);
         this.rayCastObjects.push(this.place);
@@ -147,7 +149,14 @@ class gameScene extends Physijs.Scene {//tried to include a physics engine, it w
     //this creates the lights for the scene. If the scene already has lights, we can comment this out
     createLights() {
         this.sunlight = new Sun(0,300,0);
-        this.add(this.sunlight.getObject());
+        this.add(this.sunlight.getSky());
+        this.hemiSphere = new THREE.HemisphereLight(0xEEEEEE, 0x000000, 0.2);
+
+        for (let i = 0 ; i < lanternNum_3D ; i++) {
+            let lantern = new Lantern(i, this);
+            this.lanternArray.push(lantern);
+            this.add(lantern.getObject());
+        }
     }
 
     createSkybox(){
@@ -305,6 +314,10 @@ class gameScene extends Physijs.Scene {//tried to include a physics engine, it w
 
             if (dev_enableControls_3D) {
                 this.sunlight.animate();
+
+                for ( let i = 0 ; i < this.lanternArray.length ; i++) {
+                    this.lanternArray[i].animate();
+                }
 
                 for (let i = 0; i < this.zombies.length; i++) {
                     this.zombies[i].animate();

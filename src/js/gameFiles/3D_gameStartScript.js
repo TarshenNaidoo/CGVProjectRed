@@ -8,21 +8,22 @@ let cameraView_3D = true; //control Variable used when switching between 3rd per
 
 let controls_3D; // = new PointerLockControls(camera, document.body);
 
-let zombieNum_3D = 5; //number of zombies within this level
-let zombieScale = 7;
 
 //external assets:
 let player_3D = null; //see function importPlayer below
 let playerAnimation_3D = null; //see function importPlayer below
 let playerMixer_3D = null; //see function importPlayer below
 
-//add imported objects here and set them to null
-
 let zombieImportArray_3D = []; //see function importZombie below
+let zombieNum_3D = 5; //number of zombies within this level
+let zombieScale = 7;
 
 let bullet_3D = null; //see function importBullet below
 let bulletMixer_3D = null; //see function importBullet below
 let bulletAnimation_3D = null; //see function importBullet below
+
+let lanternNum_3D = 3;
+let lanternArray_3D = [];
 
 let height_3D = 10; //controls the minimum height of the character so that it doesn't move below ground level
 
@@ -71,6 +72,10 @@ function importBullet(newBullet){
 
     bulletMixer_3D = new THREE.AnimationMixer(bullet_3D);
     bulletAnimation_3D = newBullet.animations;
+}
+
+function importLantern(newLanternArray){
+    lanternArray_3D = newLanternArray;
 }
 
 //future function for view switching
@@ -218,7 +223,10 @@ function onWindowResize () {
 
 function createRenderer() {
     let renderer = new THREE.WebGLRenderer({antialias:true});
+    renderer.physicallyCorrectLights = true;
     renderer.setClearColor(new THREE.Color(0xEEEEEE), 0.1);
+    renderer.shadowMap.enabled = true;
+
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth,window.innerHeight);
     document.body.appendChild(renderer.domElement);

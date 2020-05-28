@@ -52,7 +52,10 @@ for (let i = 0 ; i < zombieNum_3D ; i++) {
             //zombieImportScene.rotation.x = 90;
             zombieImport.scene.scale.set(zombieScale,zombieScale,zombieScale);
             zombieImport.scene.traverse((object) => {
-                if (object.isMesh) object.frustumCulled = false;
+                if (object.isMesh){
+                    object.frustumCulled = false;
+                    object.castShadow = true;
+                }
                 //Traverses Mesh and ensures that the zombie mesh will not be derendered. This is due to a bug where the
                 //the bounding box for the mesh is to small. Simplest solution is to prevent this. The performance impact
                 //is negligible
@@ -88,13 +91,31 @@ bulletLoader.load(
         loadDone++;
         checkLoad();
     },
-    function (xhr) {
-        console.log('Bullet model loading: ' + (xhr.loaded/xhr.total * 100) + '%');
-    },
-    function (err) {
-        console.error('Error loading bullet model: ' + err);
-    }
 );
+
+let lanternLoader = new GLTFLoader();
+let lanternLoaderArray = [];
+loadTotal += lanternNum_3D;
+for (let i = 0 ; i < lanternNum_3D ; i++){
+    lanternLoader.load(
+        './models/lightWStand.glb',
+        function (lantern){
+            lanternLoaderArray.push(lantern);
+
+            if (lanternLoaderArray.length === lanternNum_3D){
+                importLantern(lanternLoaderArray);
+            }
+            loadDone++;
+            checkLoad();
+        },
+        function (xhr) {
+            console.log('Lantern model loading: ' + (xhr.loaded/xhr.total * 100) + '%');
+        },
+        function (err) {
+            console.error('Error loading lantern model: ' + err);
+        }
+    )
+}
 
 
 
