@@ -16,7 +16,7 @@ let that = this;
 //gun import
 loadTotal++;
 gunGtlfloader.load(
-    'models/MagicianAllAni.glb',
+    'models/MagicianAllNewAnime.glb',
     function (playerModel) {
         importPlayer(playerModel);
 
