@@ -32,6 +32,7 @@ class Avatar {
         this.mass = 35; //mass of the player. Not necessarily in KGs
         this.force = 40;
 
+
     }
 
     reset(){

@@ -41,6 +41,9 @@ class gameScene extends Physijs.Scene {//tried to include a physics engine, it w
         this.createLights();
         this.add(this.place);
         this.rayCastObjects.push(this.place);
+
+        //adds fog to the scene
+        this.fog = this.sunlight.getFog().getFog();
     }
 
     resetScene(){ //called when 'r' is pressed

@@ -94,7 +94,16 @@ class Sky{
 
         this.sky.add(this.cloudGroup);
 
+        this.fog = new Fog(this);
 
+    }
+
+    getFog(){
+        return this.fog;
+    }
+
+    getSunLight(){
+        return this.sunPointLight;
     }
     getSky(){
         return this.sky;
@@ -122,6 +131,13 @@ class Sky{
 
         this.animateCloudGroup();
 
+        this.animateFog();
+
+
+    }
+
+    animateFog(){
+        this.fog.animate();
     }
 
     animateCloudGroup(){
