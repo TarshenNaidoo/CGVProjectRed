@@ -32,6 +32,18 @@ class Avatar {
         this.mass = 35; //mass of the player. Not necessarily in KGs
         this.force = 40;
 
+        this.directionalLightObject = new THREE.Object3D();
+        this.directionalLightObject.position.set(
+            this.scene.crosshair.position.x,
+            this.scene.crosshair.position.y,
+            this.scene.crosshair.position.z
+        )
+
+        /*
+        this.directionalLight = new THREE.DirectionalLight(0xffffff,1);
+        this.directionalLight.target = this.scene.crosshair;
+        controls_3D.getObject().add(this.directionalLight);
+         */
 
     }
 
@@ -290,6 +302,12 @@ class Avatar {
         this.controlAnimations();
 
         this.checkSkyboxBounds();
+
+        this.directionalLightObject.position.set(
+            this.scene.crosshair.position.x+1,
+            this.scene.crosshair.position.y+1,
+            this.scene.crosshair.position.z+1
+        )
 
         //}
 

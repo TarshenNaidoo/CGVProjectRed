@@ -17,8 +17,8 @@ class gameScene extends Physijs.Scene {//tried to include a physics engine, it w
             controls_3D.getObject().position.y,
             controls_3D.getObject().position.z
         );
-        this.createAvatar();
         this.crosshair = this.createCrosshair();
+        this.createAvatar();
         this.camera.add(this.crosshair);
         this.level = 1; //increases after all zombies are defeated, controls zombie health and maybe movement
         this.zombies = [];
