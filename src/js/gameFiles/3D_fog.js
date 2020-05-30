@@ -8,6 +8,7 @@ class Fog{
         this.sunTwilightHeight=  this.sky.sunTwilightHeight;
         this.fogColor = this.sunPointLight.color.getHex();
         this.fog = new THREE.FogExp2(this.fogColor,0.001);
+        this.fog = new THREE.FogExp2(this.fogColor,0.001);
     }
 
     getFog(){
@@ -26,7 +27,6 @@ class Fog{
         this.sunTwilightHeight = this.sky.sunTwilightHeight;
         if (this.sunCurrentHeight < 0 && this.sunCurrentHeight > this.sunTwilightHeight){
             density = 0.001 - (this.sunCurrentHeight/this.sunTwilightHeight)/1000;
-            console.log(density);
         } else if (this.sunCurrentHeight < 0){
             density = 0;
         }

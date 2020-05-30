@@ -28,6 +28,9 @@ let lanternArray_3D = [];
 let cloudNum_3D = Math.floor(Math.random()*7+3);
 let cloudArray_3D = [];
 
+let puddleContainer = null;
+let puddleContainerScale = 4;
+
 let height_3D = 10; //controls the minimum height of the character so that it doesn't move below ground level
 
 let moveForward_3D = false; //identifies whether the play is moving in this direction
@@ -86,10 +89,15 @@ function importCloud(newCloudArray){
     for (let i = 0 ; i < newCloudArray.length ; i++){
         let cloudMixer_3D = new THREE.AnimationMixer(newCloudArray[i].scene);
         let cloudAnimation_3D = newCloudArray[i].animations;
-        //console.log(newCloudArray[i].scene);
 
         cloudArray_3D.push([newCloudArray[i].scene, cloudMixer_3D, cloudAnimation_3D]);
     }
+}
+
+function importPuddleContainer(newPuddleContainer){
+    newPuddleContainer.scene.scale.set(puddleContainerScale,puddleContainerScale,puddleContainerScale);
+
+    puddleContainer = newPuddleContainer;
 }
 
 //future function for view switching
@@ -108,7 +116,6 @@ function switchControls(mode){
     } else {
         scene_3D.avatar.avatar.position.z = 0;
     }
-    console.log(scene_3D.avatar.avatar.position.z)
 }
 
 //Requires a previously created div in ZGame to work. Currently not implemented
@@ -252,7 +259,6 @@ function createRenderer() {
 
 function animate() {
     requestAnimationFrame(animate);
-    //console.log("running");
     scene_3D.animate();
     renderer_3D.render(scene_3D,scene_3D.getCamera());
     scene_3D.simulate(); //simulates physijs objects

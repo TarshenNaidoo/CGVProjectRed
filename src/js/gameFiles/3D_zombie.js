@@ -134,7 +134,6 @@ class Zombie {
              */
             if (this.getRange() < this.range+this.scene.avatar.range+1){
                 if (performance.now() - this.hitTime > this.timeLimit && this.zombieHealth != 0){
-                    console.log("true");
                     this.scene.avatar.hit();
                     this.hitTime = performance.now();
                 }

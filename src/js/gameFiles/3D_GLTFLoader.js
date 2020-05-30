@@ -120,7 +120,7 @@ for (let i = 0 ; i < lanternNum_3D ; i++){
         function (err) {
             console.error('Error loading lantern model: ' + err);
         }
-    )
+    );
 }
 
 let cloudLoaderArray = [];
@@ -144,9 +144,26 @@ for (let i = 0 ; i < cloudNum_3D ; i++) {
         function (err) {
             console.error('Error loading Cloud model: ' + err);
         }
-    )
+    );
 
 }
+
+let puddleContainerLoader = new GLTFLoader();
+loadTotal++;
+puddleContainerLoader.load(
+    './models/WavyContainer1.glb',
+    function(container){
+        importPuddleContainer(container);
+        loadDone++;
+        checkLoad();
+    },
+    function (xhr) {
+        console.log('Puddle Container model loading: ' + (xhr.loaded/xhr.total * 100) + '%');
+    },
+    function (err) {
+        console.error('Error loading puddle container model: ' + err);
+    }
+);
 
 
 
