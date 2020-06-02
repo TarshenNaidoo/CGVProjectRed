@@ -1,6 +1,7 @@
 let scene_3D = null;
 
 let renderer_3D = null;
+let rendererMinimap_3D = null;
 let delta_3D = 1/60; //controls fps timestep
 
 let camera_3D; // = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -255,12 +256,49 @@ function createRenderer() {
     return renderer;
 }
 
+function createMinimapRenderer_3D() {
+    let renderer = new THREE.WebGLRenderer({antialias:true});
+    renderer.physicallyCorrectLights = true;
+    renderer.setClearColor(new THREE.Color(0xEEEEEE), 0.1);
+    renderer.shadowMap.enabled = true;
+
+    renderer.setPixelRatio(window.devicePixelRatio);
+    let w  = window.innerWidth/10;
+    renderer.setSize(w,(w/16)*9);
+    document.body.appendChild(renderer.domElement);
+    renderer.domElement.style.position = 'absolute';
+    renderer.domElement.style.bottom = '0.1';
+    renderer.domElement.style.right = '0.25';
+    return renderer;
+}
+
 //layer 1 recursive animate function
 
 function animate() {
     requestAnimationFrame(animate);
     scene_3D.animate();
     renderer_3D.render(scene_3D,scene_3D.getCamera());
+
+    let initialViewport = new THREE.Vector4();
+        renderer_3D.getViewport(initialViewport);
+    let initialScissor = new THREE.Vector4();
+        renderer_3D.getScissor(initialScissor);
+
+    let currentViewport = new THREE.Vector4(window.innerWidth*0.75, window.innerHeight*0.1,window.innerWidth*0.1, window.innerHeight*0.1);
+    let currentScissor = new THREE.Vector4(window.innerWidth*0.75, window.innerHeight*0.1,window.innerWidth*0.1, window.innerHeight*0.1);
+    renderer_3D.setViewport(currentViewport);
+    renderer_3D.setScissor(currentScissor);
+    renderer_3D.setScissorTest(true);
+
+    if (scene_3D.minimap.getObject() != null){
+        renderer_3D.render(scene_3D, scene_3D.minimap.getObject());
+    }
+
+
+    renderer_3D.setViewport(initialViewport);
+    renderer_3D.setScissor(initialScissor);
+    renderer_3D.setScissorTest(false);
+
     scene_3D.simulate(); //simulates physijs objects
 }
 
@@ -374,6 +412,8 @@ async function main_3D() {
     controls_3D = new PointerLockControls.PointerLockControls(camera_3D, document.body);
     scene_3D = new gameScene(renderer_3D.domElement, camera_3D, 0,5,0);
     scene_3D.add(controls_3D.getObject());
+
+    rendererMinimap_3D = createMinimapRenderer_3D();
 
     animate();
 }

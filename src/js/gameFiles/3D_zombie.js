@@ -100,7 +100,7 @@ class Zombie {
 
     getRange(){
         let directionToPlayer = this.getDirection();
-        let radius = Math.sqrt(Math.pow(directionToPlayer.x, 2) + Math.pow(directionToPlayer.z,2));
+        let radius = Math.sqrt(Math.pow(directionToPlayer.x, 2) + Math.pow(directionToPlayer.z,2) + Math.pow(directionToPlayer.y,2));
         return radius;
     }
 
@@ -110,6 +110,7 @@ class Zombie {
 
 
         directionToPlayer.x = controls_3D.getObject().position.x - this.getPosition().x;
+        directionToPlayer.y = controls_3D.getObject().position.y - this.getPosition().y;
         directionToPlayer.z = controls_3D.getObject().position.z - this.getPosition().z;
 
         return directionToPlayer;

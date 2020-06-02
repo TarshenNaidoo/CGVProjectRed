@@ -47,6 +47,10 @@ class gameScene extends Physijs.Scene {//tried to include a physics engine, it w
 
         //adds fog to the scene
         this.fog = this.sunlight.getFog().getFog();
+
+        //adds minimap
+        this.minimap = new Map();
+        this.add(this.minimap.getObject());
     }
 
     resetScene(){ //called when 'r' is pressed
@@ -301,6 +305,8 @@ class gameScene extends Physijs.Scene {//tried to include a physics engine, it w
             if (shooting_3D) {
                 this.avatar.animateWeapon();
             }
+
+            this.minimap.animate(this.avatar.getAvatarPosition());
 
             /*
             Next 4-5 lines describe the bullet, if currentBullet is 0, there the bullet appears and is stationary.
