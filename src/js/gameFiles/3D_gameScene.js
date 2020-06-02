@@ -72,6 +72,10 @@ class gameScene extends Physijs.Scene {//tried to include a physics engine, it w
         this.crosshair.setVisible();
     }
 
+    /*
+    createHud creates the UI with stats
+     */
+
     createHUD() {
         let score = document.createElement('div');
         score.id = "score";
@@ -124,27 +128,42 @@ class gameScene extends Physijs.Scene {//tried to include a physics engine, it w
         document.body.appendChild(health);
     }
 
+    /*
+    updates ammo stat
+     */
     updateAmmo() {
         let text = document.getElementById("ammo");
         text.innerHTML = "Ammo: " + (this.actualAmmo+1);
     }
 
+    /*
+    updates score stat
+     */
     updateScore (increaseScore) {
         let text = document.getElementById("score");
         this.score += increaseScore;
         text.innerHTML = "Score " + this.score;
     }
 
+    /*
+    updates level
+     */
     updateLevel () {
         let level = document.getElementById("level");
         level.innerHTML = "Level: " + this.level;
     }
 
+    /*
+    updates avatar hp
+     */
     updateHealth() {
         let health = document.getElementById("health");
         health.innerHTML = "HP: " + this.avatar.hp;
     }
 
+    /*
+    creates the crosshair
+     */
     createCrosshair() {
         let crosshair = new Crosshair();
 
@@ -169,6 +188,9 @@ class gameScene extends Physijs.Scene {//tried to include a physics engine, it w
         }
     }
 
+    /*
+    adds static skybox
+     */
     createSkybox(){
         this.skybox = new Skybox();
         this.add(this.skybox.getObject());
@@ -237,6 +259,9 @@ class gameScene extends Physijs.Scene {//tried to include a physics engine, it w
         }
     }
 
+    /*
+    resets the bullets in play and updates UI
+     */
     reloadAmmo() {
         for (let i = 0 ; i < this.bullets.length ; i++) {
             this.bullets[i] = new Bullet(this);
@@ -245,6 +270,10 @@ class gameScene extends Physijs.Scene {//tried to include a physics engine, it w
         bullet_3D.visible = false;
         this.updateAmmo();
     }
+
+    /*
+    Controls the shooting method
+     */
     shoot() {
         if (this.actualAmmo <= 0) {
             this.reloadAmmo();
@@ -268,7 +297,7 @@ class gameScene extends Physijs.Scene {//tried to include a physics engine, it w
             this.zombies.push(generatedZombie);
 
             this.collisionObjects.push(generatedZombie);
-            this.rayCastObjects.push(generatedZombie.getObject());
+            this.rayCastObjects.push(generatedZombie.getObject()); //this is done so that we can stand on the zombie
             this.add(generatedZombie.getObject());
         }
     }
@@ -349,8 +378,8 @@ class gameScene extends Physijs.Scene {//tried to include a physics engine, it w
         return this.camera;
     }
 
-    setCameraAspect (anAspectRatio) {
-        this.camera.aspect = anAspectRatio;
+    setCameraAspect (newAspectRatio) {
+        this.camera.aspect = newAspectRatio;
         this.camera.updateProjectionMatrix();
     }
 
