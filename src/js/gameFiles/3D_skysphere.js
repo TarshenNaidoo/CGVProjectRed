@@ -1,4 +1,4 @@
-class Sky_sphere{
+class Skysphere{
 
     constructor() {
 
