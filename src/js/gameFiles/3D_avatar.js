@@ -169,6 +169,9 @@ class Avatar {
             this.canJump = true;
         }
 
+        if (this.velocity.y > 0 && controls_3D.getObject().position.y > 490) {
+            this.velocity.y = 0;
+        }
 
         this.controls.getObject().position.y += this.velocity.y * delta_3D;
         if (controls_3D.getObject().position.y < this.initialPosition.y){
