@@ -3,12 +3,12 @@ class Skybox{
     constructor() {
         this.materialArray = [];
 
-        this.texture_ft = new THREE.TextureLoader().load('../../src/textures/skybox2/sh_ft.png');
-        this.texture_bk = new THREE.TextureLoader().load('../../src/textures/skybox2/sh_bk.png');
-        this.texture_up = new THREE.TextureLoader().load('../../src/textures/skybox2/sh_up.png');
-        this.texture_dn = new THREE.TextureLoader().load('../../src/textures/skybox2/sh_dn.png');
-        this.texture_rt = new THREE.TextureLoader().load('../../src/textures/skybox2/sh_rt.png');
-        this.texture_lf = new THREE.TextureLoader().load('../../src/textures/skybox2/sh_lf.png');
+        this.texture_ft = new THREE.TextureLoader().load('/CGVProjectRed/src/textures/skybox2/sh_ft.png');
+        this.texture_bk = new THREE.TextureLoader().load('/CGVProjectRed/src/textures/skybox2/sh_bk.png');
+        this.texture_up = new THREE.TextureLoader().load('/CGVProjectRed/src/textures/skybox2/sh_up.png');
+        this.texture_dn = new THREE.TextureLoader().load('/CGVProjectRed/src/textures/skybox2/sh_dn.png');
+        this.texture_rt = new THREE.TextureLoader().load('/CGVProjectRed/src/textures/skybox2/sh_rt.png');
+        this.texture_lf = new THREE.TextureLoader().load('/CGVProjectRed/src/textures/skybox2/sh_lf.png');
 
         this.materialArray.push(new THREE.MeshPhongMaterial({map: this.texture_ft}));
         this.materialArray.push(new THREE.MeshPhongMaterial({map: this.texture_bk}));

@@ -290,8 +290,8 @@ function animate() {
 async function main_3D() {
     let PointerLockControls = await import("../three.js-master/examples/jsm/controls/PointerLockControls.js")
     'use strict';
-    Physijs.scripts.worker = '../../exLibs/physijs_worker.js';
-    Physijs.scripts.ammo = '../../exLibs/ammo.js';
+    Physijs.scripts.worker = '/CGVProjectRed/exLibs/physijs_worker.js';
+    Physijs.scripts.ammo = '/CGVProjectRed/exLibs/ammo.js';
 
     let instructions = document.getElementById('instructions');
     let zgame = document.getElementById("Z-GAME");
