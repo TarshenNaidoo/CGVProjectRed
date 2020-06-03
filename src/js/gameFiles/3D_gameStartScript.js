@@ -261,6 +261,27 @@ function animate() {
     requestAnimationFrame(animate);
     scene_3D.animate();
     renderer_3D.render(scene_3D,scene_3D.getCamera());
+
+    let initialViewport = new THREE.Vector4();
+        renderer_3D.getViewport(initialViewport);
+    let initialScissor = new THREE.Vector4();
+        renderer_3D.getScissor(initialScissor);
+
+    let currentViewport = new THREE.Vector4(window.innerWidth*0.75, window.innerHeight*0.1,window.innerWidth*0.2, window.innerHeight*0.2);
+    let currentScissor = new THREE.Vector4(window.innerWidth*0.75, window.innerHeight*0.1,window.innerWidth*0.2, window.innerHeight*0.2);
+    renderer_3D.setViewport(currentViewport);
+    renderer_3D.setScissor(currentScissor);
+    renderer_3D.setScissorTest(true);
+
+    if (scene_3D.minimap.getObject() != null){
+        renderer_3D.render(scene_3D, scene_3D.minimap.getObject());
+    }
+
+
+    renderer_3D.setViewport(initialViewport);
+    renderer_3D.setScissor(initialScissor);
+    renderer_3D.setScissorTest(false);
+
     scene_3D.simulate(); //simulates physijs objects
 }
 

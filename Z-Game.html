@@ -13,6 +13,8 @@
     <script type="text/javascript" src="exLibs/MTLLoader.js"></script>
     <script type="text/javascript" src="exLibs/physi.js"></script>
     <script type="text/javascript" src="exLibs/howler.js"></script>
+    <script type="text/javascript" src="src/js/gameFiles/2D_gameStartScript.js"></script>
+    <script type="text/javascript" src="src/js/gameFiles/2D_gameStartScene.js"></script>
     <script type="text/javascript" src="src/js/gameFiles/3D_zombie.js"></script>
     <script type="text/javascript" src="src/js/gameFiles/3D_crosshair.js"></script>
     <script type="text/javascript" src="src/js/gameFiles/3D_avatar.js"></script>
@@ -26,13 +28,16 @@
     <script type="text/javascript" src="src/js/gameFiles/3D_cloud.js"></script>
     <script type="text/javascript" src="src/js/gameFiles/3D_fog.js"></script>
     <script type="text/javascript" src="src/js/gameFiles/3D_puddleContainer.js"></script>
+    <script type="text/javascript" src="src/js/gameFiles/3D_miniMap.js"></script>
+    <script type="text/javascript" src="src/js/gameFiles/3D_dynamicSkybox.js"></script>
+    <script type="text/javascript" src="src/js/gameFiles/3D_skysphere.js"></script>
     <script type="module" src="src/js/gameFiles/3D_GLTFLoader.js"></script>
 
     <div id="blocker">
         <h1 align="center" ><span style="color:crimson" id="Z-GAME"> Z-GAME </span></h1>
         <h2 align="center"><span style="color: rebeccapurple" id="Options"> Options </span> </h2>
         <h2 align="center"><span style="color: white" id="Play_3D" class="Play"> Loading... </span> </h2>
-        <h2 align="center"><span style="color: white" id="Play_2D" class="Play"> Loading... </span> </h2>
+        <h2 align="center"><span style="color: white" id="Play_2D" class="Play" onclick="main_2D()"> Loading... </span> </h2>
         <!-- we will modify instructions later to display contextual information-->
         <div id="instructions">
             <!--
