@@ -263,10 +263,10 @@ class Avatar {
                     this.velocity.x = this.velocity.x + collisionDirection.x;
                 }
                 if (!(this.velocity.y * collisionDirection.y > 0)) {
-                    this.velocity.y = collisionDirection.y;
+                    this.velocity.y = this.velocity.y + collisionDirection.y;
                 }
                 if (!(this.velocity.z * collisionDirection.z > 0)) {
-                    this.velocity.z = collisionDirection.z;
+                    this.velocity.z = this.velocity.z + collisionDirection.z;
                 }
             }
         }
