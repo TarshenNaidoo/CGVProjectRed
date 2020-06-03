@@ -77,7 +77,7 @@ class Zombie {
                 Math.pow(x - this.getPosition().x, 2) +
                 Math.pow(y - this.getPosition().y, 2) +
                 Math.pow(z - this.getPosition().z, 2)
-            ) < this.range && this.zombieHealth >= 0
+            ) < this.range && this.zombieHealth > 0
         ){
             this.getHit();
             return true;
