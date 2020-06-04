@@ -52,6 +52,13 @@ class gameScene extends Physijs.Scene {//tried to include a physics engine, it w
         this.minimap = new Map();
         this.add(this.minimap.getObject());
 
+        //adds reflective obj
+
+        //this.add(this.mirror);
+        //this.newRenderer = renderer;
+        this.createMirror();
+        //renderer = this.newRenderer;
+        //this.newRenderer = ;
     }
 
     resetScene(){ //called when 'r' is pressed
@@ -252,6 +259,22 @@ class gameScene extends Physijs.Scene {//tried to include a physics engine, it w
 
     createAvatar(){
         this.avatar = new Avatar(this, this.initialAvatarPosition.x, this.initialAvatarPosition.y, this.initialAvatarPosition.z);
+    }
+
+    //this creates reflective shape in game
+    createMirror(){
+
+        var mirObj = new THREE.Object3D();
+        var cubeGeom = new THREE.CubeGeometry(10,10,10,1,1,1);
+        this.mirrorCubeCamera = new THREE.CubeCamera(0.1, 5000, 1024);
+
+        this.add(this.mirrorCubeCamera);
+
+        var mirrorCubeMaterial = new THREE.MeshBasicMaterial({color: 0xC0C0C0,envMap: this.mirrorCubeCamera.renderTarget});
+        this.mirrorCube = new THREE.Mesh(cubeGeom, mirrorCubeMaterial);
+        this.mirrorCube.position.set(0,10,10);
+        this.mirrorCubeCamera.position.set(0,10,10);
+        this.add(this.mirrorCube);
     }
 
     stopPlayerShootAnimation() { //stops the shooting animations after the bullet ends it's trajectory

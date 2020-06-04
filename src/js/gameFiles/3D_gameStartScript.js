@@ -262,6 +262,9 @@ function createRenderer() {
 function animate() {
     requestAnimationFrame(animate);
     scene_3D.animate();
+    scene_3D.mirrorCube.visible = false;
+    scene_3D.mirrorCubeCamera.updateCubeMap(renderer_3D,scene_3D);
+    scene_3D.mirrorCube.visible = true;
     renderer_3D.render(scene_3D,scene_3D.getCamera());
 
     let initialViewport = new THREE.Vector4();
