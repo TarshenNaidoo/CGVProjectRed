@@ -6,10 +6,10 @@ class DynamicSkybox{
 
         this.skybox = new THREE.Mesh(geometry, material);
 
-        this.skybox.material.emissive = new THREE.Color(0x0077be);
+        this.skybox.material.emissive = new THREE.Color(0x00315E);
         this.skybox.material.side = THREE.BackSide;
 
-        this.texture = new THREE.TextureLoader("bleg");
+        this.texture = new THREE.TextureLoader("bleq");
         this.texture.transparent
 
         //this.skybox.material.frustumCulled = false;
