@@ -3,7 +3,7 @@ class Cloud {
     constructor(i) {
         this.cloudGroup = new THREE.Object3D();
         this.initialX = Math.floor(Math.random()*200+50);
-        this.initialY = Math.floor(Math.random()*350+70);
+        this.initialY = Math.floor(Math.random()*400+70);
         this.initialZ = Math.floor(Math.random()*200+50);
         this.cloud = cloudArray_3D[i][0];
         this.cloud.position.set(this.initialX,this.initialY,this.initialZ);
