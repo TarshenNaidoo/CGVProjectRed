@@ -4,8 +4,8 @@ class gameScene extends Physijs.Scene {//tried to include a physics engine, it w
     constructor(renderer, theCamera) {
         super({fixedTimeStep: delta_3D});
         this.setGravity(new THREE.Vector3(0,-50, 0));
-        this.skybox = null;
-        this.createSkybox();
+        this.dynamicskybox = null;
+        this.createDynamicSkybox();
         this.background =  new THREE.Color (0x87ceeb); //temporary blue background
         this.camera = theCamera;
         this.rayCastObjects = []; //objects that the player can stand on. Excluding objects that can move eg zombies
@@ -51,6 +51,7 @@ class gameScene extends Physijs.Scene {//tried to include a physics engine, it w
         //adds minimap
         this.minimap = new Map();
         this.add(this.minimap.getObject());
+
     }
 
     resetScene(){ //called when 'r' is pressed
@@ -191,9 +192,10 @@ class gameScene extends Physijs.Scene {//tried to include a physics engine, it w
     /*
     adds static skybox
      */
-    createSkybox(){
-        this.skybox = new Skybox();
-        this.add(this.skybox.getObject());
+
+    createDynamicSkybox(){
+        this.dynamicskybox = new DynamicSkybox();
+        this.add(this.dynamicskybox.getObject());
     }
 
     //this creates the 'place' as it were complete with a skybox and map
