@@ -247,11 +247,13 @@ function createRenderer() {
     renderer.physicallyCorrectLights = true;
     renderer.setClearColor(new THREE.Color(0xEEEEEE), 0.1);
     renderer.shadowMap.enabled = true;
+    renderer.shadowMapType = THREE.PCFSoftShadowMap;
 
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth,window.innerHeight);
     document.body.appendChild(renderer.domElement);
     renderer.shadowMap.enabled = true;
+    renderer.shadowMapType = THREE.PCFSoftShadowMap;
     return renderer;
 }
 
