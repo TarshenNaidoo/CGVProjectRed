@@ -3,7 +3,7 @@ class Sky{
     constructor(x,y,z, scene) {
         this.scene = scene;
         this.sky = new THREE.Object3D();
-        this.timeStep = (1/60) * (1/2) ; //percentage of a minute it takes to complete dimming/brightening cycle
+        this.timeStep = (1 / 60) * (1 / 2); //percentage of a minute it takes to complete dimming/brightening cycle
 
         /*
         sunGroup:
@@ -35,21 +35,21 @@ class Sky{
         this.sunColorLimit = 50;
         this.sunScaleLimit = 1.5;
         this.sunOpacityPercent = 1;
-        this.sunGeometry = new THREE.SphereBufferGeometry( this.sunScaleLimit, 32, 32 );
-        this.sunMaterial = new THREE.MeshStandardMaterial( {
+        this.sunGeometry = new THREE.SphereBufferGeometry(this.sunScaleLimit, 32, 32);
+        this.sunMaterial = new THREE.MeshStandardMaterial({
             emissive: 0xffff00,
             emissiveIntensity: 1,
             color: 0xFFFFFF,
-            transparent:true,
-            opacity:0.5
-        } );
-        this.sun = new THREE.Mesh( this.sunGeometry, this.sunMaterial );
-        this.sunPointLight = new THREE.PointLight({intensity:18000, decay:2});
-        this.sunPointLight.color.b = (150/255);
+            transparent: true,
+            opacity: 0.5
+        });
+        this.sun = new THREE.Mesh(this.sunGeometry, this.sunMaterial);
+        this.sunPointLight = new THREE.PointLight({intensity: 18000, decay: 2});
+        this.sunPointLight.color.b = (150 / 255);
         this.sunPointLight.castShadow = true;
         this.sun.add(this.sunPointLight);
         this.sunGroup.add(this.sun);
-        this.sun.position.set(x,y,z);
+        this.sun.position.set(x, y, z);
         this.sunCurrentHeight = y;
         this.sunTwilightHeight = -50;
         this.sun.castShadow = false;
@@ -58,29 +58,50 @@ class Sky{
         let playerPosition = controls_3D.getObject().position;
         let sunPosition = this.getSunPosition();
         this.distanceMetric = Math.sqrt(
-            Math.pow(playerPosition.x + sunPosition.x,2)+
-            Math.pow(playerPosition.y + sunPosition.y,2)+
-            Math.pow(playerPosition.z + sunPosition.z,2)
+            Math.pow(playerPosition.x + sunPosition.x, 2) +
+            Math.pow(playerPosition.y + sunPosition.y, 2) +
+            Math.pow(playerPosition.z + sunPosition.z, 2)
         );
 
         /*
         Moon stuff:
          */
-        this.moonMesh = new THREE.SphereBufferGeometry( 5, 32, 32 );
+        this.moonMesh = new THREE.SphereBufferGeometry(5, 32, 32);
         this.moonMaterial = new THREE.MeshStandardMaterial({
             emissive: 0xc2c5cc,
             emissiveIntensity: 1,
-            color:0xFFFFFF,
-            transparent:true
+            color: 0xFFFFFF,
+            transparent: true
         });
         this.moon = new THREE.Mesh(this.moonMesh, this.moonMaterial);
-        this.moonPointLight = new THREE.PointLight({decay:2});
+        this.moonPointLight = new THREE.PointLight({decay: 2});
         this.moon.add(this.moonPointLight);
         this.moon.receiveShadow = false;
         this.moon.castShadow = true;
-        this.moon.position.set(0,y,0);
+        this.moon.position.set(0, y, 0);
         this.moonPower = 400;
         this.sky.add(this.moon);
+
+        this.starV = [];
+
+        for ( let i = 0; i < 1500; i ++ ) {
+
+            this.starCoords = [];
+            this.starCoords = this.polarToCartesian(THREE.MathUtils.randFloat(0,360 ),
+                THREE.MathUtils.randFloat(0,90  ),THREE.MathUtils.randFloat(475,500  ));
+
+            this.starV.push( this.starCoords[0], this.starCoords[1], this.starCoords[2] );
+
+        }
+
+        this.stargeo = new THREE.BufferGeometry();
+        this.stargeo.setAttribute( 'position', new THREE.Float32BufferAttribute( this.starV, 3 ) );
+
+        this.starmat = new THREE.PointsMaterial( { color: 0xEAEA16 } );
+
+        this.stars = new THREE.Points( this.stargeo, this.starmat );
+
+        this.sky.add(this.stars);
 
         this.cloudGroup = new THREE.Object3D();
         this.cloudGroupArray = [];
@@ -134,6 +155,15 @@ class Sky{
         this.animateFog();
 
 
+    }
+
+    // to map to sphere
+    polarToCartesian(latitude, longitude, elevation){
+        const x = Math.cos(latitude) * Math.cos(longitude) * elevation;
+        const y = Math.cos(latitude) * Math.sin(longitude) * elevation;
+        const z = Math.sin(latitude) * elevation;
+
+        return  [x, y, z];
     }
 
     animateFog(){
