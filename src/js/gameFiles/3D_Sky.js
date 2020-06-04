@@ -88,7 +88,7 @@ class Sky{
 
             this.starCoords = [];
             this.starCoords = this.polarToCartesian(THREE.MathUtils.randFloat(0,360 ),
-                THREE.MathUtils.randFloat(0,90  ),THREE.MathUtils.randFloat(475,500  ));
+                THREE.MathUtils.randFloat(0,90  ),THREE.MathUtils.randFloat(842,867  ));
 
             this.starV.push( this.starCoords[0], this.starCoords[1], this.starCoords[2] );
 

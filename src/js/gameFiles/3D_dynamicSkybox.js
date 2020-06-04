@@ -1,7 +1,7 @@
 class DynamicSkybox{
 
     constructor() {
-        let geometry = new THREE.SphereGeometry(500,32,32);
+        let geometry = new THREE.SphereGeometry(867,32,32);
         let material = new THREE.MeshStandardMaterial();
 
         this.skybox = new THREE.Mesh(geometry, material);

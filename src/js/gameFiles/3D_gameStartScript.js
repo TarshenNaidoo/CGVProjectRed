@@ -15,14 +15,14 @@ let playerAnimation_3D = null; //see function importPlayer below
 let playerMixer_3D = null; //see function importPlayer below
 
 let zombieImportArray_3D = []; //see function importZombie below
-let zombieNum_3D = Math.floor(Math.random()*9+1); //number of zombies within this level
+let zombieNum_3D = Math.floor(Math.random()*15+5); //number of zombies within this level
 let zombieScale = 7;
 
 let bullet_3D = null; //see function importBullet below
 let bulletMixer_3D = null; //see function importBullet below
 let bulletAnimation_3D = null; //see function importBullet below
 
-let lanternNum_3D = Math.floor(Math.random()*9+1);
+let lanternNum_3D = Math.floor(Math.random()*15+5);
 let lanternArray_3D = [];
 
 let cloudNum_3D = Math.floor(Math.random()*7+3);
