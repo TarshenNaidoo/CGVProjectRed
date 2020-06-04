@@ -4,7 +4,7 @@ class Zombie {
 
         this.zombie = new THREE.Object3D();
         let initialX = (Math.random()-0.5)*2*200;
-        let initialY = (Math.random()-0.5)*2*200
+        let initialY = (Math.random()-0.5)*2*200;
         this.zombieInitialPosition = new THREE.Vector3(initialX,2,initialY);
         this.zombieModel = zombieImportArray_3D[i][0]; //references the zombie model
         let mesh = new THREE.MeshBasicMaterial({color:0x777777});
