@@ -169,6 +169,9 @@ class Avatar {
             this.canJump = true;
         }
 
+        if (this.velocity.y > 0 && controls_3D.getObject().position.y > 490) {
+            this.velocity.y = 0;
+        }
 
         this.controls.getObject().position.y += this.velocity.y * delta_3D;
         if (controls_3D.getObject().position.y < this.initialPosition.y){
@@ -260,10 +263,10 @@ class Avatar {
                     this.velocity.x = this.velocity.x + collisionDirection.x;
                 }
                 if (!(this.velocity.y * collisionDirection.y > 0)) {
-                    this.velocity.y = collisionDirection.y;
+                    this.velocity.y = this.velocity.y + collisionDirection.y;
                 }
                 if (!(this.velocity.z * collisionDirection.z > 0)) {
-                    this.velocity.z = collisionDirection.z;
+                    this.velocity.z = this.velocity.z + collisionDirection.z;
                 }
             }
         }
