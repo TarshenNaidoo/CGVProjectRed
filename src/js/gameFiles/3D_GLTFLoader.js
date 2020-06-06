@@ -165,7 +165,202 @@ puddleContainerLoader.load(
     }
 );
 
+//Trees
+let treeType1Loader = new GLTFLoader();
+let treeType1LoaderArray = [];
+loadTotal += treeType1Num_3D;
+for (let i = 0 ; i < treeType1Num_3D ; i++){
+    treeType1Loader.load(
+        './models/tree1.glb',
+        function (treeType1){
+            treeType1LoaderArray.push(treeType1);
 
+            if (treeType1LoaderArray.length === treeType1Num_3D){
+                importTreeType1(treeType1LoaderArray);
+            }
+            loadDone++;
+            checkLoad();
+        },
+        function (xhr) {
+            console.log('tree Type 1 model loading: ' + (xhr.loaded/xhr.total * 100) + '%');
+        },
+        function (err) {
+            console.error('Error loading tree type 1 model: ' + err);
+        }
+    );
+}
+
+let treeType2Loader = new GLTFLoader();
+let treeType2LoaderArray = [];
+loadTotal += treeType2Num_3D;
+for (let i = 0 ; i < treeType2Num_3D ; i++){
+    treeType2Loader.load(
+        './models/tree2.glb',
+        function (treeType2){
+            treeType2LoaderArray.push(treeType2);
+
+            if (treeType2LoaderArray.length === treeType2Num_3D){
+                importTreeType2(treeType2LoaderArray);
+            }
+            loadDone++;
+            checkLoad();
+        },
+        function (xhr) {
+            console.log('tree type 2 model loading: ' + (xhr.loaded/xhr.total * 100) + '%');
+        },
+        function (err) {
+            console.error('Error loading tree type 2 model: ' + err);
+        }
+    );
+}
+
+let treeType3Loader = new GLTFLoader();
+let treeType3LoaderArray = [];
+loadTotal += treeType3Num_3D;
+for (let i = 0 ; i < treeType3Num_3D ; i++){
+    treeType3Loader.load(
+        './models/tree3.glb',
+        function (treeType3){
+            treeType3LoaderArray.push(treeType3);
+
+            if (treeType3LoaderArray.length === treeType3Num_3D){
+                importTreeType3(treeType3LoaderArray);
+            }
+            loadDone++;
+            checkLoad();
+        },
+        function (xhr) {
+            console.log('tree type 3 model loading: ' + (xhr.loaded/xhr.total * 100) + '%');
+        },
+        function (err) {
+            console.error('Error loading tree type 3 model: ' + err);
+        }
+    );
+}
+
+let rockLoader = new GLTFLoader();
+let rockLoaderArray = [];
+loadTotal += rockNum_3D;
+for (let i = 0 ; i < rockNum_3D ; i++){
+    rockLoader.load(
+        './models/rock1.glb',
+        function (rock){
+            rockLoaderArray.push(rock);
+
+            if (rockLoaderArray.length === rockNum_3D){
+                importRock(rockLoaderArray);
+            }
+            loadDone++;
+            checkLoad();
+        },
+        function (xhr) {
+            console.log('rocks model loading: ' + (xhr.loaded/xhr.total * 100) + '%');
+        },
+        function (err) {
+            console.error('Error loading rocks model: ' + err);
+        }
+    );
+}
+
+let rockType2Loader = new GLTFLoader();
+let rockType2LoaderArray = [];
+loadTotal += rockType2Num_3D;
+for (let i = 0 ; i < rockType2Num_3D ; i++){
+    rockType2Loader.load(
+        './models/rock2.glb',
+        function (rockType2){
+            rockType2LoaderArray.push(rockType2);
+
+            if (rockType2LoaderArray.length === rockType2Num_3D){
+                importRockType2(rockType2LoaderArray);
+            }
+            loadDone++;
+            checkLoad();
+        },
+        function (xhr) {
+            console.log('rock type 2 model loading: ' + (xhr.loaded/xhr.total * 100) + '%');
+        },
+        function (err) {
+            console.error('Error loading rock type 2 model: ' + err);
+        }
+    );
+}
+
+//castle
+let castleLoader = new GLTFLoader();
+loadTotal++;
+castleLoader.load(
+    './models/castle.glb',
+    function(castle){
+        importCastle(castle);
+        loadDone++;
+        checkLoad();
+    },
+    
+    function (xhr) {
+        console.log('castle model loading: ' + (xhr.loaded/xhr.total * 100) + '%');
+    },
+    function (err) {
+        console.error('Error loading castle model: ' + err);
+    }
+
+)
+//castle
+let castleType2Loader = new GLTFLoader();
+loadTotal++;
+castleType2Loader.load(
+    './models/castle2.glb',
+    function(castleType2){
+        importCastleType2(castleType2);
+        loadDone++;
+        checkLoad();
+    },
+    
+    function (xhr) {
+        console.log('castle type 2 model loading: ' + (xhr.loaded/xhr.total * 100) + '%');
+    },
+    function (err) {
+        console.error('Error loading castle type 2 model: ' + err);
+    }
+
+)
+
+let castleType3Loader = new GLTFLoader();
+loadTotal++;
+castleType3Loader.load(
+    './models/castle3.glb',
+    function(castleType3){
+        importCastleType3(castleType3);
+        loadDone++;
+        checkLoad();
+    },
+    
+    function (xhr) {
+        console.log('castle type 3 model loading: ' + (xhr.loaded/xhr.total * 100) + '%');
+    },
+    function (err) {
+        console.error('Error loading castle type 3 model: ' + err);
+    }
+)
+
+let wallLoader = new GLTFLoader();
+loadTotal++;
+wallLoader.load(
+    './models/wwall.glb',
+    function(wall){
+        importWall(wall);
+        loadDone++;
+        checkLoad();
+    },
+    
+    function (xhr) {
+        console.log('castle wall model loading: ' + (xhr.loaded/xhr.total * 100) + '%');
+    },
+    function (err) {
+        console.error('Error loading wall model: ' + err);
+    }
+
+)
 
 //function checks that all created imports have completed successfully, and then changes text to Play and
 //adds onclick function to start the game
