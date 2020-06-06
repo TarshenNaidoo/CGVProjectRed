@@ -53,12 +53,11 @@ class gameScene extends Physijs.Scene {//tried to include a physics engine, it w
         this.add(this.minimap.getObject());
 
         //adds reflective obj
-
-        //this.add(this.mirror);
-        //this.newRenderer = renderer;
-        this.createMirror();
-        //renderer = this.newRenderer;
-        //this.newRenderer = ;
+        this.mirror = this.createMirror();
+        this.add(this.mirror);
+        this.rayCastObjects.push(this.mirror);
+        //adds puddle
+        this.createFunPudd();
     }
 
     resetScene(){ //called when 'r' is pressed
@@ -253,7 +252,7 @@ class gameScene extends Physijs.Scene {//tried to include a physics engine, it w
 
         let floor = new THREE.Mesh( floorGeometry, floorMaterial );
         floor.receiveShadow = true;
-        place.add(floor)
+        place.add(floor);
         return place;
     }
 
@@ -265,18 +264,45 @@ class gameScene extends Physijs.Scene {//tried to include a physics engine, it w
     createMirror(){
 
         var mirObj = new THREE.Object3D();
-        var cubeGeom = new THREE.CubeGeometry(10,10,10,1,1,1);
-        this.mirrorCubeCamera = new THREE.CubeCamera(0.1, 5000, 1024);
+        var cubeGeom = new THREE.PlaneGeometry(6,4,32);
+        this.mirrorCubeCamera = new THREE.CubeCamera(0.1, 500, 512);
 
         this.add(this.mirrorCubeCamera);
 
-        var mirrorCubeMaterial = new THREE.MeshBasicMaterial({color: 0xC0C0C0,envMap: this.mirrorCubeCamera.renderTarget});
+        var mirrorCubeMaterial = new THREE.MeshBasicMaterial({color: 0xC0C0C0,side: THREE.DoubleSide,envMap: this.mirrorCubeCamera.renderTarget});
         this.mirrorCube = new THREE.Mesh(cubeGeom, mirrorCubeMaterial);
         this.mirrorCube.position.set(0,10,10);
         this.mirrorCubeCamera.position.set(0,10,10);
-        this.add(this.mirrorCube);
+        mirObj.add(this.mirrorCube);
+        return mirObj;
+
     }
 
+    //this adds a reflective puddle
+    createFunPudd(){
+        var x = 0, y = 0;
+        var heartShape = new THREE.Shape();
+        heartShape.moveTo( x + 5, y + 5 );
+        heartShape.bezierCurveTo( x + 5, y + 5, x + 4, y, x, y );
+        heartShape.bezierCurveTo( x - 6, y, x - 6, y + 7,x - 6, y + 7 );
+        heartShape.bezierCurveTo( x - 6, y + 11, x - 3, y + 15.4, x + 5, y + 10 );
+        heartShape.bezierCurveTo( x + 12, y + 15.4, x + 16, y + 11, x + 16, y + 7 );
+        heartShape.bezierCurveTo( x + 16, y + 7, x + 16, y, x + 10, y );
+        heartShape.bezierCurveTo( x + 7, y, x + 5, y + 5, x, y);
+
+        this.puddCubeCamera = new THREE.CubeCamera(0.1, 500, 512);
+        this.add(this.puddCubeCamera);
+        var puddMaterial = new THREE.MeshBasicMaterial({color: 0xb5651d,side: THREE.DoubleSide,envMap: this.puddCubeCamera.renderTarget});
+        var geometry = new THREE.ShapeGeometry( heartShape );
+        //var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+        this.pudd = new THREE.Mesh(geometry, puddMaterial);
+        this.add(this.pudd);
+        this.pudd.position.set(0,1,5);
+        this.pudd.scale.set(0.5,0.5,0.5);
+        this.pudd.rotation.set(Math.PI/2,0,0);
+        this.puddCubeCamera.position.set(0,1,5);
+    }
+    
     stopPlayerShootAnimation() { //stops the shooting animations after the bullet ends it's trajectory
         if (this.avatar.playerLightAttack.isRunning()){
             this.avatar.playerLightAttack.stop();
