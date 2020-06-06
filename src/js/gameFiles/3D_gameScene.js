@@ -302,6 +302,7 @@ class gameScene extends Physijs.Scene {//tried to include a physics engine, it w
         this.pudd.rotation.set(Math.PI/2,0,0);
         this.puddCubeCamera.position.set(0,1,5);
     }
+    
     stopPlayerShootAnimation() { //stops the shooting animations after the bullet ends it's trajectory
         if (this.avatar.playerLightAttack.isRunning()){
             this.avatar.playerLightAttack.stop();
