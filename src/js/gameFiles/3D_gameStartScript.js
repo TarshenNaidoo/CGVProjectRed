@@ -28,8 +28,35 @@ let lanternArray_3D = [];
 let cloudNum_3D = Math.floor(Math.random()*7+3);
 let cloudArray_3D = [];
 
+let lanternNum_3D = Math.floor(Math.random()*15+5);
+let lanternArray_3D = [];
+
+let treeType1Num_3D = Math.floor(Math.random()*9+1);
+let treeType1Array_3D = []; //tree objects
+
+let treeType2Num_3D = Math.floor(Math.random()*9+1);
+let treeType2Array_3D = []; //tree objects
+
+let treeType3Num_3D = Math.floor(Math.random()*9+1);
+let treeType3Array_3D = []; //tree objects
+
+let rockNum_3D = Math.floor(Math.random()*9+1);
+let rockArray_3D = []; //rock objects
+
+let rockType2Num_3D = Math.floor(Math.random()*11+2);
+let rockType2Array_3D = []; //rock objects
+
+let cloudNum_3D = Math.floor(Math.random()*7+3);
+let cloudArray_3D = [];
+
 let puddleContainer = null;
 let puddleContainerScale = 4;
+
+let castle = null; //castle objects
+let castleType2 = null; //another castle object
+let castleType3 = null; // another castle object
+
+let wall = null; //wall object
 
 let height_3D = 10; //controls the minimum height of the character so that it doesn't move below ground level
 
@@ -82,6 +109,42 @@ function importBullet(newBullet){
 
 function importLantern(newLanternArray){
     lanternArray_3D = newLanternArray;
+}
+
+function importTreeType1(newTreeType1Array){
+    treeType1Array_3D = newTreeType1Array;
+}
+
+function importTreeType2(newTreeType2Array){
+    treeType2Array_3D = newTreeType2Array;
+}
+
+function importTreeType3(newTreeType3Array){
+    treeType3Array_3D = newTreeType3Array;
+}
+
+function importCastle(newCastle){
+    castle = newCastle;
+}
+
+function importCastleType2(newCastleType2){
+    castleType2 = newCastleType2;
+}
+
+function importCastleType3(newCastleType3){
+    castleType3 = newCastleType3;
+}
+
+function importWall(newWall){
+    wall = newWall;
+}
+
+function importRock(newRockArray){
+    rockArray_3D = newRockArray;
+}
+
+function importRockType2(newRockType2Array){
+    rockType2Array_3D = newRockType2Array;
 }
 
 function importCloud(newCloudArray){
