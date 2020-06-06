@@ -262,9 +262,15 @@ function createRenderer() {
 function animate() {
     requestAnimationFrame(animate);
     scene_3D.animate();
+    //this makes the puddle reflective
+    scene_3D.pudd.visible = false;
+
+    //this makes the mirror in gameScene reflective
     scene_3D.mirrorCube.visible = false;
+    scene_3D.puddCubeCamera.updateCubeMap(renderer_3D,scene_3D);
     scene_3D.mirrorCubeCamera.updateCubeMap(renderer_3D,scene_3D);
     scene_3D.mirrorCube.visible = true;
+    scene_3D.pudd.visible = true;
     renderer_3D.render(scene_3D,scene_3D.getCamera());
 
     let initialViewport = new THREE.Vector4();
