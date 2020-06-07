@@ -346,7 +346,7 @@ castleType3Loader.load(
 let wallLoader = new GLTFLoader();
 loadTotal++;
 wallLoader.load(
-    './models/wwall.glb',
+    './models/wall.glb',
     function(wall){
         importWall(wall);
         loadDone++;

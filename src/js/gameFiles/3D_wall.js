@@ -3,7 +3,7 @@ class Wall{
     constructor() {
         
         this.object = new THREE.Object3D();
-        this.wall = Wall.scene;
+        this.wall = wall.scene;
         this.object.add(this.wall);
         this.object.position.set(-300,0,100);
         //this.object.scale.set(3,3,3);
