@@ -565,6 +565,7 @@ class gameScene extends Physijs.Scene {//tried to include a physics engine, it w
         this.camera.add(listener);
         this.add(head);
 
+        //bug
         head.add(audioLoader);
     }
 
