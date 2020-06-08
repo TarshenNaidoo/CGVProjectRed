@@ -5,7 +5,7 @@ class Castle{
         this.object = new THREE.Object3D();
         this.castle = castle.scene;
         this.object.add(this.castle);
-        this.object.position.set(10,50,-100);
+        this.object.position.set(0,10,-100);
         this.object.scale.set(15,15,15);
         this.force = 1;
 		this.range = 10;

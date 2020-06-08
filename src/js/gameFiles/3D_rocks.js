@@ -5,7 +5,7 @@ class Rocks{
         this.object = new THREE.Object3D();
         this.rock = rockArray_3D[i].scene;
         this.object.add(this.rock)
-        this.object.position.set((Math.random())*3*250,2, (Math.random())*3*250);
+        this.object.position.set((Math.random())*2*250,1, (Math.random())*2*250);
         this.force = 1;
     }
 
