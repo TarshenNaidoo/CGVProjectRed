@@ -492,34 +492,36 @@ class gameScene extends Physijs.Scene {//tried to include a physics engine, it w
             sound.play();
         });
 
+        let texture = new THREE.TextureLoader().load('../../src/textures/head.jpg');
+
         let upperlip = new THREE.Mesh(
             new THREE.CylinderBufferGeometry(5,5,1,50,10,false,0,Math.PI*1.1),
-            new THREE.MeshStandardMaterial({side: THREE.DoubleSide})
+            new THREE.MeshStandardMaterial({side: THREE.DoubleSide,map: texture})
         );
 
         let lowerlip = new THREE.Mesh(
             new THREE.CylinderBufferGeometry(5,5,1,50,10,false,0,Math.PI*1.1),
-            new THREE.MeshStandardMaterial({side: THREE.DoubleSide})
+            new THREE.MeshStandardMaterial({side: THREE.DoubleSide,map: texture})
         );
 
         let forehead = new THREE.Mesh(
             new THREE.CylinderBufferGeometry(7,7,13,50,10,false,0,Math.PI*1.1),
-            new THREE.MeshStandardMaterial({side: THREE.DoubleSide})
+            new THREE.MeshStandardMaterial({side: THREE.DoubleSide,map: texture})
         );
 
         let nose = new THREE.Mesh(
             new THREE.CylinderGeometry(2.5, 2.5, 10, 20),
-            new THREE.MeshStandardMaterial()
+            new THREE.MeshStandardMaterial({side: THREE.DoubleSide,map: texture})
         );
 
         let nostril = new THREE.Mesh(
             new THREE.SphereGeometry(5,32,32,0,3.15,0,3.15),
-            new THREE.MeshStandardMaterial({side: THREE.DoubleSide})
+            new THREE.MeshStandardMaterial({side: THREE.DoubleSide,map: texture})
         );
 
         let nostrilDivisor = new THREE.Mesh(
             new THREE.CircleBufferGeometry(5,50,Math.PI*2,Math.PI),
-            new THREE.MeshStandardMaterial({side: THREE.DoubleSide})
+            new THREE.MeshStandardMaterial({side: THREE.DoubleSide,map: texture})
         );
 
         nostrilDivisor.rotateX(Math.PI/2);
@@ -537,7 +539,7 @@ class gameScene extends Physijs.Scene {//tried to include a physics engine, it w
 
         let head = new THREE.Mesh(
             new THREE.CylinderGeometry(10, 10, 40, 64),
-            new THREE.MeshStandardMaterial()
+            new THREE.MeshStandardMaterial({side: THREE.DoubleSide,map: texture})
         );
 
         forehead.position.y = 13.5;
