@@ -95,13 +95,22 @@ class Sky{
         }
 
         this.stargeo = new THREE.BufferGeometry();
-        this.stargeo.setAttribute( 'position', new THREE.Float32BufferAttribute( this.starV, 3 ) );
+        this.stargeoB = new THREE.BufferGeometry();
+
+        this.starA = this.starV.slice(0,749);
+        this.starB = this.starV.slice(750,1499);
+
+        this.stargeo.setAttribute( 'position', new THREE.Float32BufferAttribute( this.starA, 3 ) );
+        this.stargeoB.setAttribute( 'position', new THREE.Float32BufferAttribute( this.starB, 3 ) );
 
         this.starmat = new THREE.PointsMaterial( { color: 0xEAEA16 } );
+        this.starmatB = new THREE.PointsMaterial( { color: 0xEEEEEE } );
 
         this.stars = new THREE.Points( this.stargeo, this.starmat );
+        this.starsB = new THREE.Points( this.stargeoB, this.starmatB );
 
         this.sky.add(this.stars);
+        this.sky.add(this.starsB);
 
         this.cloudGroup = new THREE.Object3D();
         this.cloudGroupArray = [];

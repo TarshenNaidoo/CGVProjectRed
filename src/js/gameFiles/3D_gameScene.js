@@ -52,6 +52,9 @@ class gameScene extends Physijs.Scene {//tried to include a physics engine, it w
         this.minimap = new Map();
         this.add(this.minimap.getObject());
 
+        //adds the easter island head
+        this.dumbhead();
+
         //adds reflective obj
         this.mirror = this.createMirror();
         this.add(this.mirror);
@@ -451,6 +454,94 @@ class gameScene extends Physijs.Scene {//tried to include a physics engine, it w
             }
             this.simulate();
         }
+    }
+    dumbhead(){
+        let listener = new THREE.AudioListener();
+        let sound = new THREE.PositionalAudio(listener);
+
+        let audioLoader = new THREE.AudioLoader();
+        audioLoader.load( '/../../src/sound/dumdum.mp3', function( buffer ) {
+            sound.setBuffer( buffer );
+            sound.setRefDistance(30);
+            sound.setVolume(0.8);
+            sound.play();
+        });
+
+        let texture = new THREE.TextureLoader().load('../../src/textures/head.jpg');
+
+        let upperlip = new THREE.Mesh(
+            new THREE.CylinderBufferGeometry(5,5,1,50,10,false,0,Math.PI*1.1),
+            new THREE.MeshStandardMaterial({side: THREE.DoubleSide,map: texture})
+        );
+
+        let lowerlip = new THREE.Mesh(
+            new THREE.CylinderBufferGeometry(5,5,1,50,10,false,0,Math.PI*1.1),
+            new THREE.MeshStandardMaterial({side: THREE.DoubleSide,map: texture})
+        );
+
+        let forehead = new THREE.Mesh(
+            new THREE.CylinderBufferGeometry(7,7,13,50,10,false,0,Math.PI*1.1),
+            new THREE.MeshStandardMaterial({side: THREE.DoubleSide,map: texture})
+        );
+
+        let nose = new THREE.Mesh(
+            new THREE.CylinderGeometry(2.5, 2.5, 10, 20),
+            new THREE.MeshStandardMaterial({side: THREE.DoubleSide,map: texture})
+        );
+
+        let nostril = new THREE.Mesh(
+            new THREE.SphereGeometry(5,32,32,0,3.15,0,3.15),
+            new THREE.MeshStandardMaterial({side: THREE.DoubleSide,map: texture})
+        );
+
+        let nostrilDivisor = new THREE.Mesh(
+            new THREE.CircleBufferGeometry(5,50,Math.PI*2,Math.PI),
+            new THREE.MeshStandardMaterial({side: THREE.DoubleSide,map: texture})
+        );
+
+        nostrilDivisor.rotateX(Math.PI/2);
+        nostrilDivisor.rotateY(Math.PI/2);
+
+        nostril.add(nostrilDivisor);
+
+        nostril.rotateX(-Math.PI/2);
+        nostril.position.y = -9;
+
+        nose.add(nostril);
+
+        nose.position.z = -8;
+        nose.rotateX(Math.PI/12);
+
+        let head = new THREE.Mesh(
+            new THREE.CylinderGeometry(10, 10, 40, 64),
+            new THREE.MeshStandardMaterial({side: THREE.DoubleSide,map: texture})
+        );
+
+        forehead.position.y = 13.5;
+        forehead.position.z = -7;
+        forehead.rotateY(Math.PI/2);
+
+        upperlip.position.y = -14;
+        upperlip.position.z = -7;
+        upperlip.rotateY(Math.PI/2);
+
+        lowerlip.position.y = -15.5;
+        lowerlip.position.z = -7;
+        lowerlip.rotateY(Math.PI/2);
+
+        head.position.y = 22;
+        head.position.z = 100;
+
+        head.add(nose);
+        head.add(forehead);
+        head.add(upperlip);
+        head.add(lowerlip);
+
+        this.camera.add(listener);
+        this.add(head);
+
+        //bug
+        head.add(audioLoader);
     }
 
     changeWeapon() {
