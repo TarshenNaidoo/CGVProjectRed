@@ -190,6 +190,29 @@ for (let i = 0 ; i < treeType1Num_3D ; i++){
     );
 }
 
+let treeType2Loader = new GLTFLoader();
+let treeType2LoaderArray = [];
+loadTotal += treeType2Num_3D;
+for (let i = 0 ; i < treeType2Num_3D ; i++){
+    treeType2Loader.load(
+        './models/tree2.glb',
+        function (treeType2){
+            treeType2LoaderArray.push(treeType2);
+
+            if (treeType2LoaderArray.length === treeType2Num_3D){
+                importTreeType2(treeType2LoaderArray);
+            }
+            loadDone++;
+            checkLoad();
+        },
+        function (xhr) {
+            console.log('tree type 2 model loading: ' + (xhr.loaded/xhr.total * 100) + '%');
+        },
+        function (err) {
+            console.error('Error loading tree type 2 model: ' + err);
+        }
+    );
+}
 
 let rockLoader = new GLTFLoader();
 let rockLoaderArray = [];
@@ -216,7 +239,7 @@ for (let i = 0 ; i < rockNum_3D ; i++){
 }
 
 
-/*/castle
+//castle
 let castleLoader = new GLTFLoader();
 loadTotal++;
 castleLoader.load(
@@ -234,9 +257,9 @@ castleLoader.load(
         console.error('Error loading castle model: ' + err);
     }
 
-)*/
+)
 //castle
-/*let castleType2Loader = new GLTFLoader();
+let castleType2Loader = new GLTFLoader();
 loadTotal++;
 castleType2Loader.load(
     './models/castle2.glb',
@@ -253,7 +276,7 @@ castleType2Loader.load(
         console.error('Error loading castle type 2 model: ' + err);
     }
 
-)*/
+)
 
 let castleType3Loader = new GLTFLoader();
 loadTotal++;

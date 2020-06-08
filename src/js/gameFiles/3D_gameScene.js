@@ -63,18 +63,19 @@ class gameScene extends Physijs.Scene {//tried to include a physics engine, it w
         this.createFunPudd();
 
         this.treeType1Array = [];
+        this.treeType2Array = [];
 
         this.rockArray = [];
 
-        /*this.castle = new Castle(); //creates a castle object
+        this.castle = new Castle(); //creates a castle object
         this.collisionObjects.push(this.castle);
         this.rayCastObjects.push(this.castle.getObject());
-        this.add(this.castle.getObject());*/
+        this.add(this.castle.getObject());
 
-        /*this.castleType2 = new CastleType2(); //creates a castle object
+        this.castleType2 = new CastleType2(); //creates a castle object
         this.collisionObjects.push(this.castleType2);
         this.rayCastObjects.push(this.castleType2.getObject());
-        this.add(this.castleType2.getObject());*/
+        this.add(this.castleType2.getObject());
 
         this.castleType3 = new CastleType3(); //creates a castle object
         this.collisionObjects.push(this.castleType3);
@@ -93,6 +94,13 @@ class gameScene extends Physijs.Scene {//tried to include a physics engine, it w
             this.rockArray.push(rock);
             this.add(rock.getObject());
         }
+        
+        for (let i = 0 ; i < treeType2Num_3D ; i++) {
+            let treeType2 = new TreeType2(i, this);
+            this.treeType2Array.push(treeType2);
+            this.add(treeType2.getObject());
+        }
+        
 
     }
 

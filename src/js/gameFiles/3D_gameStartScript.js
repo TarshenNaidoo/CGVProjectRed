@@ -31,14 +31,17 @@ let cloudArray_3D = [];
 let treeType1Num_3D = Math.floor(Math.random()*9+1);
 let treeType1Array_3D = []; //tree objects
 
+let treeType2Num_3D = Math.floor(Math.random()*9+1);
+let treeType2Array_3D = []; //tree objects
+
 let rockNum_3D = Math.floor(Math.random()*9+1);
 let rockArray_3D = []; //rock objects
 
 let puddleContainer = null;
 let puddleContainerScale = 4;
 
-//let castle = null; //castle objects
-/*let castleType2 = null; //another castle object*/
+let castle = null; //castle objects
+let castleType2 = null; //another castle object
 let castleType3 = null; // another castle object
 
 let height_3D = 10; //controls the minimum height of the character so that it doesn't move below ground level
@@ -98,21 +101,21 @@ function importTreeType1(newTreeType1Array){
     treeType1Array_3D = newTreeType1Array;
 }
 
-/*function importCastle(newCastle){
-    castle = newCastle;
-}*/
+function importTreeType2(newTreeType2Array){
+    treeType2Array_3D = newTreeType2Array;
+}
 
-/*function importCastleType2(newCastleType2){
+function importCastle(newCastle){
+    castle = newCastle;
+}
+
+function importCastleType2(newCastleType2){
     castleType2 = newCastleType2;
-}*/
+}
 
 function importCastleType3(newCastleType3){
     castleType3 = newCastleType3;
 }
-
-/*function importWall(newWall){
-    wall = newWall;
-}*/
 
 function importRock(newRockArray){
     rockArray_3D = newRockArray;
