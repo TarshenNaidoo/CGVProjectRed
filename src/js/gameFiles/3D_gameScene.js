@@ -552,8 +552,8 @@ class gameScene extends Physijs.Scene {//tried to include a physics engine, it w
         lowerlip.position.z = -7;
         lowerlip.rotateY(Math.PI/2);
 
-        //head.position.y = 22;
-        //head.position.z = 200;
+        head.position.y = 22;
+        head.position.z = 100;
 
         head.add(nose);
         head.add(forehead);
