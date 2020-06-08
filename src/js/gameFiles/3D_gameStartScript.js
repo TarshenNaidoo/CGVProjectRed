@@ -301,8 +301,8 @@ function animate() {
 
     //this makes the mirror in gameScene reflective
     scene_3D.mirrorCube.visible = false;
-    scene_3D.puddCubeCamera.update(renderer_3D,scene_3D);
-    scene_3D.mirrorCubeCamera.update(renderer_3D,scene_3D);
+    //scene_3D.puddCubeCamera.update(renderer_3D,scene_3D);
+    //scene_3D.mirrorCubeCamera.update(renderer_3D,scene_3D);
     scene_3D.mirrorCube.visible = true;
     scene_3D.pudd.visible = true;
     renderer_3D.render(scene_3D,scene_3D.getCamera());
