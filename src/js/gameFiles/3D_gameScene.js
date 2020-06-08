@@ -541,7 +541,7 @@ class gameScene extends Physijs.Scene {//tried to include a physics engine, it w
         );
 
         forehead.position.y = 13.5;
-        forehead.position.z = -8;
+        forehead.position.z = -7;
         forehead.rotateY(Math.PI/2);
 
         upperlip.position.y = -14;
