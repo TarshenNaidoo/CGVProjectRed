@@ -83,8 +83,9 @@ class Sky{
         this.sky.add(this.moon);
 
         this.starV = [];
+        this.numStars = 10000;
 
-        for ( let i = 0; i < 1500; i ++ ) {
+        for ( let i = 0; i < this.numStars; i ++ ) {
 
             this.starCoords = [];
             this.starCoords = this.polarToCartesian(THREE.MathUtils.randFloat(0,360 ),
@@ -97,8 +98,8 @@ class Sky{
         this.stargeo = new THREE.BufferGeometry();
         this.stargeoB = new THREE.BufferGeometry();
 
-        this.starA = this.starV.slice(0,749);
-        this.starB = this.starV.slice(750,1499);
+        this.starA = this.starV.slice(0,this.numStars/2-1);
+        this.starB = this.starV.slice(this.numStars/2,this.numStars-1);
 
         this.stargeo.setAttribute( 'position', new THREE.Float32BufferAttribute( this.starA, 3 ) );
         this.stargeoB.setAttribute( 'position', new THREE.Float32BufferAttribute( this.starB, 3 ) );
