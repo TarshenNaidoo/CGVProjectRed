@@ -168,6 +168,8 @@ function onMouseDown (event) {
         if (event.buttons === 1 && blocker.style.display === 'none') {
             scene_3D.shoot();
             shooting_3D = true;
+            var audioShoot = new Audio("/src/sounds/Steam-hiss-sound-effect.mp3");
+	        audioShoot.play();
         }
     }
 }
@@ -204,6 +206,8 @@ function onKeyDown (event) {
 
             case 32: // space
                 jumping_3D = true;
+                var audioJump = new Audio("/src/sounds/Jump-sound.mp3");
+	            audioJump.play();
                 break;
         }
     }
@@ -448,6 +452,35 @@ async function main_3D() {
     controls_3D = new PointerLockControls.PointerLockControls(camera_3D, document.body);
     scene_3D = new gameScene(renderer_3D.domElement, camera_3D, 0,5,0);
     scene_3D.add(controls_3D.getObject());
+    
+    //adding background sound
+	var listener = new THREE.AudioListener();
+	camera_3D.add(listener);
+	var audioLoader = new THREE.AudioLoader();
+	var sound1 = new THREE.PositionalAudio( listener );
+	audioLoader.load( "/src/sounds/Battle-music.mp3", function ( buffer ) {
+
+		sound1.setBuffer( buffer );
+		sound1.setRefDistance( 20 );
+		sound1.setLoop( true );
+		sound1.setVolume( 0.5 );
+		sound1.play();
+
+	} );
+	scene_3D.add(sound1);
+	
+	//Zombie sounds
+	var audioZombo = new THREE.PositionalAudio(listener);
+	audioLoader.load( "/src/sounds/Large-Zombie-Horde.mp3", function ( buffer ) {
+
+		audioZombo.setBuffer( buffer );
+		audioZombo.setRefDistance( 20 );
+		audioZombo.setLoop( true );
+		audioZombo.setVolume( 0.25 );
+		audioZombo.play();
+
+	} );
+	scene_3D.add(audioZombo);
 
     animate();
 }
