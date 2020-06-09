@@ -312,7 +312,7 @@ class gameScene extends Physijs.Scene {//tried to include a physics engine, it w
 
         var mirObj = new THREE.Object3D();
         var cubeGeom = new THREE.PlaneGeometry(6,4,32);
-        this.mirrorCubeCamera = new THREE.CubeCamera(0.1, 500, 512);
+        this.mirrorCubeCamera = new THREE.CubeCamera(0.1, 500, 2048);
 
         this.add(this.mirrorCubeCamera);
 
@@ -337,7 +337,7 @@ class gameScene extends Physijs.Scene {//tried to include a physics engine, it w
         heartShape.bezierCurveTo( x + 16, y + 7, x + 16, y, x + 10, y );
         heartShape.bezierCurveTo( x + 7, y, x + 5, y + 5, x, y);
 
-        this.puddCubeCamera = new THREE.CubeCamera(0.1, 500, 512);
+        this.puddCubeCamera = new THREE.CubeCamera(0.1, 500, 128);
         this.add(this.puddCubeCamera);
         var puddMaterial = new THREE.MeshBasicMaterial({color: 0xb5651d,side: THREE.DoubleSide,envMap: this.puddCubeCamera.renderTarget});
         var geometry = new THREE.ShapeGeometry( heartShape );
@@ -552,7 +552,7 @@ class gameScene extends Physijs.Scene {//tried to include a physics engine, it w
         this.add(head);
 
         //bug
-        head.add(audioLoader);
+        //head.add(audioLoader);
     }
 
     changeWeapon() {

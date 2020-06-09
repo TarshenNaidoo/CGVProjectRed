@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <title>Z-Game</title>
     <script type="text/javascript" src="src/js/three.js-master/build/three.js"></script>
-    <script type="text/javascript" src="exLibs/jquery-1.9.0.js"></script>
+    <script type="text/javascript" src="exLibs/jquery-3.5.1.js"></script>
     <script type="text/javascript" src="exLibs/stats.js"></script>
     <script type="text/javascript" src="exLibs/dat.gui.js"></script>
     <script type="text/javascript" src="exLibs/OBJLoader.js"></script>
@@ -38,12 +38,15 @@
     <script type="text/javascript" src="src/js/gameFiles/3D_dynamicSkybox.js"></script>
     <script type="text/javascript" src="src/js/gameFiles/3D_skysphere.js"></script>
     <script type="module" src="src/js/gameFiles/3D_GLTFLoader.js"></script>
+    <script>
+        var audioMenu = new Audio("/src/sounds/dark-scary-soundscape.mp3");
+        audioMenu.play();
+    </script>
 
     <div id="blocker">
         <h1 align="center" ><span style="color:crimson" id="Z-GAME"> Z-GAME </span></h1>
-        <h2 align="center"><span style="color: rebeccapurple" id="Options"> Options </span> </h2>
         <h2 align="center"><span style="color: white" id="Play_3D" class="Play"> Loading... </span> </h2>
-        <h2 align="center"><span style="color: white" id="Play_2D" class="Play" onclick="main_2D()"> Loading... </span> </h2>
+        <!--<h2 align="center"><span style="color: white" id="Play_2D" class="Play" onclick="main_2D()"> Loading... </span> </h2>-->
         <!-- we will modify instructions later to display contextual information-->
         <div id="instructions">
             <!--
