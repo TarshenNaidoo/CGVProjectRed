@@ -40,6 +40,8 @@ let rockArray_3D = []; //rock objects
 let puddleContainer = null;
 let puddleContainerScale = 4;
 
+let mirrorControl = 0;
+
 let castle = null; //castle objects
 let castleType2 = null; //another castle object
 let castleType3 = null; // another castle object
@@ -305,7 +307,12 @@ function animate() {
     //this makes the mirror in gameScene reflective
     scene_3D.mirrorCube.visible = false;
     //scene_3D.puddCubeCamera.update(renderer_3D,scene_3D);
-    //scene_3D.mirrorCubeCamera.update(renderer_3D,scene_3D);
+    mirrorControl++;
+
+    if (mirrorControl % 30 === 0) {
+        scene_3D.mirrorCubeCamera.update(renderer_3D,scene_3D);
+        mirrorControl = 0;
+    }
     scene_3D.mirrorCube.visible = true;
     scene_3D.pudd.visible = true;
     renderer_3D.render(scene_3D,scene_3D.getCamera());

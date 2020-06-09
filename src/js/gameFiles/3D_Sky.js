@@ -110,7 +110,7 @@ class Sky{
         this.starsB = new THREE.Points( this.stargeoB, this.starmatB );
 
         this.sky.add(this.stars);
-        this.sky.add(this.starsB);
+        //this.sky.add(this.starsB);
 
         this.cloudGroup = new THREE.Object3D();
         this.cloudGroupArray = [];
