@@ -1,5 +1,8 @@
 class Fog{
 
+    /*
+    This creates the fog and modulates the color according to sun position
+     */
     constructor(sky) {
         this.sky = sky
         this.scene = this.sky.scene;

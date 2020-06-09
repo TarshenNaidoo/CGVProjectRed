@@ -12,7 +12,6 @@ class DynamicSkybox{
         this.texture = new THREE.TextureLoader("bleq");
         this.texture.transparent
 
-        //this.skybox.material.frustumCulled = false;
     }
 
     getObject(){
@@ -20,6 +19,9 @@ class DynamicSkybox{
     }
 
     animate(intensity){
+        /*
+        Changes the intensity of the skybox
+         */
         this.skybox.material.emissiveIntensity = Math.max(0,intensity);
     }
 

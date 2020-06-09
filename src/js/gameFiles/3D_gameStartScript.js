@@ -321,6 +321,10 @@ function animate() {
     scene_3D.pudd.visible = true;
     renderer_3D.render(scene_3D,scene_3D.getCamera());
 
+    /*
+    This next few lines switches the viewport and scissoring region (only a certain area will be affected), renders the picture in picture
+    and resets the viewport and scissoring region
+     */
     let initialViewport = new THREE.Vector4();
         renderer_3D.getViewport(initialViewport);
     let initialScissor = new THREE.Vector4();

@@ -1,6 +1,9 @@
 class Skybox{
 
     constructor() {
+        /*
+        Materials are imported and pushed to the skybox mesh
+         */
         this.materialArray = [];
 
         this.texture_ft = new THREE.TextureLoader().load('../../src/textures/skybox2/sh_ft.png');

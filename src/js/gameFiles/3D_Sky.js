@@ -82,6 +82,9 @@ class Sky{
         this.moonPower = 400;
         this.sky.add(this.moon);
 
+        /*
+        This creates a certain amount of stars and displays them around the spherical skybox
+         */
         this.starV = [];
         this.numStars = 10000;
 
