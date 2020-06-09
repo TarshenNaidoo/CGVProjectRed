@@ -168,8 +168,20 @@ function onMouseDown (event) {
         if (event.buttons === 1 && blocker.style.display === 'none') {
             scene_3D.shoot();
             shooting_3D = true;
-            var audioShoot = new Audio("/src/sounds/Steam-hiss-sound-effect.mp3");
-	        audioShoot.play();
+            var listener = new THREE.AudioListener();
+		camera_3D.add(listener);
+		var audioLoader = new THREE.AudioLoader();
+		var sound3 = new THREE.PositionalAudio( listener );
+		audioLoader.load( "/src/sounds/Steam-hiss-sound-effect.mp3", function ( buffer ) {
+
+			sound3.setBuffer( buffer );
+			sound3.setRefDistance( 20 );
+			sound3.setLoop( false );
+			sound3.setVolume( 0.4 );
+			sound3.play();
+
+		} );
+		scene_3D.add(sound3);
         }
     }
 }
