@@ -71,7 +71,9 @@ class Avatar {
     }
 
     setInitialPosition() {
-        this.controls.position.set(this.initialPosition.x, this.initialPosition.y+5, this.initialPosition.z);
+        controls_3D.getObject().position.x = this.initialPosition.x;
+        controls_3D.getObject().position.y = this.initialPosition.y;
+        controls_3D.getObject().position.z = this.initialPosition.z;
     }
 
     getActiveWeapon() {
