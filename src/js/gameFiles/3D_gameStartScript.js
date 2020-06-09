@@ -385,7 +385,9 @@ async function main_3D() {
         "            <br/>\n" +
         "            See character from behind: =\n" +
         "            <br/>\n" +
-        "            Fly: SHIFT"
+        "            Fly: SHIFT\n" +
+        "            <br/>\n" +
+        "            Pause Time: T"
     zgame.innerHTML = "";
     play.innerHTML = "";
 
