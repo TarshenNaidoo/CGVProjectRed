@@ -213,7 +213,7 @@ for (let i = 0 ; i < treeType2Num_3D ; i++){
         }
     );
 }
-
+//loads rock object
 let rockLoader = new GLTFLoader();
 let rockLoaderArray = [];
 loadTotal += rockNum_3D;
@@ -239,7 +239,7 @@ for (let i = 0 ; i < rockNum_3D ; i++){
 }
 
 
-//castle
+//loads castle object
 let castleLoader = new GLTFLoader();
 loadTotal++;
 castleLoader.load(
@@ -258,7 +258,7 @@ castleLoader.load(
     }
 
 )
-//castle
+//loads another castle object
 let castleType2Loader = new GLTFLoader();
 loadTotal++;
 castleType2Loader.load(
@@ -277,7 +277,7 @@ castleType2Loader.load(
     }
 
 )
-
+//loads the 3rd type of castle/house
 let castleType3Loader = new GLTFLoader();
 loadTotal++;
 castleType3Loader.load(

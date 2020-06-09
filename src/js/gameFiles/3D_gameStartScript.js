@@ -29,13 +29,13 @@ let cloudNum_3D = Math.floor(Math.random()*7+3);
 let cloudArray_3D = [];
 
 let treeType1Num_3D = Math.floor(Math.random()*9+1);
-let treeType1Array_3D = []; //tree objects
+let treeType1Array_3D = []; //tree objects array
 
 let treeType2Num_3D = Math.floor(Math.random()*9+1);
-let treeType2Array_3D = []; //tree objects
+let treeType2Array_3D = []; //tree objects array
 
 let rockNum_3D = Math.floor(Math.random()*9+1);
-let rockArray_3D = []; //rock objects
+let rockArray_3D = []; //rock objects array
 
 let puddleContainer = null;
 let puddleContainerScale = 4;

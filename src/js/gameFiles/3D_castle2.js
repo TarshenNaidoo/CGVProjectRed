@@ -5,9 +5,9 @@ class CastleType2{
         this.object = new THREE.Object3D();
         this.castletype2 = castleType2.scene;
         this.object.add(this.castletype2);
-        this.object.position.set(100,-5,600);
+        this.object.position.set(300,2.5,150);
         this.object.rotation.set(0,3.14159,0);
-        //this.object.scale.set(2,2,2);
+        this.object.scale.set(0.5,0.5,0.5);
         this.force = 1;
 
     }

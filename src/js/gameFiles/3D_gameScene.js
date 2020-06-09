@@ -61,12 +61,15 @@ class gameScene extends Physijs.Scene {//tried to include a physics engine, it w
         this.rayCastObjects.push(this.mirror);
         //adds puddle
         this.createFunPudd();
-
+        
+        //creates a tree object array
         this.treeType1Array = [];
         this.treeType2Array = [];
 
+        //creates rock object array
         this.rockArray = [];
 
+        //adds casles/houses to the scene
         this.castle = new Castle(); //creates a castle object
         this.collisionObjects.push(this.castle);
         this.rayCastObjects.push(this.castle.getObject());
@@ -82,26 +85,26 @@ class gameScene extends Physijs.Scene {//tried to include a physics engine, it w
         this.rayCastObjects.push(this.castleType3.getObject());
         this.add(this.castleType3.getObject());
 
+        //adds different types of trees on the scene
         for (let i = 0 ; i < treeType1Num_3D ; i++) { //creates tree objects
             let treeType1 = new TreeType1(i, this);
             this.treeType1Array.push(treeType1);
             this.add(treeType1.getObject());
         }
 
-
-        for (let i = 0 ; i < rockNum_3D ; i++) {
-            let rock = new Rocks(i, this);
-            this.rockArray.push(rock);
-            this.add(rock.getObject());
-        }
-        
         for (let i = 0 ; i < treeType2Num_3D ; i++) {
             let treeType2 = new TreeType2(i, this);
             this.treeType2Array.push(treeType2);
             this.add(treeType2.getObject());
         }
         
-
+        //adds rock objects on the scene
+        for (let i = 0 ; i < rockNum_3D ; i++) {
+            let rock = new Rocks(i, this);
+            this.rockArray.push(rock);
+            this.add(rock.getObject());
+        }
+        
     }
 
     resetScene(){ //called when 'r' is pressed
