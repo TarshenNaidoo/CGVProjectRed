@@ -350,7 +350,6 @@ async function main_3D() {
 
     let instructions = document.getElementById('instructions');
     let zgame = document.getElementById("Z-GAME");
-    let options = document.getElementById("Options");
     let play = document.getElementById("Play_3D");
     instructions.innerHTML= "<span id=\"title\" style=\"font-size:30px\">Click to start game</span>\n" +
         "            <br/>\n" +
@@ -368,7 +367,6 @@ async function main_3D() {
         "            <br/>\n" +
         "            Fly: SHIFT"
     zgame.innerHTML = "";
-    options.innerHTML = "";
     play.innerHTML = "";
 
     //confirms that browser supports pointer lock controls
