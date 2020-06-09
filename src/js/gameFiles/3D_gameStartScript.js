@@ -94,7 +94,7 @@ function importBullet(newBullet){
     bulletMixer_3D = new THREE.AnimationMixer(bullet_3D);
     bulletAnimation_3D = newBullet.animations;
 }
-
+// --------------- imports the external objects --------------
 function importLantern(newLanternArray){
     lanternArray_3D = newLanternArray;
 }

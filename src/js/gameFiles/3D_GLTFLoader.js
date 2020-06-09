@@ -239,7 +239,7 @@ for (let i = 0 ; i < rockNum_3D ; i++){
 }
 
 
-//loads castle object
+//loads external castle object
 let castleLoader = new GLTFLoader();
 loadTotal++;
 castleLoader.load(

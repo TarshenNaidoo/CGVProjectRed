@@ -8,6 +8,7 @@ class TreeType2{
         this.object.position.set((Math.random())*5*250,4.25, (Math.random())*5*250);
         this.object.scale.set(3,3,3);
         this.force = 1;
+        this.range = 10;
 
     }
 
